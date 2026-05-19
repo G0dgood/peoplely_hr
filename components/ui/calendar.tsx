@@ -19,7 +19,7 @@ export function Calendar({ className = '', onSelect, selectedDate, onClose, ...p
   const nextMonthDays = [1];
 
   return (
-    <div className={`w-80 bg-white dark:bg-[#11131A] rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl p-4 flex flex-col gap-4 ${className}`} {...props}>
+    <div className={`w-80 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl p-4 flex flex-col gap-4 ${className}`} {...props}>
       <div className="flex items-center justify-between">
         <button className="p-2 text-gray-400 hover:text-gray-950 dark:hover:text-white"><FaChevronLeft /></button>
         <span className="font-bold text-gray-900 dark:text-white">January 2023</span>

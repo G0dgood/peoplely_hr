@@ -91,10 +91,7 @@ export default function OtpVerifyPage() {
       {/* Main Content Card */}
       <div className="w-full max-w-md mx-auto flex flex-col items-center gap-8 z-10 py-12">
         {/* Header Logo */}
-        <div className="flex items-center gap-2">
-          <div className="text-primary font-bold text-lg flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20">H</div>
-          <span className="font-bold text-gray-900 tracking-wide text-body-md">HR<span className="font-normal text-gray-500">Dashboard</span></span>
-        </div>
+        <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-7 w-auto" />
 
         {/* Text Headers */}
         <div className="text-center flex flex-col gap-2">
@@ -150,7 +147,7 @@ export default function OtpVerifyPage() {
       {/* Footer Area */}
       <footer className="text-center text-[10px] text-gray-400 z-10 w-full">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-          <span>&copy; 2025 HRDashboard . Alrights reserved.</span>
+          <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
           <div className="flex gap-3">
             <a href="#" className="hover:underline font-medium">Terms &amp; Conditions</a>
             <a href="#" className="hover:underline font-medium">Privacy Policy</a>

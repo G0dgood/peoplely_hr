@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@import "./css/header.css";
+@import "./css/table.css";
+@import "./css/sideNav.css";
 
 :root {
-  --background: #ffffff;
+  --background: #FAFBFC;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -58,25 +63,109 @@
   --text-body-xs--line-height: 1.5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
+html,
 body {
-  background: var(--background);
+  background-color: var(--background) !important;
   color: var(--foreground);
   font-family: var(--font-sans);
 }
 
 @layer components {
+
   /* Component Utilities */
-  .h1 { @apply text-h1 font-bold; }
-  .h2 { @apply text-h2 font-bold; }
-  .h3 { @apply text-h3 font-bold; }
-  .h4 { @apply text-h4 font-bold; }
-  .h5 { @apply text-h5 font-bold; }
-  .h6 { @apply text-h6 font-bold; }
+  .h1 {
+    @apply text-h1 font-bold;
+  }
+
+  .h2 {
+    @apply text-h2 font-bold;
+  }
+
+  .h3 {
+    @apply text-h3 font-bold;
+  }
+
+  .h4 {
+    @apply text-h4 font-bold;
+  }
+
+  .h5 {
+    @apply text-h5 font-bold;
+  }
+
+  .h6 {
+    @apply text-h6 font-bold;
+  }
+}
+
+
+
+
+main {
+  grid-area: main;
+  overflow-y: auto;
+  width: 100%;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#page-wrapper {
+  display: grid;
+  position: relative;
+  height: 100dvh;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 80px 1fr auto;
+  grid-template-areas:
+    "sidenav header"
+    "sidenav main"
+    "sidenav footer";
+}
+
+@media (max-width: 768px) {
+  #page-wrapper {
+    grid-template-areas:
+      "sidenav header"
+      "sidenav main"
+      "sidenav footer";
+    grid-template-columns: 0px 100%;
+    grid-template-rows: 70px 1fr auto;
+    width: 100vw;
+    overflow-x: hidden;
+    transition: grid-template-columns 0.3s ease;
+  }
+
+  #footer {
+    width: 100%;
+  }
+
+  #page-wrapper.mobile-nav-open {
+    grid-template-areas:
+      "sidenav header"
+      "sidenav main"
+      "sidenav footer";
+    grid-template-columns: 16rem 100%;
+    overflow-x: hidden;
+  }
+
+  #page-wrapper.mobile-nav-open #sidenav {
+    display: flex;
+    transform: translateX(0);
+  }
+
+  main {
+    grid-area: main;
+    overflow-y: auto;
+    width: 100%;
+    padding: 14px !important;
+    background-color: var(--background);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 }

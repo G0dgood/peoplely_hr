@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash, FaCheck, FaGoogle, FaApple, FaExclamationCircle } from "react-icons/fa";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +25,13 @@ export default function LoginPage() {
   const emailHasError = isDuarte;
   const emailIsValidated = isPristia;
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isFormFilled && !emailHasError) {
+      router.push("/onboarding");
+    }
+  };
+
   return (
     <main className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
       
@@ -35,10 +44,7 @@ export default function LoginPage() {
 
         {/* Text Details Area */}
         <div className="mt-8 flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <div className="text-primary font-bold text-lg flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20">H</div>
-            <span className="font-bold text-white tracking-wide text-body-md">HR<span className="font-normal text-gray-400">Dashboard</span></span>
-          </div>
+          <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-7 w-auto self-start brightness-0 invert" />
 
           <div className="flex flex-col gap-2">
             <h1 className="text-white text-h4 font-bold leading-tight lg:text-h3">
@@ -65,7 +71,7 @@ export default function LoginPage() {
             </h2>
           </div>
 
-          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             
             {/* Email Input Group */}
             <div className="flex flex-col gap-1.5">
@@ -202,7 +208,7 @@ export default function LoginPage() {
         {/* Footer Area */}
         <footer className="text-center text-[10px] text-gray-400 py-4 lg:py-0 border-t lg:border-t-0 border-gray-50 mt-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-            <span>&copy; 2025 HRDashboard . Alrights reserved.</span>
+            <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
             <div className="flex gap-3">
               <a href="#" className="hover:underline font-medium">Terms &amp; Conditions</a>
               <a href="#" className="hover:underline font-medium">Privacy Policy</a>

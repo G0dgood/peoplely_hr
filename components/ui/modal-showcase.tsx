@@ -21,9 +21,9 @@ export function ModalShowcase() {
       <Button onClick={() => setOpenModal('success')} variant="primary">Success Dialog (Center)</Button>
 
       {/* Add New Profile (Right Sheet Modal) */}
-      <Modal 
-        isOpen={openModal === 'addProfile'} 
-        onClose={() => setOpenModal(null)} 
+      <Modal
+        isOpen={openModal === 'addProfile'}
+        onClose={() => setOpenModal(null)}
         position="right"
       >
         <ModalHeader onClose={() => setOpenModal(null)}>
@@ -33,19 +33,19 @@ export function ModalShowcase() {
           <Input label="First Name" placeholder="First Name" required />
           <Input label="Last Name" placeholder="Last Name" required />
           <Input label="Email Address" placeholder="Email Address" type="email" required />
-          
+
           <div className="relative">
-            <Input 
-              label="Join Date" 
-              value={selectedDate} 
-              readOnly 
+            <Input
+              label="Join Date"
+              value={selectedDate}
+              readOnly
               onClick={() => setShowDatePicker(!showDatePicker)}
               rightIcon={<FaCalendarAlt className="text-gray-400 cursor-pointer" />}
               required
             />
             {showDatePicker && (
               <div className="absolute right-0 bottom-full mb-2 z-50 shadow-2xl">
-                <Calendar 
+                <Calendar
                   onSelect={(date) => {
                     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
                     setSelectedDate(date.toLocaleDateString('en-GB', options));
@@ -73,9 +73,9 @@ export function ModalShowcase() {
       </Modal>
 
       {/* Upload CV (Center Modal) */}
-      <Modal 
-        isOpen={openModal === 'uploadCV'} 
-        onClose={() => setOpenModal(null)} 
+      <Modal
+        isOpen={openModal === 'uploadCV'}
+        onClose={() => setOpenModal(null)}
         position="center"
       >
         <ModalHeader onClose={() => setOpenModal(null)}>
@@ -83,7 +83,7 @@ export function ModalShowcase() {
         </ModalHeader>
         <ModalContent>
           <div className="flex flex-col gap-4">
-            <p className="text-body-sm text-gray-500 mb-2">Please upload the candidate's CV here.</p>
+            <p className="text-body-sm text-gray-500 mb-2">Please upload the candidate&apos;s CV here.</p>
             <div className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-12 flex flex-col items-center justify-center text-center gap-4 hover:border-primary transition-colors cursor-pointer bg-gray-50 dark:bg-gray-800/50">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl">
                 <FaCloudUploadAlt />
@@ -103,9 +103,9 @@ export function ModalShowcase() {
       </Modal>
 
       {/* Welcome Dialog (Center Modal) */}
-      <Modal 
-        isOpen={openModal === 'success'} 
-        onClose={() => setOpenModal(null)} 
+      <Modal
+        isOpen={openModal === 'success'}
+        onClose={() => setOpenModal(null)}
         position="center"
       >
         <ModalContent className="flex flex-col items-center justify-center text-center p-12 gap-4 relative overflow-hidden">
@@ -114,16 +114,16 @@ export function ModalShowcase() {
           <div className="absolute top-20 right-20 w-4 h-2 bg-[#0062FF] rotate-12 rounded"></div>
           <div className="absolute bottom-24 left-20 w-2 h-4 bg-[#8C62FF] -rotate-45 rounded"></div>
           <div className="absolute bottom-20 right-16 w-3 h-3 bg-[#27A376] rounded-full"></div>
-          
+
           <div className="w-24 h-24 rounded-full bg-[#27A376] border-[8px] border-[#27A376]/20 flex items-center justify-center text-white text-5xl font-light mb-4 shadow-lg shadow-[#27A376]/30 relative z-10">
             *
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white relative z-10">Welcome to HRDashboard!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white relative z-10">Welcome to Peoplely HR!</h2>
           <p className="text-gray-500 dark:text-gray-400 text-body-md max-w-xs mb-4 relative z-10">
-            Enjoy the convenience of managing your company's employees!
+            Enjoy the convenience of managing your company&apos;s employees!
           </p>
-          <Button variant="primary" className="w-full justify-center py-3 bg-[#11131A] hover:bg-gray-900 text-white dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 relative z-10" onClick={() => setOpenModal(null)}>
-            Let's Go!
+          <Button variant="primary" className="w-full justify-center py-3 relative z-10" onClick={() => setOpenModal(null)}>
+            Let&apos;s Go!
           </Button>
         </ModalContent>
       </Modal>

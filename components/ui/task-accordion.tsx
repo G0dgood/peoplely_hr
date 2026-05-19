@@ -36,7 +36,7 @@ export function TaskAccordionItem({
   }
 
   return (
-    <div className={`w-full bg-white dark:bg-[#11131A] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm transition-all duration-200 overflow-hidden ${className}`}>
+    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm transition-all duration-200 overflow-hidden ${className}`}>
       
       {/* Header Row */}
       <div 
@@ -67,7 +67,7 @@ export function TaskAccordionItem({
 
       {/* Expanded Content Grid */}
       {isOpen && (
-        <div className="px-5 pb-5 pt-2 border-t border-gray-50 dark:border-gray-800/50 bg-gray-50/30 dark:bg-[#11131A] flex flex-col gap-4 text-body-sm text-gray-600 dark:text-gray-400">
+        <div className="px-5 pb-5 pt-2 border-t border-gray-50 dark:border-gray-800/50 bg-gray-50/30 dark:bg-gray-900 flex flex-col gap-4 text-body-sm text-gray-600 dark:text-gray-400">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             
             <div className="flex flex-col gap-1">

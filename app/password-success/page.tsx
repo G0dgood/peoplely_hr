@@ -59,7 +59,7 @@ export default function PasswordSuccessPage() {
             You&apos;ve successfully changed your password
           </h2>
           <p className="text-gray-500 text-body-sm max-w-xs mx-auto">
-            Always remember the password for your account at HRDashboard!
+            Always remember the password for your account at Peoplely HR!
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function PasswordSuccessPage() {
       {/* Footer Area */}
       <footer className="text-center text-[10px] text-gray-400 z-10 w-full">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-          <span>&copy; 2025 HRDashboard . Alrights reserved.</span>
+          <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
           <div className="flex gap-3">
             <a href="#" className="hover:underline font-medium">Terms &amp; Conditions</a>
             <a href="#" className="hover:underline font-medium">Privacy Policy</a>

@@ -39,7 +39,7 @@ export function TaskBoard({
   const totalCount = tasks.length
 
   return (
-    <div className={`w-full bg-white dark:bg-[#11131A] border border-gray-100 dark:border-gray-800 rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ${className}`} {...props}>
+    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ${className}`} {...props}>
       {/* Header bar */}
       <div className="flex items-center justify-between p-6 flex-wrap gap-4 border-b border-gray-50 dark:border-gray-800/50">
         <div className="flex items-center gap-4">
@@ -80,7 +80,7 @@ export function TaskBoard({
 
       {/* Expanded Task list */}
       {isExpanded && (
-        <div className="p-6 bg-white dark:bg-[#11131A] transition-all duration-300">
+        <div className="p-6 bg-white dark:bg-gray-900 transition-all duration-300">
           
           {/* Desktop Table View */}
           <div className="hidden md:block overflow-x-auto">

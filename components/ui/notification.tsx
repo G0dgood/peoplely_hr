@@ -55,7 +55,7 @@ export function NotificationCard({
   ...props 
 }: NotificationCardProps) {
   return (
-    <div className={`w-full max-w-md bg-white dark:bg-[#11131A] rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col gap-6 ${className}`} {...props}>
+    <div className={`w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col gap-6 ${className}`} {...props}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
         <button className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
@@ -70,7 +70,7 @@ export function NotificationCard({
       <Button 
         onClick={onShowAll} 
         variant="primary" 
-        className="w-full justify-center py-3 bg-[#11131A] hover:bg-gray-900 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+        className="w-full justify-center py-3"
       >
         {showAllText}
       </Button>

@@ -1,16 +1,6 @@
 import * as React from "react"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"
 
-const Pagination = ({ className = '', ...props }: React.HTMLAttributes<HTMLElement>) => (
-  <nav
-    role="navigation"
-    aria-label="pagination"
-    className={`flex w-full items-center justify-between ${className}`}
-    {...props}
-  />
-)
-Pagination.displayName = "Pagination"
-
 const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(
   ({ className = '', ...props }, ref) => (
     <ul
@@ -44,7 +34,7 @@ const PaginationLink = ({
       flex h-10 w-10 items-center justify-center rounded-xl text-body-md font-semibold transition-colors
       ${isActive 
         ? "bg-primary text-white" 
-        : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+        : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
       }
       ${className}
     `}
@@ -95,12 +85,48 @@ const PaginationEllipsis = ({
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"
 
+const Pagination = ({ className = '', children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={`flex w-full items-center justify-center mt-6 ${className}`}
+    {...props}
+  >
+    {children || (
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink isActive>1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink>2</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink>3</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink>10</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext />
+        </PaginationItem>
+      </PaginationContent>
+    )}
+  </nav>
+)
+Pagination.displayName = "Pagination"
+
 export {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationPrevious,
   PaginationNext,
-  PaginationEllipsis,
+  PaginationPrevious,
 }

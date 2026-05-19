@@ -1,0 +1,84 @@
+"use client";
+
+import * as React from "react";
+import { HiOutlineCalendarDays } from "react-icons/hi2";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
+
+interface NewHolidayDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function NewHolidayDrawer({ isOpen, onClose }: NewHolidayDrawerProps) {
+  const [dateRange, setDateRange] = React.useState("19 Apr 2023 - 24 Apr 2023");
+  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex justify-end">
+      <div
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full border-l border-gray-100 dark:border-gray-800 flex flex-col">
+        <div className="p-8 flex-1 overflow-y-auto">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-8">
+            New Holiday
+          </h2>
+
+          <div className="flex flex-col gap-6">
+            {/* Holiday Name */}
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                Holiday Name <span className="text-red-500">*</span>
+              </label>
+              <Input 
+                placeholder="Eid Mubarak" 
+                className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+              />
+            </div>
+
+            {/* Date Range Selection */}
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                Date Range <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+                >
+                  <span>{dateRange}</span>
+                  <HiOutlineCalendarDays className="text-lg text-gray-400" />
+                </button>
+                <DatePicker
+                  isOpen={isDatePickerOpen}
+                  onClose={() => setIsDatePickerOpen(false)}
+                  onSave={(range) => setDateRange(range)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Footer */}
+        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+          <Button
+            variant="outline"
+            className="flex-1 font-bold h-12"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" className="flex-1 font-bold h-12">
+            Add
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

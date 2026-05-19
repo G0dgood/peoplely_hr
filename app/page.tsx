@@ -128,19 +128,31 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black p-8 sm:p-20 font-sans">
       <main className="max-w-4xl mx-auto flex flex-col gap-12">
-        <header className="border-b pb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <header className="border-b pb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h1 className="h1 mb-2">Design System</h1>
             <p className="text-body-xl text-gray-500">
               Typography and Colors style guide.
             </p>
           </div>
-          <div className="flex gap-3">
-            <Link href="/login" className="px-5 py-2.5 rounded-xl bg-[#11131A] text-white hover:bg-black font-bold text-body-sm transition-colors shadow-sm">
-              View Login Screen
+          <div className="flex flex-wrap gap-2.5 max-w-xl">
+            <Link href="/login" className="px-4 py-2 rounded-xl bg-[#11131A] text-white hover:bg-black font-bold text-body-xs transition-colors shadow-sm">
+              Login
             </Link>
-            <Link href="/register" className="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-sm transition-colors shadow-sm bg-white">
-              View Register Screen
+            <Link href="/register" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+              Register
+            </Link>
+            <Link href="/forgot-password" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+              Reset Password
+            </Link>
+            <Link href="/otp-verify" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+              OTP Verify
+            </Link>
+            <Link href="/update-password" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+              Update Password
+            </Link>
+            <Link href="/password-success" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+              Success Screen
             </Link>
           </div>
         </header>

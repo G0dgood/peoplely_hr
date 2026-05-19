@@ -138,9 +138,9 @@ export default function LoginPage() {
                 </div>
                 <span>Remember Me</span>
               </label>
-              <a href="#" className="font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/forgot-password" className="font-semibold text-gray-600 hover:text-gray-900 transition-colors">
                 Forgot Password
-              </a>
+              </Link>
             </div>
 
             {/* Submit Button */}

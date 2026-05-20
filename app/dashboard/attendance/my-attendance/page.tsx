@@ -17,8 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
-import { ClockOutModal } from "@/components/ui/clock-out-modal";
-import { EditPaidTimeModal } from "@/components/ui/edit-paid-time-modal";
+import { ClockOutModal, EditPaidTimeModal } from "@/components/ui/modal";
 import {
  Pagination,
  PaginationContent,

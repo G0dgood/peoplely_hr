@@ -1,17 +1,20 @@
 "use client";
 
 import { Sidebar, SidebarItem, SidebarSubItem } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
   HiOutlineSquares2X2,
   HiOutlineUsers,
   HiOutlineClipboardDocumentList,
+  HiOutlineDocumentText,
+  HiOutlineNewspaper,
   HiOutlineClock,
   HiOutlineCalendarDays,
   HiOutlineBanknotes,
   HiOutlinePresentationChartLine,
   HiOutlineBriefcase,
+  HiOutlineChartBar,
   HiOutlineQuestionMarkCircle,
   HiOutlineCog6Tooth,
   HiMiniChevronDoubleLeft,
@@ -35,6 +38,12 @@ export function DashboardSidenav({
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>(["employees"]);
   const itemClass = collapsed ? "justify-center px-0" : "";
+
+  useEffect(() => {
+    if (pathname.startsWith("/dashboard/checklist")) {
+      setExpandedItems((prev) => prev.includes("checklist") ? prev : [...prev, "checklist"]);
+    }
+  }, [pathname]);
 
   const toggleExpand = (id: string) => {
     setExpandedItems((prev) =>
@@ -126,8 +135,64 @@ export function DashboardSidenav({
           )}
         </div>
 
-        <SidebarItem icon={<HiOutlineClipboardDocumentList />} hasSubmenu={!collapsed} title={collapsed ? "Checklist" : undefined} className={itemClass}>
-          {!collapsed && "Checklist"}
+        <div>
+          <SidebarItem
+            icon={<HiOutlineClipboardDocumentList />}
+            hasSubmenu={!collapsed}
+            expanded={expandedItems.includes("checklist")}
+            onClick={() => toggleExpand("checklist")}
+            title={collapsed ? "Checklist" : undefined}
+            className={itemClass}
+          >
+            {!collapsed && "Checklist"}
+          </SidebarItem>
+          {!collapsed && expandedItems.includes("checklist") && (
+            <div className="flex flex-col">
+              <SidebarSubItem
+                active={pathname === "/dashboard/checklist/to-dos"}
+                href="/dashboard/checklist/to-dos"
+              >
+                To-Dos
+              </SidebarSubItem>
+              <SidebarSubItem
+                active={pathname === "/dashboard/checklist/onboarding"}
+                href="/dashboard/checklist/onboarding"
+              >
+                Onboarding
+              </SidebarSubItem>
+              <SidebarSubItem
+                active={pathname === "/dashboard/checklist/offboarding"}
+                href="/dashboard/checklist/offboarding"
+              >
+                Offboarding
+              </SidebarSubItem>
+              <SidebarSubItem
+                isLast
+                active={pathname === "/dashboard/checklist/setting"}
+                href="/dashboard/checklist/setting"
+              >
+                Setting
+              </SidebarSubItem>
+            </div>
+          )}
+        </div>
+        <SidebarItem
+          icon={<HiOutlineDocumentText />}
+          active={pathname === "/dashboard/documents"}
+          title={collapsed ? "Documents" : undefined}
+          className={itemClass}
+          href="/dashboard/documents"
+        >
+          {!collapsed && "Documents"}
+        </SidebarItem>
+        <SidebarItem
+          icon={<HiOutlineNewspaper />}
+          active={pathname.startsWith("/dashboard/news")}
+          title={collapsed ? "News" : undefined}
+          className={itemClass}
+          href="/dashboard/news"
+        >
+          {!collapsed && "News"}
         </SidebarItem>
         <SidebarItem
           icon={<HiOutlineClock />}
@@ -270,13 +335,29 @@ export function DashboardSidenav({
             </SidebarSubItem>
           </div>
         )}
+        <SidebarItem
+          icon={<HiOutlineChartBar />}
+          active={pathname.startsWith("/dashboard/report")}
+          title={collapsed ? "Report" : undefined}
+          className={itemClass}
+          href="/dashboard/report"
+        >
+          {!collapsed && "Report"}
+        </SidebarItem>
       </nav>
 
       {/* ── Footer ── */}
       <div
         className="p-3 flex flex-col gap-1 border-gray-100 dark:border-gray-800/60"
       >
-        <SidebarItem icon={<HiOutlineQuestionMarkCircle />} badge={8} title={collapsed ? "Help Center" : undefined} className={itemClass}>
+        <SidebarItem 
+          icon={<HiOutlineQuestionMarkCircle />} 
+          badge={8} 
+          title={collapsed ? "Help Center" : undefined} 
+          className={itemClass}
+          href="/dashboard/help-center"
+          active={pathname === "/dashboard/help-center"}
+        >
           {!collapsed && "Help Center"}
         </SidebarItem>
         <SidebarItem icon={<HiOutlineCog6Tooth />} title={collapsed ? "Settings" : undefined} className={itemClass}>

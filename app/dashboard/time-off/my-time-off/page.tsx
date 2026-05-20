@@ -19,8 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
-import { TimeOffDrawer } from "@/components/ui/time-off-drawer";
-import { AddTimeOffDrawer } from "@/components/ui/add-time-off-drawer";
+import { TimeOffDrawer, AddTimeOffDrawer } from "@/components/ui/drawer";
 import {
   Table,
   TableBody,

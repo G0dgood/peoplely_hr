@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
-import { EditCandidateModal } from "@/components/ui/edit-candidate-modal";
+import { EditCandidateModal } from "@/components/ui/modal";
 import {
   Table,
   TableBody,

@@ -11,9 +11,7 @@ import {
 import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { NewHolidayDrawer } from "@/components/ui/new-holiday-drawer";
-import { NewTypeDrawer } from "@/components/ui/new-type-drawer";
-import { NewPolicyDrawer } from "@/components/ui/new-policy-drawer";
+import { NewHolidayDrawer, NewTypeDrawer, NewPolicyDrawer } from "@/components/ui/drawer";
 import { TypePoliciesSection, INITIAL_POLICIES } from "@/components/ui/type-policies-section";
 import {
   Table,

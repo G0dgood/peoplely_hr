@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { FaSearch } from "react-icons/fa";
 import { HiOutlineMail, HiOutlineBell } from "react-icons/hi";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 export interface DashboardHeaderProps {
   isDarkMode?: boolean;
   userName?: string;
@@ -18,6 +21,8 @@ export function DashboardHeader({
   userRole = "Administrator",
   userAvatar = "https://i.pravatar.cc/150?u=pristia",
 }: DashboardHeaderProps) {
+  const pathname = usePathname();
+
   return (
     <header id="header"
       className="flex items-center justify-between px-8 h-20 transition-colors bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
@@ -38,14 +43,23 @@ export function DashboardHeader({
         </div>
 
         <nav className="hidden xl:flex items-center gap-6">
-          {["Documents", "News", "Payslip", "Report"].map((item) => (
-            <a
-              key={item}
-              href="#"
-              className="text-sm font-medium transition-colors text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          {[
+            { name: "Documents", href: "/dashboard/documents" },
+            { name: "News", href: "/dashboard/news" },
+            { name: "Payslip", href: "#" },
+            { name: "Report", href: "/dashboard/report" },
+          ].map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`text-sm font-medium transition-colors ${
+                pathname === item.href
+                  ? "text-primary font-bold"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              }`}
             >
-              {item}
-            </a>
+              {item.name}
+            </Link>
           ))}
         </nav>
       </div>

@@ -14,10 +14,10 @@ export function Modal({ className = '', children, isOpen = false, onClose, posit
   return (
     <div className={`fixed inset-0 z-50 flex ${showBackdrop ? 'bg-gray-900/40 backdrop-blur-sm' : 'pointer-events-none'}`}>
       <div 
-        className={`bg-white dark:bg-gray-900 shadow-2xl flex flex-col pointer-events-auto ${
+        className={`bg-white dark:bg-gray-900 shadow-2xl flex flex-col pointer-events-auto overflow-hidden ${
           position === 'right' 
             ? 'ml-auto h-full w-full max-w-md sm:rounded-l-3xl' 
-            : 'm-auto w-full max-w-lg rounded-3xl max-h-[90vh]'
+            : `m-auto w-full rounded-3xl max-h-[90vh] ${className.includes('max-w-') ? '' : 'max-w-lg'}`
         } ${className}`}
         {...props}
       >

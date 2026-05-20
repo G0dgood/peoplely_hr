@@ -3,7 +3,7 @@
 import * as React from "react";
 import { HiOutlineInformationCircle, HiOutlineCalendarDays, HiOutlineClock } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
-import { Modal } from "@/components/ui/modal";
+import { Modal } from "./modal";
 import { DatePicker } from "@/components/ui/date-picker";
 
 interface EditPaidTimeModalProps {

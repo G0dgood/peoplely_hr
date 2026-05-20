@@ -14,7 +14,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { EditPaidTimeModal } from "@/components/ui/edit-paid-time-modal";
+import { EditPaidTimeModal } from "@/components/ui/modal";
 import {
   Table,
   TableBody,

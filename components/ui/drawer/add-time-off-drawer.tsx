@@ -4,7 +4,8 @@ import * as React from "react";
 import { 
   HiOutlineCalendarDays, 
   HiOutlineDocumentArrowUp,
-  HiOutlineMagnifyingGlass
+  HiOutlineMagnifyingGlass,
+  HiOutlineChevronRight
 } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,16 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
         onClick={onClose}
       />
       <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full shadow-2xl flex flex-col">
+        {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
+        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
+          >
+            <HiOutlineChevronRight className="text-xl" />
+          </button>
+        </div>
         <div className="p-8 flex-1 overflow-y-auto">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-8">
             Add New Time Off

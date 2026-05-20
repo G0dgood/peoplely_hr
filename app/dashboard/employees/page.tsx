@@ -131,7 +131,7 @@ const EMPLOYEES = [
 import {
  Pagination,
 } from "@/components/ui/pagination";
-import { ProfileDrawer } from "@/components/ui/profile-drawer";
+import { ProfileDrawer } from "@/components/ui/drawer";
 
 interface Employee {
  name: string;

@@ -10,7 +10,7 @@ import {
   ModalTitle,
   ModalContent,
   ModalFooter,
-} from "@/components/ui/modal";
+} from "./modal";
 
 interface Candidate {
   id: number;
@@ -125,9 +125,9 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               <span className="text-[11px] font-bold text-gray-550 dark:text-gray-400">Upload CV</span>
               <div
                 onClick={() => cvInputRef.current?.click()}
-                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
               >
-                <span className="text-xs font-semibold text-gray-550 dark:text-gray-400 truncate mr-2">
+                <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                   {cvName || "Upload File"}
                 </span>
                 <DocumentUploadIcon />
@@ -150,7 +150,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               <span className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Photo</span>
               <div
                 onClick={() => photoInputRef.current?.click()}
-                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
               >
                 <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                   {photoName || "Upload Photo"}
@@ -176,7 +176,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
             <span className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Attachment</span>
             <div
               onClick={() => attachmentInputRef.current?.click()}
-              className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+              className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
             >
               <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                 {attachmentName || "Upload attachment"}

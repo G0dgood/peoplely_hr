@@ -9,12 +9,14 @@ import {
   HiOutlineClipboardDocumentList,
   HiOutlineDocumentText,
   HiOutlineNewspaper,
+  HiOutlineChatBubbleLeftRight,
   HiOutlineClock,
   HiOutlineCalendarDays,
   HiOutlineBanknotes,
   HiOutlinePresentationChartLine,
   HiOutlineBriefcase,
   HiOutlineChartBar,
+  HiOutlineBell,
   HiOutlineQuestionMarkCircle,
   HiOutlineCog6Tooth,
   HiMiniChevronDoubleLeft,
@@ -195,6 +197,15 @@ export function DashboardSidenav({
           {!collapsed && "News"}
         </SidebarItem>
         <SidebarItem
+          icon={<HiOutlineChatBubbleLeftRight />}
+          active={pathname.startsWith("/dashboard/message")}
+          title={collapsed ? "Message" : undefined}
+          className={itemClass}
+          href="/dashboard/message"
+        >
+          {!collapsed && "Message"}
+        </SidebarItem>
+        <SidebarItem
           icon={<HiOutlineClock />}
           hasSubmenu={!collapsed}
           expanded={expandedItems.includes("time-off")}
@@ -336,6 +347,33 @@ export function DashboardSidenav({
           </div>
         )}
         <SidebarItem
+          icon={<HiOutlineBell />}
+          hasSubmenu={!collapsed}
+          expanded={expandedItems.includes("notification")}
+          onClick={() => toggleExpand("notification")}
+          title={collapsed ? "Notification" : undefined}
+          className={itemClass}
+        >
+          {!collapsed && "Notification"}
+        </SidebarItem>
+        {!collapsed && expandedItems.includes("notification") && (
+          <div className="flex flex-col">
+            <SidebarSubItem
+              active={pathname === "/dashboard/notification"}
+              href="/dashboard/notification"
+            >
+              All Notifications
+            </SidebarSubItem>
+            <SidebarSubItem
+              isLast
+              active={pathname.startsWith("/dashboard/settings/notification")}
+              href="/dashboard/settings/notification"
+            >
+              Settings
+            </SidebarSubItem>
+          </div>
+        )}
+        <SidebarItem
           icon={<HiOutlineChartBar />}
           active={pathname.startsWith("/dashboard/report")}
           title={collapsed ? "Report" : undefined}
@@ -360,7 +398,13 @@ export function DashboardSidenav({
         >
           {!collapsed && "Help Center"}
         </SidebarItem>
-        <SidebarItem icon={<HiOutlineCog6Tooth />} title={collapsed ? "Settings" : undefined} className={itemClass}>
+        <SidebarItem
+          icon={<HiOutlineCog6Tooth />}
+          title={collapsed ? "Settings" : undefined}
+          className={itemClass}
+          href="/dashboard/settings/notification"
+          active={pathname.startsWith("/dashboard/settings")}
+        >
           {!collapsed && "Setting"}
         </SidebarItem>
 

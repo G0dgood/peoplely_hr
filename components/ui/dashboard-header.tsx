@@ -2,9 +2,9 @@
 
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { NotificationPopup } from "@/components/ui/notification-popup";
 import { FaSearch } from "react-icons/fa";
-import { HiOutlineMail, HiOutlineBell } from "react-icons/hi";
+import { HiOutlineMail } from "react-icons/hi";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -67,22 +67,14 @@ export function DashboardHeader({
       {/* Right side icons and profile */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-10 h-10 p-0 relative dark:hover:bg-gray-800"
+          <Link
+            href="/dashboard/message"
+            className="w-10 h-10 flex items-center justify-center rounded-xl relative hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <HiOutlineMail className="text-xl text-gray-500 dark:text-gray-400" />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-error border-2 border-white dark:border-gray-900" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-10 h-10 p-0 relative dark:hover:bg-gray-800"
-          >
-            <HiOutlineBell className="text-xl text-gray-500 dark:text-gray-400" />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-error border-2 border-white dark:border-gray-900" />
-          </Button>
+            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border-2 border-white dark:border-gray-900" />
+          </Link>
+          <NotificationPopup />
         </div>
 
         <div className="flex items-center gap-3 ml-2">

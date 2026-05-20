@@ -8,6 +8,7 @@ import {
   HiOutlinePencilSquare,
   HiOutlineTrash
 } from "react-icons/hi2";
+import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NewHolidayDrawer } from "@/components/ui/new-holiday-drawer";
@@ -41,6 +42,11 @@ export default function TimeOffSettingsPage() {
   const [isTypeDrawerOpen, setIsTypeDrawerOpen] = React.useState(false);
   const [isPolicyDrawerOpen, setIsPolicyDrawerOpen] = React.useState(false);
   const [policies, setPolicies] = React.useState(INITIAL_POLICIES);
+
+  const tabs: SettingsTabItem[] = [
+    { id: "holiday", label: "Holiday", icon: <HiOutlineCalendarDays className="text-lg" /> },
+    { id: "policies", label: "Types & Policies", icon: <HiOutlineDocumentText className="text-lg" /> },
+  ];
 
   const typeNames = Array.from(new Set(policies.map((p) => p.type)));
 
@@ -94,28 +100,13 @@ export default function TimeOffSettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Sidebar Tabs */}
-        <Card className="lg:col-span-3 p-4 flex flex-col gap-2">
-          <button
-            onClick={() => setActiveTab("holiday")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs ${activeTab === "holiday"
-                ? "bg-primary/5 text-primary"
-                : "text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
-              }`}
-          >
-            <HiOutlineCalendarDays className="text-lg" />
-            Holiday
-          </button>
-          <button
-            onClick={() => setActiveTab("policies")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-xs ${activeTab === "policies"
-                ? "bg-primary/5 text-primary"
-                : "text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
-              }`}
-          >
-            <HiOutlineDocumentText className="text-lg" />
-            Types & Policies
-          </button>
-        </Card>
+        <SettingsTabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          variant="emerald"
+          className="lg:col-span-3"
+        />
 
         {/* Content Area */}
         <Card className="lg:col-span-9 p-8">

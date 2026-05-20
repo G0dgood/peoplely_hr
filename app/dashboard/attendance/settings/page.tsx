@@ -8,6 +8,7 @@ import {
   HiOutlineCalendarDays,
   HiOutlineEllipsisVertical
 } from "react-icons/hi2";
+import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -19,12 +20,11 @@ export default function AttendanceSettingsPage() {
   const [startDate, setStartDate] = React.useState("11 Feb 2023");
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
 
-  const tabClass = (tab: TabType) =>
-    `w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-xs font-bold transition-all text-left ${
-      activeTab === tab
-        ? "bg-emerald-50 dark:bg-emerald-950/20 text-[#10B981] border border-emerald-100/50 dark:border-emerald-900/30"
-        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/40"
-    }`;
+  const tabs: SettingsTabItem[] = [
+    { id: "general", label: "General", icon: <HiOutlineCog6Tooth className="text-lg" /> },
+    { id: "location", label: "Location & Policy", icon: <HiOutlineGlobeAlt className="text-lg" /> },
+    { id: "qrcode", label: "QR Code", icon: <HiOutlineQrCode className="text-lg" /> },
+  ];
 
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full">
@@ -37,29 +37,12 @@ export default function AttendanceSettingsPage() {
       {/* Main Settings Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
         {/* Left Side settings nav */}
-        <Card className="p-4 border border-gray-200 dark:border-gray-800 flex flex-col gap-2">
-          <button
-            onClick={() => setActiveTab("general")}
-            className={tabClass("general")}
-          >
-            <HiOutlineCog6Tooth className="text-lg" />
-            <span>General</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("location")}
-            className={tabClass("location")}
-          >
-            <HiOutlineGlobeAlt className="text-lg" />
-            <span>Location & Policy</span>
-          </button>
-          <button
-            onClick={() => setActiveTab("qrcode")}
-            className={tabClass("qrcode")}
-          >
-            <HiOutlineQrCode className="text-lg" />
-            <span>QR Code</span>
-          </button>
-        </Card>
+        <SettingsTabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          variant="emerald"
+        />
 
         {/* Right Side Settings Form Container */}
         <Card className="p-8 border border-gray-200 dark:border-gray-800 md:col-span-3">

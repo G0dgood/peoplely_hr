@@ -7,6 +7,7 @@ import {
  HiOutlineCurrencyDollar,
  HiOutlineInformationCircle,
 } from "react-icons/hi2";
+import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
@@ -16,11 +17,11 @@ type TabType = "general" | "paycycle" | "compensation";
 export default function PayrollSettingsPage() {
  const [activeTab, setActiveTab] = React.useState<TabType>("general");
 
- const tabClass = (tab: TabType) =>
-  `w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-xs font-bold transition-all text-left ${activeTab === tab
-   ? "bg-emerald-50 dark:bg-emerald-950/20 text-[#10B981] border border-emerald-100/50 dark:border-emerald-900/30"
-   : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/40"
-  }`;
+ const tabs: SettingsTabItem[] = [
+  { id: "general", label: "General", icon: <HiOutlineCog6Tooth className="text-lg" /> },
+  { id: "paycycle", label: "Pay Cycle", icon: <HiOutlineCalendarDays className="text-lg" /> },
+  { id: "compensation", label: "Compensation", icon: <HiOutlineCurrencyDollar className="text-lg" /> },
+ ];
 
  return (
   <div className="flex flex-col gap-8 p-8 min-h-full">
@@ -34,20 +35,12 @@ export default function PayrollSettingsPage() {
    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
 
     {/* Left Nav */}
-    <Card className="p-4 border border-gray-200 dark:border-gray-800 flex flex-col gap-2">
-     <button onClick={() => setActiveTab("general")} className={tabClass("general")}>
-      <HiOutlineCog6Tooth className="text-lg" />
-      <span>General</span>
-     </button>
-     <button onClick={() => setActiveTab("paycycle")} className={tabClass("paycycle")}>
-      <HiOutlineCalendarDays className="text-lg" />
-      <span>Pay Cycle</span>
-     </button>
-     <button onClick={() => setActiveTab("compensation")} className={tabClass("compensation")}>
-      <HiOutlineCurrencyDollar className="text-lg" />
-      <span>Compensation</span>
-     </button>
-    </Card>
+    <SettingsTabs
+     tabs={tabs}
+     activeTab={activeTab}
+     onChange={setActiveTab}
+     variant="emerald"
+    />
 
     {/* Right Content */}
     <Card className="p-8 border border-gray-200 dark:border-gray-800 md:col-span-3">

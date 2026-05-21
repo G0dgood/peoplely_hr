@@ -26,6 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+
+import { PageHeader } from "@/components/ui/page-header";
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -280,10 +282,7 @@ export default function CandidatesPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Candidates</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">This is the data of all candidates who applied</p>
-        </div>
+        <PageHeader title="Candidates" description="This is the data of all candidates who applied" />
         <div className="flex items-center gap-3">
           <Button
             variant="primary"

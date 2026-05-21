@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   HiOutlineUsers,
   HiOutlineUserPlus,
@@ -26,59 +27,56 @@ const REPORT_CARDS: ReportCardProps[] = [
     icon: <HiOutlineUsers className="text-lg text-[#0FAF7A]" />,
     title: "Headcount (Point-in-time)",
     description: "Breakdown of all current employees.",
-    href: "/dashboard/report/headcount",
+    href: "/report/headcount",
   },
   {
     icon: <HiOutlineUserPlus className="text-lg text-[#0FAF7A]" />,
     title: "Onboarding",
     description: "Onboarding employees by month of their Join Date.",
-    href: "/dashboard/report/onboarding",
+    href: "/report/onboarding",
   },
   {
     icon: <HiOutlineUserMinus className="text-lg text-[#0FAF7A]" />,
     title: "Offboarding",
     description: "Offboarding and inactive employees by month of their Last Working Date.",
-    href: "/dashboard/report/offboarding",
+    href: "/report/offboarding",
   },
   {
     icon: <HiOutlineClock className="text-lg text-[#0FAF7A]" />,
     title: "Time Off Balance",
     description: "An overview of employees' time off balances.",
-    href: "/dashboard/report/time-off-balance",
+    href: "/report/time-off-balance",
   },
   {
     icon: <HiOutlineBriefcase className="text-lg text-[#0FAF7A]" />,
     title: "Recruitment Pipeline",
     description: "An overview of the hiring progress during a period of time.",
-    href: "/dashboard/report/recruitment",
+    href: "/report/recruitment",
   },
   {
     icon: <HiOutlineDocumentText className="text-lg text-[#0FAF7A]" />,
     title: "Employee Data Reports",
     description: "An overview of employee information.",
-    href: "/dashboard/report/employee-data",
+    href: "/report/employee-data",
   },
   {
     icon: <HiOutlineCalendarDays className="text-lg text-[#0FAF7A]" />,
     title: "Time Off Schedule",
     description: "An overview of employees' time off schedules.",
-    href: "/dashboard/report/time-off-schedule",
+    href: "/report/time-off-schedule",
   },
   {
     icon: <HiOutlinePresentationChartLine className="text-lg text-[#0FAF7A]" />,
     title: "Employee Turnover Rate",
     description: "An overview of the resigned employees over the active employees.",
-    href: "/dashboard/report/turnover-rate",
+    href: "/report/turnover-rate",
   },
 ];
 
 export default function ReportPage() {
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Report</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Here's report so far</p>
-      </div>
+      <PageHeader title="Report" description="Here's report so far" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {REPORT_CARDS.map((card, index) => (

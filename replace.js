@@ -1,23 +1,70 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
-function replaceInDir(dir) {
+// Find all .tsx files in app directory
+const findFiles = (dir, fileList = []) => {
   const files = fs.readdirSync(dir);
   for (const file of files) {
-    const fullPath = path.join(dir, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      replaceInDir(fullPath);
-    } else if (fullPath.endsWith('.tsx') || fullPath.endsWith('.ts')) {
-      let content = fs.readFileSync(fullPath, 'utf8');
-      content = content.replace(/border-gray-100/g, 'border-gray-200');
-      // Wait, if I change 100 to 200, I should probably change 200 to 300 to make them all more visible.
-      // But let's just make everything border-gray-300
-      content = content.replace(/border-gray-100/g, 'border-gray-300');
-      content = content.replace(/border-gray-200/g, 'border-gray-300');
-      fs.writeFileSync(fullPath, content);
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      findFiles(filePath, fileList);
+    } else if (filePath.endsWith('.tsx')) {
+      fileList.push(filePath);
+    }
+  }
+  return fileList;
+};
+
+const files = findFiles(path.join(process.cwd(), 'app'));
+
+const regex1 = /<div>\s*<h1 className="text-2xl font-bold text-gray-900 dark:text-white">([^<]+)<\/h1>\s*<p className="text-sm text-gray-500 dark:text-gray-400 mt-1">([^<]+)<\/p>\s*<\/div>/g;
+const regex2 = /<div>\s*<h1 className="text-2xl font-bold text-gray-900 dark:text-white">([^<]+)<\/h1>\s*<\/div>/g;
+const regex3 = /<h1 className="text-2xl font-bold text-gray-900 dark:text-white">([^<]+)<\/h1>/g; // Solo h1 tags without div wrapper
+
+for (const file of files) {
+  let content = fs.readFileSync(file, 'utf8');
+  let originalContent = content;
+  let modified = false;
+
+  // Replace full div > h1 + p
+  content = content.replace(regex1, (match, title, desc) => {
+    modified = true;
+    return `<PageHeader title="${title}" description="${desc}" />`;
+  });
+
+  // Replace full div > h1
+  content = content.replace(regex2, (match, title) => {
+    modified = true;
+    return `<PageHeader title="${title}" />`;
+  });
+  
+  if (modified) {
+    // Check if PageHeader is already imported
+    if (!content.includes('PageHeader')) {
+      console.log(`Failed to inject PageHeader import in ${file} because it should already be there since we replaced it, but wait, it's not imported yet`);
+    }
+    
+    if (!content.includes('import { PageHeader }')) {
+      // Find the last import statement
+      const importRegex = /^import\s+.*?;?\s*$/gm;
+      let lastIndex = 0;
+      let match;
+      while ((match = importRegex.exec(content)) !== null) {
+        lastIndex = match.index + match[0].length;
+      }
+      
+      const importStatement = `\nimport { PageHeader } from "@/components/ui/page-header";\n`;
+      if (lastIndex > 0) {
+        content = content.slice(0, lastIndex) + importStatement + content.slice(lastIndex);
+      } else {
+        content = importStatement + content;
+      }
+    }
+    
+    if (content !== originalContent) {
+      fs.writeFileSync(file, content);
+      console.log(`Updated ${file}`);
     }
   }
 }
-
-replaceInDir('./app');
-replaceInDir('./components');

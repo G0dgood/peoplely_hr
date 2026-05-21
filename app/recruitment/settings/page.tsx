@@ -29,6 +29,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/modal";
 import {
+
+import { PageHeader } from "@/components/ui/page-header";
   Table,
   TableBody,
   TableCell,
@@ -373,14 +375,9 @@ export default function RecruitmentSettingsPage() {
 
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Setting Recruitment</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {activeTab === "workflow" && "Hiring Workflow"}
+      <PageHeader title="Setting Recruitment" description="{activeTab === "workflow" && "Hiring Workflow"}
           {activeTab === "tags" && "Tag & Resource"}
-          {activeTab === "emails" && "Email Template"}
-        </p>
-      </div>
+          {activeTab === "emails" && "Email Template"}" />
 
       {/* Settings Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">

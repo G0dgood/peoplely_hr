@@ -8,6 +8,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import Link from "next/link";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 const DIRECTORY_DATA = [
   {
@@ -100,10 +102,7 @@ export default function DirectoryPage() {
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header Section */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Directory</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">This is director board</p>
-      </div>
+      <PageHeader title="Directory" description="This is director board" />
 
       {/* Directory Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

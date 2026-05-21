@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { AddFolderDrawer } from "@/components/ui/drawer";
 import { ShareModal, ShareOption } from "@/components/ui/modal/share-modal";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Table,
   TableBody,
@@ -192,10 +193,7 @@ export default function DocumentsPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with page meta and filter actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Documents</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">These are the uploaded documents</p>
-        </div>
+        <PageHeader title="Documents" description="These are the uploaded documents" />
 
         <div className="flex items-center gap-3">
           {/* Date Range Selection Indicator */}

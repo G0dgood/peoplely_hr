@@ -12,6 +12,8 @@ import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 type TabType = "general" | "location" | "qrcode";
 
@@ -29,10 +31,7 @@ export default function AttendanceSettingsPage() {
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header Section */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Setting Attendance</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Setting your Attendance</p>
-      </div>
+      <PageHeader title="Setting Attendance" description="Setting your Attendance" />
 
       {/* Main Settings Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">

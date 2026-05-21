@@ -134,6 +134,8 @@ import {
 } from "@/components/ui/pagination";
 import { TableActions } from "@/components/ui/table-actions";
 import { ProfileDrawer } from "@/components/ui/drawer";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 interface Employee {
   name: string;
@@ -166,10 +168,7 @@ export default function EmployeesPage() {
     <div className="flex flex-col gap-8 p-8 relative min-h-full">
       {/* Header Section */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Employees</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your Employee</p>
-        </div>
+        <PageHeader title="Employees" description="Manage your Employee" />
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -204,13 +203,11 @@ export default function EmployeesPage() {
             <Dropdown
               label="All Offices"
               options={["London Office", "New York Office", "Unpixel Office"]}
-              icon={<HiOutlineAdjustmentsHorizontal />}
               className="w-48"
             />
             <Dropdown
               label="All Job Titles"
               options={["UI UX Designer", "Graphic Designer", "Product Manager"]}
-              icon={<HiOutlineAdjustmentsHorizontal />}
               className="w-48"
             />
             <Dropdown

@@ -11,6 +11,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 interface OnboardingTask {
   id: number;
@@ -141,12 +143,7 @@ export default function OnboardingChecklistPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Page Title & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Checklist - Onboarding</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            These are some of the tasks that must be completed
-          </p>
-        </div>
+        <PageHeader title="Checklist - Onboarding" description="These are some of the tasks that must be completed" />
 
         <div className="flex items-center gap-3">
           {/* Office Filter Dropdown */}

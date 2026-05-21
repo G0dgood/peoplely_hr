@@ -11,6 +11,8 @@ import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
 import { Card } from "@/components/ui/card";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 type TabType = "general" | "paycycle" | "compensation";
 
@@ -26,10 +28,7 @@ export default function PayrollSettingsPage() {
  return (
   <div className="flex flex-col gap-8 p-8 min-h-full">
    {/* Header */}
-   <div>
-    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Setting Payroll</h1>
-    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Setting your payroll</p>
-   </div>
+   <PageHeader title="Setting Payroll" description="Setting your payroll" />
 
    {/* Settings Layout */}
    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">

@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { NewHolidayDrawer, NewTypeDrawer, NewPolicyDrawer } from "@/components/ui/drawer";
 import { TypePoliciesSection, INITIAL_POLICIES } from "@/components/ui/type-policies-section";
 import {
+
+import { PageHeader } from "@/components/ui/page-header";
   Table,
   TableBody,
   TableCell,
@@ -91,10 +93,7 @@ export default function TimeOffSettingsPage() {
   return (
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header Section */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Setting Time Off</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Setting your Time off here</p>
-      </div>
+      <PageHeader title="Setting Time Off" description="Setting your Time off here" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Sidebar Tabs */}

@@ -18,6 +18,7 @@ import {
   HiOutlineNewspaper,
 } from "react-icons/hi2";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { TableActions } from "@/components/ui/table-actions";
 
 interface NewsItem {
@@ -107,10 +108,7 @@ export default function NewsListPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with breadcrumbs and filters */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Latest News</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">List News</p>
-        </div>
+        <PageHeader title="Latest News" description="List News" />
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Status Dropdown */}

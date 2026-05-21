@@ -15,6 +15,8 @@ import {
   HiOutlineMagnifyingGlass,
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 interface HelpCategory {
   icon: React.ReactNode;
@@ -88,10 +90,7 @@ export default function HelpCenterPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with title and search bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Help Center</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">What can we help you with?</p>
-        </div>
+        <PageHeader title="Help Center" description="What can we help you with?" />
         <div className="relative w-full md:w-80">
           <input
             type="text"

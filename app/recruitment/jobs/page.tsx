@@ -22,6 +22,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
+import { PageHeader } from "@/components/ui/page-header";
+
 
 type JobStatus = "ACTIVE" | "CLOSED" | "UNACTIVE";
 
@@ -765,10 +767,7 @@ export default function RecruitmentJobsPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Recruitment</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Here's all job list</p>
-        </div>
+        <PageHeader title="Recruitment" description="Here's all job list" />
         <div className="flex items-center gap-3">
           <Input
             placeholder="Search what you need"

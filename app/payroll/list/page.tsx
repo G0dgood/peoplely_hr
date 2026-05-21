@@ -28,6 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+
+import { PageHeader } from "@/components/ui/page-header";
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -216,10 +218,7 @@ export default function PayrollListPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Payroll</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your team's payroll</p>
-        </div>
+        <PageHeader title="Payroll" description="Manage your team's payroll" />
         <div className="flex items-center gap-3">
           <Input
             placeholder="Search employee"

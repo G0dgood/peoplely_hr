@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react"
+import { motion } from "framer-motion"
 
 const Tabs = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className = '', ...props }, ref) => (
@@ -12,19 +15,29 @@ interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
-  ({ className = '', active = false, ...props }, ref) => (
+  ({ className = '', active = false, children, ...props }, ref) => (
     <button
       ref={ref}
       className={`
-        px-6 py-3 font-bold text-body-md transition-all border-b-2 -mb-[2px]
+        relative px-6 py-3 font-bold text-body-md transition-colors border-b-2 -mb-[2px] border-transparent
         ${active 
-          ? 'border-primary text-primary' 
-          : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:border-gray-700'
+          ? 'text-primary' 
+          : 'text-gray-500 hover:text-gray-900 hover:border-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:border-gray-700'
         }
         ${className}
       `}
       {...props}
-    />
+    >
+      {children}
+      {active && (
+        <motion.div
+          layoutId="activeTabUnderline"
+          className="absolute left-0 right-0 bottom-[-2px] h-[2px] bg-primary z-10"
+          initial={false}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        />
+      )}
+    </button>
   )
 )
 TabsTrigger.displayName = "TabsTrigger"

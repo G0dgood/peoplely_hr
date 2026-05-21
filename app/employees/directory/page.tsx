@@ -107,15 +107,15 @@ export default function DirectoryPage() {
       {/* Directory Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {DIRECTORY_DATA.map((person, index) => (
-          <Link key={index} href={`/dashboard/employees/${index + 1}`}>
-            <Card className="p-8 flex flex-col items-center text-center group hover:border-gray-400 dark:hover:border-gray-600 transition-colors h-full cursor-pointer">
+          <Link key={index} href={`/employees/${index + 1}`}>
+            <Card className="p-8 flex flex-col items-center text-center group hover:border-primary dark:hover:border-primary hover:shadow-md transition-all h-full cursor-pointer">
             <Avatar 
               src={person.avatar} 
               size="lg" 
               className="mb-6 ring-4 ring-gray-50 dark:ring-gray-800 group-hover:ring-primary/10 transition-all"
             />
             
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">
               {person.name}
             </h3>
             <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-6">

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { HiPlus, HiMinus } from "react-icons/hi2";
+import { motion, AnimatePresence } from "framer-motion";
 
 type OrgNodeData = {
   id: string;
@@ -72,9 +73,9 @@ const OrgNode = ({ node, toggleNode }: { node: OrgNodeData; toggleNode: (id: str
   const hasChildren = node.children !== undefined;
 
   return (
-    <div className="flex flex-col items-center">
+    <motion.div layout className="flex flex-col items-center">
       {/* Node Card */}
-      <div className="relative">
+      <motion.div layout className="relative">
         {node.isRoot ? (
           <div className="border border-gray-300 dark:border-gray-700 rounded-full px-6 py-2.5 text-sm font-bold text-gray-900 dark:text-white bg-white dark:bg-gray-900 relative z-10">
             {node.name}
@@ -97,38 +98,47 @@ const OrgNode = ({ node, toggleNode }: { node: OrgNodeData; toggleNode: (id: str
             {node.isExpanded ? <HiMinus className="text-[10px] stroke-2" /> : <HiPlus className="text-[10px] stroke-2" />}
           </button>
         )}
-      </div>
+      </motion.div>
 
       {/* Children Tree */}
+      <AnimatePresence>
       {hasChildren && node.isExpanded && node.children && node.children.length > 0 && (
-        <div className="org-tree-children relative pt-8 flex justify-center">
+        <motion.div 
+          layout
+          initial={{ opacity: 0, y: -20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+          className="org-tree-children relative pt-8 flex justify-center origin-top"
+        >
           {/* Vertical line from parent to horizontal line */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></div>
+          <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
 
           {node.children.map((child, index) => (
-            <div key={child.id} className="org-tree-node relative px-2 sm:px-4 pt-8 flex flex-col items-center">
+            <motion.div layout key={child.id} className="org-tree-node relative px-2 sm:px-4 pt-8 flex flex-col items-center">
               
               {/* Horizontal line connections */}
               {node.children!.length > 1 && (
                 <>
                   {index !== 0 && (
-                    <div className="absolute top-0 left-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></div>
+                    <motion.div layout className="absolute top-0 left-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
                   )}
                   {index !== node.children!.length - 1 && (
-                    <div className="absolute top-0 right-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></div>
+                    <motion.div layout className="absolute top-0 right-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
                   )}
                 </>
               )}
 
               {/* Vertical line to child */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></div>
+              <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
 
               <OrgNode node={child} toggleNode={toggleNode} />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
-    </div>
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

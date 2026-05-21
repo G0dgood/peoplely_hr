@@ -106,7 +106,7 @@ export default function EmployeeDetailPage() {
 
     {/* Right Column - Tabs and Content */}
     <div className="lg:col-span-8 flex flex-col gap-6">
-     <Card className="p-2 rounded-2xl">
+     <Card className="p-2 rounded-xl">
       <Tabs className="border-none">
        {TABS.map((tab) => (
         <TabsTrigger

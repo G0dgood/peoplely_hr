@@ -125,7 +125,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               <span className="text-[11px] font-bold text-gray-550 dark:text-gray-400">Upload CV</span>
               <div
                 onClick={() => cvInputRef.current?.click()}
-                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+                className="border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
               >
                 <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                   {cvName || "Upload File"}
@@ -150,7 +150,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               <span className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Photo</span>
               <div
                 onClick={() => photoInputRef.current?.click()}
-                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+                className="border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
               >
                 <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                   {photoName || "Upload Photo"}
@@ -176,7 +176,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
             <span className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Attachment</span>
             <div
               onClick={() => attachmentInputRef.current?.click()}
-              className="border border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
+              className="border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
             >
               <span className="text-xs font-semibold text-gray-555 dark:text-gray-400 truncate mr-2">
                 {attachmentName || "Upload attachment"}
@@ -245,7 +245,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
                 <select
                   value={job}
                   onChange={(e) => setJob(e.target.value)}
-                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
+                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
                 >
                   <option value="">Select job</option>
                   <option value="Designer">Designer</option>
@@ -262,7 +262,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
                 <select
                   value={source}
                   onChange={(e) => setSource(e.target.value)}
-                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
+                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
                 >
                   <option value="">Add source</option>
                   <option value="LinkedIn">LinkedIn</option>
@@ -281,7 +281,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               placeholder="Input cover letter"
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
-              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
+              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
             />
           </div>
         </ModalContent>

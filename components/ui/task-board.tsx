@@ -39,7 +39,7 @@ export function TaskBoard({
   const totalCount = tasks.length
 
   return (
-    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ${className}`} {...props}>
+    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ${className}`} {...props}>
       {/* Header bar */}
       <div className="flex items-center justify-between p-6 flex-wrap gap-4 border-b border-gray-50 dark:border-gray-800/50">
         <div className="flex items-center gap-4">
@@ -86,7 +86,7 @@ export function TaskBoard({
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800 text-body-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <tr className="border-b border-gray-300 dark:border-gray-800 text-body-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                   <th className="pb-4 pt-2 font-semibold">Task</th>
                   <th className="pb-4 pt-2 font-semibold">Due Date</th>
                   <th className="pb-4 pt-2 font-semibold">Assignee</th>
@@ -101,7 +101,7 @@ export function TaskBoard({
                         <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 border ${
                           task.completed 
                             ? "bg-primary/10 border-primary/20 text-primary" 
-                            : "border-gray-200 dark:border-gray-700 text-transparent"
+                            : "border-gray-300 dark:border-gray-700 text-transparent"
                         }`}>
                           <FaCheck className="text-[10px]" />
                         </span>
@@ -141,13 +141,13 @@ export function TaskBoard({
           {/* Mobile/Card list View */}
           <div className="flex flex-col gap-4 md:hidden">
             {tasks.map((task) => (
-              <div key={task.id} className="p-4 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-800/80 flex flex-col gap-3">
+              <div key={task.id} className="p-4 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-300 dark:border-gray-800/80 flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 border ${
                       task.completed 
                         ? "bg-primary/10 border-primary/20 text-primary" 
-                        : "border-gray-200 dark:border-gray-700 text-transparent"
+                        : "border-gray-300 dark:border-gray-700 text-transparent"
                     }`}>
                       <FaCheck className="text-[10px]" />
                     </span>
@@ -157,7 +157,7 @@ export function TaskBoard({
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between gap-4 pt-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between gap-4 pt-2 border-t border-gray-300 dark:border-gray-800">
                   <div className="flex items-center gap-2">
                     <Avatar src={task.assignee.avatar} size="sm" />
                     <span className="text-body-xs font-semibold text-gray-500 dark:text-gray-400">{task.assignee.name}</span>

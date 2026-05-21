@@ -14,15 +14,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const variants = {
       primary: "bg-primary text-white hover:bg-primary/90 focus:ring-primary dark:focus:ring-offset-gray-900",
-      outline: "border border-gray-200 bg-transparent text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 focus:ring-gray-200 dark:focus:ring-offset-gray-900",
+      outline: "border border-gray-300 bg-transparent text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 focus:ring-gray-200 dark:focus:ring-offset-gray-900",
       ghost: "bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 focus:ring-gray-100 dark:focus:ring-offset-gray-900",
       danger: "bg-error text-white hover:bg-red-600 focus:ring-error dark:focus:ring-offset-gray-900",
     };
 
     const sizes = {
-      sm: "h-10 px-4 text-body-sm",
-      md: "h-12 px-6 text-body-md",
-      lg: "h-14 px-8 text-body-lg",
+      sm: "h-8 px-3 text-xs",
+      md: "h-10 px-4 text-sm",
+      lg: "h-12 px-6 text-base",
     };
 
     const variantStyles = variants[variant];

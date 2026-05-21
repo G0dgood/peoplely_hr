@@ -22,7 +22,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center text-center p-8 py-16 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xs transition-all ${className}`}
+      className={`flex flex-col items-center justify-center text-center p-8 py-16 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-xs transition-all ${className}`}
     >
       {/* Icon Area */}
       {icon && (

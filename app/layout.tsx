@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import { DashboardWrapper } from "@/components/ui/dashboard-wrapper";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -22,7 +23,11 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <DashboardWrapper>
+          {children}
+        </DashboardWrapper>
+      </body>
     </html>
   );
 }

@@ -49,7 +49,7 @@ const PaginationPrevious = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to previous page"
-    className={`border border-gray-200 dark:border-gray-800 ${className}`}
+    className={`border border-gray-300 dark:border-gray-800 ${className}`}
     {...props}
   >
     <FaChevronLeft className="h-3 w-3 text-gray-500 dark:text-gray-400" />
@@ -63,7 +63,7 @@ const PaginationNext = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to next page"
-    className={`border border-gray-200 dark:border-gray-800 ${className}`}
+    className={`border border-gray-300 dark:border-gray-800 ${className}`}
     {...props}
   >
     <FaChevronRight className="h-3 w-3 text-gray-500 dark:text-gray-400" />

@@ -42,7 +42,7 @@ export function DashboardSidenav({
   const itemClass = collapsed ? "justify-center px-0" : "";
 
   useEffect(() => {
-    if (pathname.startsWith("/dashboard/checklist")) {
+    if (pathname.startsWith("/checklist")) {
       setExpandedItems((prev) => prev.includes("checklist") ? prev : [...prev, "checklist"]);
     }
   }, [pathname]);
@@ -57,12 +57,12 @@ export function DashboardSidenav({
     <Sidebar
       id="sidenav"
       collapsed={collapsed}
-      className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white"
+      className="bg-white dark:bg-gray-900 border-r border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
     >
       {/* ── Logo + collapse toggle ── */}
       <div
-        className={`flex items-center px-4 py-5 shrink-0 ${collapsed ? "justify-center" : "justify-between"
-          } border-gray-100 dark:border-gray-800/60`}
+        className={`flex items-center px-4 py-5 shrink-0 ${collapsed ? "justify-center flex-col gap-3" : "justify-between"
+          } dark:border-gray-800/60`}
       >
         <div className="flex items-center gap-2">
           <img
@@ -72,15 +72,14 @@ export function DashboardSidenav({
           />
           {!collapsed && (
             <span className="text-lg font-bold text-gray-900 dark:text-white">
-              HRDashboard
+              Peoplely HR
             </span>
           )}
         </div>
 
         <button
           onClick={() => onCollapse(!collapsed)}
-          className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${collapsed ? "hidden" : ""
-            } text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-gray-800`}
+          className="w-8 h-8 flex shrink-0 items-center justify-center rounded-lg transition-colors cursor-pointer text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-gray-800"
         >
           <HiMiniChevronDoubleLeft
             className={`transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
@@ -115,21 +114,21 @@ export function DashboardSidenav({
           {!collapsed && expandedItems.includes("employees") && (
             <div className="flex flex-col">
               <SidebarSubItem
-                active={pathname === "/dashboard/employees"}
-                href="/dashboard/employees"
+                active={pathname === "/employees"}
+                href="/employees"
               >
                 Manage Employees
               </SidebarSubItem>
               <SidebarSubItem
-                active={pathname === "/dashboard/employees/directory"}
-                href="/dashboard/employees/directory"
+                active={pathname === "/employees/directory"}
+                href="/employees/directory"
               >
                 Directory
               </SidebarSubItem>
               <SidebarSubItem
                 isLast
-                active={pathname === "/dashboard/employees/org-chart"}
-                href="/dashboard/employees/org-chart"
+                active={pathname === "/employees/org-chart"}
+                href="/employees/org-chart"
               >
                 ORG Chart
               </SidebarSubItem>
@@ -151,27 +150,27 @@ export function DashboardSidenav({
           {!collapsed && expandedItems.includes("checklist") && (
             <div className="flex flex-col">
               <SidebarSubItem
-                active={pathname === "/dashboard/checklist/to-dos"}
-                href="/dashboard/checklist/to-dos"
+                active={pathname === "/checklist/to-dos"}
+                href="/checklist/to-dos"
               >
                 To-Dos
               </SidebarSubItem>
               <SidebarSubItem
-                active={pathname === "/dashboard/checklist/onboarding"}
-                href="/dashboard/checklist/onboarding"
+                active={pathname === "/checklist/onboarding"}
+                href="/checklist/onboarding"
               >
                 Onboarding
               </SidebarSubItem>
               <SidebarSubItem
-                active={pathname === "/dashboard/checklist/offboarding"}
-                href="/dashboard/checklist/offboarding"
+                active={pathname === "/checklist/offboarding"}
+                href="/checklist/offboarding"
               >
                 Offboarding
               </SidebarSubItem>
               <SidebarSubItem
                 isLast
-                active={pathname === "/dashboard/checklist/setting"}
-                href="/dashboard/checklist/setting"
+                active={pathname === "/checklist/setting"}
+                href="/checklist/setting"
               >
                 Setting
               </SidebarSubItem>
@@ -180,28 +179,28 @@ export function DashboardSidenav({
         </div>
         <SidebarItem
           icon={<HiOutlineDocumentText />}
-          active={pathname === "/dashboard/documents"}
+          active={pathname === "/documents"}
           title={collapsed ? "Documents" : undefined}
           className={itemClass}
-          href="/dashboard/documents"
+          href="/documents"
         >
           {!collapsed && "Documents"}
         </SidebarItem>
         <SidebarItem
           icon={<HiOutlineNewspaper />}
-          active={pathname.startsWith("/dashboard/news")}
+          active={pathname.startsWith("/news")}
           title={collapsed ? "News" : undefined}
           className={itemClass}
-          href="/dashboard/news"
+          href="/news"
         >
           {!collapsed && "News"}
         </SidebarItem>
         <SidebarItem
           icon={<HiOutlineChatBubbleLeftRight />}
-          active={pathname.startsWith("/dashboard/message")}
+          active={pathname.startsWith("/message")}
           title={collapsed ? "Message" : undefined}
           className={itemClass}
-          href="/dashboard/message"
+          href="/message"
         >
           {!collapsed && "Message"}
         </SidebarItem>
@@ -218,27 +217,27 @@ export function DashboardSidenav({
         {!collapsed && expandedItems.includes("time-off") && (
           <div className="flex flex-col">
             <SidebarSubItem
-              active={pathname === "/dashboard/time-off/my-time-off"}
-              href="/dashboard/time-off/my-time-off"
+              active={pathname === "/time-off/my-time-off"}
+              href="/time-off/my-time-off"
             >
               My Time Off
             </SidebarSubItem>
             <SidebarSubItem
-              active={pathname === "/dashboard/time-off/team-time-off"}
-              href="/dashboard/time-off/team-time-off"
+              active={pathname === "/time-off/team-time-off"}
+              href="/time-off/team-time-off"
             >
               Team Time Off
             </SidebarSubItem>
             <SidebarSubItem
-              active={pathname === "/dashboard/time-off/employee-time-off"}
-              href="/dashboard/time-off/employee-time-off"
+              active={pathname === "/time-off/employee-time-off"}
+              href="/time-off/employee-time-off"
             >
               Employee Time Off
             </SidebarSubItem>
             <SidebarSubItem
               isLast
-              active={pathname === "/dashboard/time-off/settings"}
-              href="/dashboard/time-off/settings"
+              active={pathname === "/time-off/settings"}
+              href="/time-off/settings"
             >
               Settings
             </SidebarSubItem>
@@ -257,27 +256,27 @@ export function DashboardSidenav({
         {!collapsed && expandedItems.includes("attendance") && (
           <div className="flex flex-col">
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/attendance/my-attendance")}
-              href="/dashboard/attendance/my-attendance"
+              active={pathname.startsWith("/attendance/my-attendance")}
+              href="/attendance/my-attendance"
             >
               My Attendance
             </SidebarSubItem>
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/attendance/team-attendance")}
-              href="/dashboard/attendance/team-attendance"
+              active={pathname.startsWith("/attendance/team-attendance")}
+              href="/attendance/team-attendance"
             >
               Team Attendance
             </SidebarSubItem>
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/attendance/employee-attendance")}
-              href="/dashboard/attendance/employee-attendance"
+              active={pathname.startsWith("/attendance/employee-attendance")}
+              href="/attendance/employee-attendance"
             >
               Employee Attendance
             </SidebarSubItem>
             <SidebarSubItem
               isLast
-              active={pathname.startsWith("/dashboard/attendance/settings")}
-              href="/dashboard/attendance/settings"
+              active={pathname.startsWith("/attendance/settings")}
+              href="/attendance/settings"
             >
               Settings
             </SidebarSubItem>
@@ -296,15 +295,15 @@ export function DashboardSidenav({
         {!collapsed && expandedItems.includes("payroll") && (
           <div className="flex flex-col">
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/payroll/list")}
-              href="/dashboard/payroll/list"
+              active={pathname.startsWith("/payroll/list")}
+              href="/payroll/list"
             >
               Employee Payroll
             </SidebarSubItem>
             <SidebarSubItem
               isLast
-              active={pathname.startsWith("/dashboard/payroll/settings")}
-              href="/dashboard/payroll/settings"
+              active={pathname.startsWith("/payroll/settings")}
+              href="/payroll/settings"
             >
               Settings
             </SidebarSubItem>
@@ -326,21 +325,21 @@ export function DashboardSidenav({
         {!collapsed && expandedItems.includes("recruitment") && (
           <div className="flex flex-col">
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/recruitment/jobs")}
-              href="/dashboard/recruitment/jobs"
+              active={pathname.startsWith("/recruitment/jobs")}
+              href="/recruitment/jobs"
             >
               Jobs
             </SidebarSubItem>
             <SidebarSubItem
-              active={pathname.startsWith("/dashboard/recruitment/candidates")}
-              href="/dashboard/recruitment/candidates"
+              active={pathname.startsWith("/recruitment/candidates")}
+              href="/recruitment/candidates"
             >
               Candidates
             </SidebarSubItem>
             <SidebarSubItem
               isLast
-              active={pathname.startsWith("/dashboard/recruitment/settings")}
-              href="/dashboard/recruitment/settings"
+              active={pathname.startsWith("/recruitment/settings")}
+              href="/recruitment/settings"
             >
               Settings
             </SidebarSubItem>
@@ -359,15 +358,15 @@ export function DashboardSidenav({
         {!collapsed && expandedItems.includes("notification") && (
           <div className="flex flex-col">
             <SidebarSubItem
-              active={pathname === "/dashboard/notification"}
-              href="/dashboard/notification"
+              active={pathname === "/notification"}
+              href="/notification"
             >
               All Notifications
             </SidebarSubItem>
             <SidebarSubItem
               isLast
-              active={pathname.startsWith("/dashboard/settings/notification")}
-              href="/dashboard/settings/notification"
+              active={pathname.startsWith("/settings/notification")}
+              href="/settings/notification"
             >
               Settings
             </SidebarSubItem>
@@ -375,10 +374,10 @@ export function DashboardSidenav({
         )}
         <SidebarItem
           icon={<HiOutlineChartBar />}
-          active={pathname.startsWith("/dashboard/report")}
+          active={pathname.startsWith("/report")}
           title={collapsed ? "Report" : undefined}
           className={itemClass}
-          href="/dashboard/report"
+          href="/report"
         >
           {!collapsed && "Report"}
         </SidebarItem>
@@ -386,15 +385,15 @@ export function DashboardSidenav({
 
       {/* ── Footer ── */}
       <div
-        className="p-3 flex flex-col gap-1 border-gray-100 dark:border-gray-800/60"
+        className="p-3 flex flex-col gap-1 border-t border-gray-300 dark:border-gray-800/60"
       >
-        <SidebarItem 
-          icon={<HiOutlineQuestionMarkCircle />} 
-          badge={8} 
-          title={collapsed ? "Help Center" : undefined} 
+        <SidebarItem
+          icon={<HiOutlineQuestionMarkCircle />}
+          badge={8}
+          title={collapsed ? "Help Center" : undefined}
           className={itemClass}
-          href="/dashboard/help-center"
-          active={pathname === "/dashboard/help-center"}
+          href="/help-center"
+          active={pathname === "/help-center"}
         >
           {!collapsed && "Help Center"}
         </SidebarItem>
@@ -402,8 +401,8 @@ export function DashboardSidenav({
           icon={<HiOutlineCog6Tooth />}
           title={collapsed ? "Settings" : undefined}
           className={itemClass}
-          href="/dashboard/settings/notification"
-          active={pathname.startsWith("/dashboard/settings")}
+          href="/settings/notification"
+          active={pathname.startsWith("/settings")}
         >
           {!collapsed && "Setting"}
         </SidebarItem>

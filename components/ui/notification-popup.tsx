@@ -85,7 +85,7 @@ export function NotificationPopup() {
 
       {/* Popup */}
       {open && (
-        <div className="absolute right-0 top-[calc(100%+12px)] w-[360px] bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 top-[calc(100%+12px)] w-[360px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-xl z-50 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-3">
             <span className="text-sm font-bold text-gray-900 dark:text-white">Notification</span>

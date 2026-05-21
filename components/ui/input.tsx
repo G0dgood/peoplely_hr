@@ -30,14 +30,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={`
-              w-full h-12 rounded-xl text-body-md bg-white border outline-none transition-colors
+              w-full h-10 rounded-xl text-sm bg-white border outline-none transition-colors
               dark:bg-gray-800 dark:text-white
               placeholder:text-gray-400
               ${leftIcon ? 'pl-11' : 'pl-4'}
               ${rightIcon ? 'pr-11' : 'pr-4'}
               ${error 
                 ? 'border-error focus:border-error focus:ring-1 focus:ring-error' 
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary'
+                : 'border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary'
               }
               ${props.disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900' : ''}
               ${className}

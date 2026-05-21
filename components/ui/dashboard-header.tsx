@@ -25,7 +25,7 @@ export function DashboardHeader({
 
   return (
     <header id="header"
-      className="flex items-center justify-between px-8 h-20 transition-colors bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
+      className="flex items-center justify-between px-8 h-20 transition-colors bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-800"
     >
       {/* Search and Nav links */}
       <div className="flex items-center gap-8">
@@ -34,20 +34,20 @@ export function DashboardHeader({
             placeholder="Search anything..."
             leftIcon={<FaSearch className="text-gray-400 text-sm" />}
             rightIcon={
-              <span className="text-[11px] font-semibold border px-1.5 py-0.5 rounded-md select-none text-gray-400 border-gray-200 bg-white dark:text-gray-500 dark:border-gray-800 dark:bg-gray-900">
+              <span className="text-[11px] font-semibold border px-1.5 py-0.5 rounded-md select-none text-gray-400 border-gray-300 bg-white dark:text-gray-500 dark:border-gray-800 dark:bg-gray-900">
                 ⌘ F
               </span>
             }
-            className="h-11 rounded-xl text-sm bg-gray-50 border-gray-200 placeholder:text-gray-400 dark:bg-gray-900 dark:border-gray-800 dark:text-white dark:placeholder:text-gray-600"
+            className="h-11 rounded-xl text-sm bg-gray-50 border-gray-300 placeholder:text-gray-400 dark:bg-gray-900 dark:border-gray-800 dark:text-white dark:placeholder:text-gray-600"
           />
         </div>
 
         <nav className="hidden xl:flex items-center gap-6">
           {[
-            { name: "Documents", href: "/dashboard/documents" },
-            { name: "News", href: "/dashboard/news" },
+            { name: "Documents", href: "/documents" },
+            { name: "News", href: "/news" },
             { name: "Payslip", href: "#" },
-            { name: "Report", href: "/dashboard/report" },
+            { name: "Report", href: "/report" },
           ].map((item) => (
             <Link
               key={item.name}
@@ -68,7 +68,7 @@ export function DashboardHeader({
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <Link
-            href="/dashboard/message"
+            href="/message"
             className="w-10 h-10 flex items-center justify-center rounded-xl relative hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <HiOutlineMail className="text-xl text-gray-500 dark:text-gray-400" />
@@ -78,7 +78,7 @@ export function DashboardHeader({
         </div>
 
         <div className="flex items-center gap-3 ml-2">
-          <Avatar src={userAvatar} size="sm" className="rounded-full border-2 border-gray-100 dark:border-gray-800" />
+          <Avatar src={userAvatar} size="sm" className="rounded-full border-2 border-gray-300 dark:border-gray-800" />
         </div>
       </div>
     </header>

@@ -32,12 +32,12 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 !bg-black/20 dark:bg-black/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 !bg-black/20 dark:bg-black/40  transition-opacity"
         onClick={onClose}
       />
       <div className="relative w-full max-w-2xl bg-white dark:bg-gray-950 h-full shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out translate-x-0">
         {/* Floating Close Button */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -63,13 +63,13 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
                 label="Effective from"
                 required
                 value="09 Mar 2023"
-                onChange={() => {}}
+                onChange={() => { }}
                 rightIcon={<HiOutlineCalendar className="text-gray-400 dark:text-gray-500 text-lg" />}
               />
               <Input
                 label="Standard working hours/day"
                 value="8h 00m"
-                onChange={() => {}}
+                onChange={() => { }}
                 rightIcon={<HiOutlineClock className="text-gray-400 dark:text-gray-500 text-lg" />}
               />
             </div>
@@ -81,19 +81,17 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Duration-based */}
-                <div 
+                <div
                   onClick={() => setScheduleType("duration")}
-                  className={`border rounded-xl p-4 cursor-pointer transition-colors ${
-                    scheduleType === "duration" 
-                      ? "border-[#0FAF7A] bg-emerald-50/30 dark:bg-emerald-900/10" 
-                      : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
-                  }`}
+                  className={`border rounded-xl p-4 cursor-pointer transition-colors ${scheduleType === "duration"
+                    ? "border-[#0FAF7A] bg-emerald-50/30 dark:bg-emerald-900/10"
+                    : "border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
+                    }`}
                 >
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-bold text-gray-900 dark:text-white">Duration-based</span>
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                      scheduleType === "duration" ? "border-[#0FAF7A]" : "border-gray-300 dark:border-gray-600"
-                    }`}>
+                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${scheduleType === "duration" ? "border-[#0FAF7A]" : "border-gray-300 dark:border-gray-600"
+                      }`}>
                       {scheduleType === "duration" && <div className="w-2 h-2 rounded-full bg-[#0FAF7A]" />}
                     </div>
                   </div>
@@ -102,19 +100,17 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
                   </p>
                 </div>
                 {/* Clock-based */}
-                <div 
+                <div
                   onClick={() => setScheduleType("clock")}
-                  className={`border rounded-xl p-4 cursor-pointer transition-colors ${
-                    scheduleType === "clock" 
-                      ? "border-[#0FAF7A] bg-emerald-50/30 dark:bg-emerald-900/10" 
-                      : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
-                  }`}
+                  className={`border rounded-xl p-4 cursor-pointer transition-colors ${scheduleType === "clock"
+                    ? "border-[#0FAF7A] bg-emerald-50/30 dark:bg-emerald-900/10"
+                    : "border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
+                    }`}
                 >
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-bold text-gray-900 dark:text-white">Clock-based</span>
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                      scheduleType === "clock" ? "border-[#0FAF7A]" : "border-gray-300 dark:border-gray-600"
-                    }`}>
+                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${scheduleType === "clock" ? "border-[#0FAF7A]" : "border-gray-300 dark:border-gray-600"
+                      }`}>
                       {scheduleType === "clock" && <div className="w-2 h-2 rounded-full bg-[#0FAF7A]" />}
                     </div>
                   </div>
@@ -130,22 +126,22 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
               <label className="text-body-sm font-bold text-gray-900 dark:text-white">
                 Working Time
               </label>
-              <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-                <div className="flex px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 text-[11px] font-bold text-gray-400 dark:text-gray-500 border-b border-gray-200 dark:border-gray-800">
+              <div className="border border-gray-300 dark:border-gray-800 rounded-xl overflow-hidden">
+                <div className="flex px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 text-[11px] font-bold text-gray-400 dark:text-gray-500 border-b border-gray-300 dark:border-gray-800">
                   <div className="flex-1">Working Day</div>
                   <div className="flex-1">Time</div>
                 </div>
                 <div className="flex flex-col">
                   {workingDays.map((day, idx) => (
-                    <div key={day.day} className={`flex items-center px-6 py-4 ${idx !== workingDays.length - 1 ? 'border-b border-gray-100 dark:border-gray-800/50' : ''}`}>
+                    <div key={day.day} className={`flex items-center px-6 py-4 ${idx !== workingDays.length - 1 ? 'border-b border-gray-300 dark:border-gray-800/50' : ''}`}>
                       <div className="flex-1 flex items-center gap-4">
-                        <Toggle 
-                          checked={day.active} 
+                        <Toggle
+                          checked={day.active}
                           onChange={() => {
                             const newDays = [...workingDays];
                             newDays[idx].active = !newDays[idx].active;
                             setWorkingDays(newDays);
-                          }} 
+                          }}
                         />
                         <span className="text-xs font-bold text-gray-900 dark:text-white">{day.day}</span>
                       </div>
@@ -171,18 +167,18 @@ export function AddWorkScheduleDrawer({ isOpen, onClose }: AddWorkScheduleDrawer
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-950 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
           <div className="text-xs font-bold text-gray-900 dark:text-white">
             Total Working Time : <span className="text-[#0FAF7A]">40h 00m</span>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto">
-            <button 
+            <button
               onClick={onClose}
-              className="flex-1 sm:flex-none h-11 px-8 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="flex-1 sm:flex-none h-11 px-8 rounded-xl border border-gray-300 dark:border-gray-700 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               Cancel
             </button>
-            <button 
+            <button
               onClick={onClose}
               className="flex-1 sm:flex-none h-11 px-8 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-sm font-bold hover:opacity-90 transition-opacity"
             >

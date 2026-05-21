@@ -76,7 +76,7 @@ export function TypePoliciesSection({
         const originalIndex = firstItem?.originalIndex ?? 0;
 
         return (
-          <Card key={typeName} className="p-8 border border-gray-100 dark:border-gray-800">
+          <Card key={typeName} className="p-8 border border-gray-300 dark:border-gray-800">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{typeName}</h3>

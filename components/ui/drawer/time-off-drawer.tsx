@@ -25,12 +25,12 @@ export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
       <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full shadow-2xl flex flex-col">
         {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -75,7 +75,7 @@ export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) 
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Attachment</span>
               <div className="flex flex-col gap-4">
                 <span className="text-xs font-bold text-gray-900 dark:text-white">-</span>
-                <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl">
                   <span className="text-xs font-bold text-gray-900 dark:text-white">Upload attachment</span>
                   <HiOutlineDocumentArrowUp className="text-gray-400 dark:text-gray-500 text-xl" />
                 </div>
@@ -87,7 +87,7 @@ export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) 
           </div>
         </div>
 
-        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4">
           <Button
             variant="outline"
             className="flex-1 font-bold h-12"

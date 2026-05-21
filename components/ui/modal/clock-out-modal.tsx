@@ -32,7 +32,7 @@ export function ClockOutModal({
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      className="p-8 border border-gray-200 dark:border-gray-800"
+      className="p-8 border border-gray-300 dark:border-gray-800"
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
@@ -55,7 +55,7 @@ export function ClockOutModal({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Input notes here"
-            className="w-full min-h-[100px] px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary resize-none"
+            className="w-full min-h-[100px] px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary resize-none"
           />
         </div>
 

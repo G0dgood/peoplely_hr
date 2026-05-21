@@ -21,7 +21,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
     return (
       <div
         ref={ref}
-        className={`relative flex shrink-0 overflow-hidden rounded-full bg-gray-100 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 ${sizes[size]} ${className}`}
+        className={`relative flex shrink-0 overflow-hidden rounded-full bg-gray-100 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 ${sizes[size]} ${className}`}
         {...props}
       >
         {src ? (

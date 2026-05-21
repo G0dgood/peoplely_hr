@@ -96,10 +96,10 @@ export const SidebarSubItem = React.forwardRef<HTMLButtonElement, SidebarSubItem
     return (
       <div className="relative flex items-center group h-11">
         {/* Vertical line connector */}
-        <div className={`absolute left-[26px] top-0 w-[1px] bg-gray-200 dark:bg-gray-800 ${isLast ? 'h-[22px]' : 'h-full'}`} />
+        <div className={`absolute left-[26px] top-0 w-[1px] bg-gray-300 dark:bg-gray-700 ${isLast ? 'h-[22px]' : 'h-full'}`} />
 
         {/* Horizontal elbow connector */}
-        <div className="absolute left-[26px] top-[22px] w-[14px] h-[1px] bg-gray-200 dark:bg-gray-800" />
+        <div className="absolute left-[26px] top-[22px] w-[14px] h-[1px] bg-gray-300 dark:bg-gray-700" />
 
         {href ? (
           <Link href={href} className={classes}>

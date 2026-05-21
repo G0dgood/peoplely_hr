@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Input your registered email"
-              className="w-full py-3 px-4 text-body-sm rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full py-3 px-4 text-body-sm rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               required
             />
           </div>
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
 
             <Link
               href="/login"
-              className="w-full py-3.5 rounded-xl font-bold text-body-sm text-center border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
+              className="w-full py-3.5 rounded-xl font-bold text-body-sm text-center border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
             >
               Back to Login
             </Link>

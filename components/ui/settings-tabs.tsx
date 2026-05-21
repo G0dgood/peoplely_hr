@@ -40,7 +40,7 @@ export function SettingsTabs({
   };
 
   return (
-    <Card className={`p-4 border border-gray-200 dark:border-gray-800 flex flex-col gap-2 ${className}`}>
+    <Card className={`p-4 border border-gray-300 dark:border-gray-800 flex flex-col gap-2 ${className}`}>
       {tabs.map((tab) => (
         <button
           key={tab.id}

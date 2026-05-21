@@ -36,7 +36,7 @@ export function TaskAccordionItem({
   }
 
   return (
-    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm transition-all duration-200 overflow-hidden ${className}`}>
+    <div className={`w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl shadow-sm transition-all duration-200 overflow-hidden ${className}`}>
       
       {/* Header Row */}
       <div 

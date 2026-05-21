@@ -55,7 +55,7 @@ export function NotificationCard({
   ...props 
 }: NotificationCardProps) {
   return (
-    <div className={`w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col gap-6 ${className}`} {...props}>
+    <div className={`w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl border border-gray-300 dark:border-gray-800 shadow-xl overflow-hidden p-6 flex flex-col gap-6 ${className}`} {...props}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
         <button className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">

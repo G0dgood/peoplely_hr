@@ -89,7 +89,7 @@ export default function LoginPage() {
                       ? "border-error focus:ring-error/20 focus:border-error"
                       : emailIsValidated
                         ? "border-[#10B981] focus:ring-primary/20 focus:border-primary"
-                        : "border-gray-200 focus:ring-primary/20 focus:border-primary"
+                        : "border-gray-300 focus:ring-primary/20 focus:border-primary"
                   }`}
                 />
                 {emailIsValidated && (
@@ -117,7 +117,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Input your password account"
-                  className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
                 <button
                   type="button"
@@ -138,7 +138,7 @@ export default function LoginPage() {
                 <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                   rememberMe 
                     ? "bg-[#10B981] border-[#10B981] text-white" 
-                    : "border-gray-200 hover:border-gray-300 bg-white"
+                    : "border-gray-300 hover:border-gray-300 bg-white"
                 }`}>
                   {rememberMe && <FaCheck className="text-[10px]" />}
                 </div>
@@ -173,14 +173,14 @@ export default function LoginPage() {
             <div className="flex gap-4">
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
+                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
               >
                 <FaGoogle className="text-red-500 text-sm" />
                 <span>Google</span>
               </button>
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
+                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
               >
                 <FaApple className="text-black text-base" />
                 <span>Apple</span>
@@ -198,7 +198,7 @@ export default function LoginPage() {
           </div>
 
           {/* Quick Demo Helper */}
-          <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 flex flex-col gap-1 text-[11px] text-gray-500">
+          <div className="bg-gray-50 border border-gray-300 rounded-xl p-3 flex flex-col gap-1 text-[11px] text-gray-500">
             <span className="font-bold text-gray-700">Quick Test Inputs:</span>
             <span>Type <strong className="text-primary select-all">pristia@gmail.com</strong> for a valid state mockup.</span>
             <span>Type <strong className="text-error select-all">duarte@gmail.com</strong> for an error state mockup.</span>

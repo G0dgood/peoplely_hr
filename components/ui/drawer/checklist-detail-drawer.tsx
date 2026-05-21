@@ -47,13 +47,13 @@ export function ChecklistDetailDrawer({
     <div className="fixed inset-0 z-[100] flex justify-end">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
       {/* Drawer Panel */}
       <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-all duration-300">
         {/* Dismiss button on left edge */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -128,12 +128,12 @@ export function ChecklistDetailDrawer({
         </div>
 
         {/* Footer actions */}
-        <div className="p-8 border-t border-gray-100/50 dark:border-gray-800/30 flex items-center gap-4 bg-white dark:bg-gray-900">
+        <div className="p-8 border-t border-gray-300/50 dark:border-gray-800/30 flex items-center gap-4 bg-white dark:bg-gray-900">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
-            className="flex-1 font-bold h-12 border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Button>

@@ -63,7 +63,7 @@ export default function UpdatePasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Input your password account"
-                className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
               <button
                 type="button"
@@ -137,7 +137,7 @@ export default function UpdatePasswordPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-type your new password"
-                className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
               <button
                 type="button"

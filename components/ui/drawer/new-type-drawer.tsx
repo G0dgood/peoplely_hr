@@ -35,15 +35,15 @@ export function NewTypeDrawer({ isOpen, onClose, onAdd }: NewTypeDrawerProps) {
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
-      <form 
+      <form
         onSubmit={handleSubmit}
         className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl"
       >
         {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -63,11 +63,11 @@ export function NewTypeDrawer({ isOpen, onClose, onAdd }: NewTypeDrawerProps) {
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Type Name <span className="text-red-500">*</span>
               </label>
-              <Input 
+              <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Engagement" 
-                className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800"
+                placeholder="Engagement"
+                className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800"
                 required
               />
             </div>
@@ -81,36 +81,32 @@ export function NewTypeDrawer({ isOpen, onClose, onAdd }: NewTypeDrawerProps) {
                 <button
                   type="button"
                   onClick={() => setPaidType("paid")}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                    paidType === "paid"
-                      ? "border-primary bg-white dark:bg-gray-900"
-                      : "border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
-                  }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${paidType === "paid"
+                    ? "border-primary bg-white dark:bg-gray-900"
+                    : "border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
+                    }`}
                 >
                   <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Paid</span>
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                    paidType === "paid"
-                      ? "border-primary animate-scaleIn"
-                      : "border-gray-200 dark:border-gray-800"
-                  }`}>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${paidType === "paid"
+                    ? "border-primary animate-scaleIn"
+                    : "border-gray-300 dark:border-gray-800"
+                    }`}>
                     {paidType === "paid" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                   </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPaidType("unpaid")}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                    paidType === "unpaid"
-                      ? "border-primary bg-white dark:bg-gray-900"
-                      : "border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
-                  }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${paidType === "unpaid"
+                    ? "border-primary bg-white dark:bg-gray-900"
+                    : "border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
+                    }`}
                 >
                   <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Unpaid</span>
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                    paidType === "unpaid"
-                      ? "border-primary"
-                      : "border-gray-200 dark:border-gray-800"
-                  }`}>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${paidType === "unpaid"
+                    ? "border-primary"
+                    : "border-gray-300 dark:border-gray-800"
+                    }`}>
                     {paidType === "unpaid" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                   </div>
                 </button>
@@ -126,36 +122,32 @@ export function NewTypeDrawer({ isOpen, onClose, onAdd }: NewTypeDrawerProps) {
                 <button
                   type="button"
                   onClick={() => setUnit("days")}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                    unit === "days"
-                      ? "border-primary bg-white dark:bg-gray-900"
-                      : "border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
-                  }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${unit === "days"
+                    ? "border-primary bg-white dark:bg-gray-900"
+                    : "border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
+                    }`}
                 >
                   <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Days</span>
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                    unit === "days"
-                      ? "border-primary"
-                      : "border-gray-200 dark:border-gray-800"
-                  }`}>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${unit === "days"
+                    ? "border-primary"
+                    : "border-gray-300 dark:border-gray-800"
+                    }`}>
                     {unit === "days" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                   </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => setUnit("hours")}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-                    unit === "hours"
-                      ? "border-primary bg-white dark:bg-gray-900"
-                      : "border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
-                  }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${unit === "hours"
+                    ? "border-primary bg-white dark:bg-gray-900"
+                    : "border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900"
+                    }`}
                 >
                   <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Hours</span>
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                    unit === "hours"
-                      ? "border-primary"
-                      : "border-gray-200 dark:border-gray-800"
-                  }`}>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${unit === "hours"
+                    ? "border-primary"
+                    : "border-gray-300 dark:border-gray-800"
+                    }`}>
                     {unit === "hours" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                   </div>
                 </button>
@@ -165,7 +157,7 @@ export function NewTypeDrawer({ isOpen, onClose, onAdd }: NewTypeDrawerProps) {
         </div>
 
         {/* Action Footer */}
-        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4">
           <Button
             type="button"
             variant="outline"

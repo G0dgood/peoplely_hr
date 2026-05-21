@@ -31,7 +31,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         warning: "border-transparent bg-warning text-black",
         error: "border-transparent bg-error text-white",
         gray: "border-transparent bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white",
-        outline: "text-gray-900 border border-gray-200 dark:border-gray-700 dark:text-white",
+        outline: "text-gray-900 border border-gray-300 dark:border-gray-700 dark:text-white",
       };
       variantStyles = solidVariants[variant] || solidVariants.primary;
     }

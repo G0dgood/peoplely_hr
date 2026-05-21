@@ -139,19 +139,19 @@ export default function Home() {
       <Link href="/login" className="px-4 py-2 rounded-xl bg-[#11131A] text-white hover:bg-black font-bold text-body-xs transition-colors shadow-sm">
        Login
       </Link>
-      <Link href="/register" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+      <Link href="/register" className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
        Register
       </Link>
-      <Link href="/forgot-password" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+      <Link href="/forgot-password" className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
        Reset Password
       </Link>
-      <Link href="/otp-verify" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+      <Link href="/otp-verify" className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
        OTP Verify
       </Link>
-      <Link href="/update-password" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+      <Link href="/update-password" className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
        Update Password
       </Link>
-      <Link href="/password-success" className="px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
+      <Link href="/password-success" className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold text-body-xs transition-colors shadow-sm bg-white">
        Success Screen
       </Link>
      </div>
@@ -227,7 +227,7 @@ export default function Home() {
      </p>
      <div className="flex flex-wrap gap-4 mt-4">
       {['Bold', 'Semibold', 'Medium', 'Regular'].map((weight) => (
-       <div key={weight} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 w-32 flex flex-col items-center justify-center gap-2">
+       <div key={weight} className="bg-white p-4 rounded-xl shadow-sm border border-gray-300 w-32 flex flex-col items-center justify-center gap-2">
         <span className={`text-4xl ${weight === 'Bold' ? 'font-bold' :
          weight === 'Semibold' ? 'font-semibold' :
           weight === 'Medium' ? 'font-medium' : 'font-normal'
@@ -384,7 +384,7 @@ export default function Home() {
       <div>
        <h3 className="h3 mb-6">Component Label</h3>
        <div className="flex flex-col gap-4 max-w-sm">
-        <div className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center gap-4 bg-white border border-gray-300 rounded-2xl p-4 shadow-sm">
          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-900">
           <FaSun />
          </div>
@@ -396,7 +396,7 @@ export default function Home() {
          </div>
          <span className="font-bold text-white text-body-lg">Dark Mode</span>
         </div>
-        <div className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center gap-4 bg-white border border-gray-300 rounded-2xl p-4 shadow-sm">
          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-900">
           <FaBookmark />
          </div>
@@ -408,14 +408,14 @@ export default function Home() {
       <div>
        <h3 className="h3 mb-6">Header Title</h3>
        <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+        <div className="flex items-center justify-between border-b border-gray-300 pb-4">
          <div>
           <h1 className="h1">Header Title</h1>
           <p className="text-gray-500 text-body-sm mt-2">The style guide provides to change stylistic for your design site.</p>
          </div>
          <Badge variant="gray">www.website.co</Badge>
         </div>
-        <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+        <div className="flex items-center justify-between border-b border-gray-300 pb-4">
          <div>
           <h2 className="h4 font-bold">HR Management Platform</h2>
           <p className="text-gray-500 text-body-xs mt-1">12,000+ active users</p>
@@ -510,7 +510,7 @@ export default function Home() {
           </div>
          </div>
         </CardContent>
-        <CardFooter className="pt-4 border-t border-gray-100">
+        <CardFooter className="pt-4 border-t border-gray-300">
          <Button variant="outline" className="w-full justify-center">View Profile</Button>
         </CardFooter>
        </Card>
@@ -593,8 +593,8 @@ export default function Home() {
        <div className="flex gap-6 items-start">
 
         {/* Light Mode Sidebar */}
-        <div className="h-[800px] w-60 shadow-xl rounded-2xl overflow-hidden border border-gray-200 bg-white flex flex-col transition-all duration-300 hover:shadow-2xl">
-         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
+        <div className="h-[800px] w-60 shadow-xl rounded-2xl overflow-hidden border border-gray-300 bg-white flex flex-col transition-all duration-300 hover:shadow-2xl">
+         <div className="flex items-center justify-between px-4 py-5 border-b border-gray-300">
           <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-6 w-auto" />
           <button className="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-50">
            <FaAngleDoubleLeft />
@@ -618,7 +618,7 @@ export default function Home() {
           <SidebarItem icon={<FaBriefcase />} hasSubmenu className="bg-transparent hover:bg-gray-50">Recruitment</SidebarItem>
          </div>
 
-         <div className="mt-auto p-4 border-t border-gray-100 flex flex-col gap-2">
+         <div className="mt-auto p-4 border-t border-gray-300 flex flex-col gap-2">
           <button className="w-full flex items-center justify-between px-4 py-2 text-sm font-semibold rounded-2xl text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors">
            <div className="flex items-center gap-3">
             <FaQuestionCircle className="text-lg" />
@@ -707,7 +707,7 @@ export default function Home() {
        <div className="flex gap-6 items-start">
 
         {/* Light Mode Other Menu */}
-        <div className="w-60 shadow-xl rounded-2xl overflow-hidden border border-gray-100 bg-white p-4 flex flex-col gap-1 transition-all duration-300 hover:shadow-2xl">
+        <div className="w-60 shadow-xl rounded-2xl overflow-hidden border border-gray-300 bg-white p-4 flex flex-col gap-1 transition-all duration-300 hover:shadow-2xl">
          <SidebarItem icon={<FaBuilding />} className="bg-transparent hover:bg-gray-50">Company Info</SidebarItem>
          <SidebarItem icon={<FaBuilding />} className="bg-transparent hover:bg-gray-50">Offices</SidebarItem>
          <SidebarItem icon={<FaEnvelope />} className="bg-transparent hover:bg-gray-50">Departments</SidebarItem>
@@ -744,7 +744,7 @@ export default function Home() {
        <div className="flex flex-col gap-6">
 
         {/* Light Option 1: Selected / Checked state */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-md flex flex-col gap-1">
+        <div className="bg-white border border-gray-300 rounded-2xl p-3 shadow-md flex flex-col gap-1">
          <button className="w-full flex items-center justify-between px-3 py-2.5 text-body-sm font-semibold rounded-xl text-gray-400 hover:bg-gray-50">
           <span>Menu</span>
          </button>
@@ -758,7 +758,7 @@ export default function Home() {
         </div>
 
         {/* Light Option 2: Badge and Dot states */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-md flex flex-col gap-1">
+        <div className="bg-white border border-gray-300 rounded-2xl p-3 shadow-md flex flex-col gap-1">
          <button className="w-full flex items-center justify-between px-3 py-2.5 text-body-sm font-semibold rounded-xl text-gray-700 bg-gray-50/50">
           <span>Menu</span>
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-error text-white text-[10px] font-bold">1</span>
@@ -813,7 +813,7 @@ export default function Home() {
        <div className="flex flex-col gap-6">
 
         {/* Employees Submenu (Light) */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-md flex flex-col">
+        <div className="bg-white border border-gray-300 rounded-2xl p-3 shadow-md flex flex-col">
          <div className="flex items-center justify-between px-3 py-2 text-body-sm font-bold text-gray-900 border-b border-gray-50 pb-2">
           <div className="flex items-center gap-2">
            <FaUsers className="text-gray-500 text-base" />
@@ -830,7 +830,7 @@ export default function Home() {
         </div>
 
         {/* Time Off Submenu (Light) */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-md flex flex-col">
+        <div className="bg-white border border-gray-300 rounded-2xl p-3 shadow-md flex flex-col">
          <div className="flex items-center justify-between px-3 py-2 text-body-sm font-bold text-gray-900 border-b border-gray-50 pb-2">
           <div className="flex items-center gap-2">
            <FaCalendarCheck className="text-gray-500 text-base" />
@@ -890,7 +890,7 @@ export default function Home() {
     <section className="flex flex-col gap-8">
      <h2 className="h2 border-b pb-4">Header Variants</h2>
 
-     <div className="flex flex-col gap-12 bg-gray-50 dark:bg-[#11131A]/50 p-4 sm:p-8 rounded-3xl border border-gray-200 dark:border-gray-800">
+     <div className="flex flex-col gap-12 bg-gray-50 dark:bg-[#11131A]/50 p-4 sm:p-8 rounded-3xl border border-gray-300 dark:border-gray-800">
 
       {/* Variant 1: Full Dark Header */}
       <header className="w-full h-20 bg-[#11131A] text-white px-6 sm:px-8 flex items-center justify-between rounded-2xl shadow-md border border-gray-800">
@@ -924,7 +924,7 @@ export default function Home() {
       </header>
 
       {/* Variant 2: Full Light Header */}
-      <header className="w-full h-20 bg-white text-gray-900 px-6 sm:px-8 flex items-center justify-between rounded-2xl shadow-sm border border-gray-100">
+      <header className="w-full h-20 bg-white text-gray-900 px-6 sm:px-8 flex items-center justify-between rounded-2xl shadow-sm border border-gray-300">
        <div className="flex items-center gap-12">
         <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-5 w-auto" />
         <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
@@ -1014,7 +1014,7 @@ export default function Home() {
       {/* Switches */}
       <div className="flex flex-col gap-6">
        <h3 className="h3">Toggles (Switch)</h3>
-       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
         <div className="flex gap-4">
          <Switch defaultChecked />
          <Switch />
@@ -1038,7 +1038,7 @@ export default function Home() {
       {/* Checkboxes & Radios */}
       <div className="flex flex-col gap-6">
        <h3 className="h3">Selection</h3>
-       <div className="flex flex-col gap-6 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col gap-6 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
         <div className="flex gap-4 items-center">
          <Radio name="radio-demo" />
          <Radio name="radio-demo" defaultChecked />
@@ -1058,7 +1058,7 @@ export default function Home() {
       {/* Social Buttons */}
       <div className="flex flex-col gap-6 w-full max-w-sm">
        <h3 className="h3">Social Login Buttons</h3>
-       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
         <Button variant="outline" className="w-full justify-center text-gray-900 dark:text-gray-900 bg-white hover:bg-gray-50">
          <FaGoogle className="text-[#EA4335] text-lg mr-2" /> Google
         </Button>
@@ -1083,7 +1083,7 @@ export default function Home() {
     <section className="flex flex-col gap-8">
      <h2 className="h2 border-b pb-4">Table Builder</h2>
 
-     <div className="bg-white dark:bg-[#11131A] border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm max-w-6xl">
+     <div className="bg-white dark:bg-[#11131A] border border-gray-300 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm max-w-6xl">
       <Table>
        <TableHeader>
         <TableRow>
@@ -1206,7 +1206,7 @@ export default function Home() {
 
       <div className="flex flex-col gap-4 mt-4">
        <h3 className="h3">Task Details Accordions</h3>
-       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
         <TaskAccordionItem
          title="Prepare company welcome kit"
          status="draft"
@@ -1232,10 +1232,10 @@ export default function Home() {
 
       <div className="flex flex-col gap-4 mt-6">
        <h3 className="h3">Tree Connections (Hierarchy)</h3>
-       <div className="flex flex-col bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
 
         {/* Parent Row */}
-        <div className="flex items-center gap-3 p-4 bg-white dark:bg-[#11131A] rounded-xl border border-gray-100 dark:border-gray-800 font-bold text-body-sm text-gray-950 dark:text-white">
+        <div className="flex items-center gap-3 p-4 bg-white dark:bg-[#11131A] rounded-xl border border-gray-300 dark:border-gray-800 font-bold text-body-sm text-gray-950 dark:text-white">
          📁 Onboarding Tasks (Parent Checklist)
         </div>
 
@@ -1296,12 +1296,12 @@ export default function Home() {
     <section className="flex flex-col gap-8">
      <h2 className="h2 border-b pb-4">Tabs & Pagination</h2>
 
-     <div className="flex flex-col gap-12 bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 rounded-3xl border border-gray-200 dark:border-gray-800 max-w-6xl">
+     <div className="flex flex-col gap-12 bg-gray-50 dark:bg-gray-900/50 p-6 sm:p-8 rounded-3xl border border-gray-300 dark:border-gray-800 max-w-6xl">
 
       {/* Date / Day Selection variants */}
       <div className="flex flex-col gap-4">
        <h3 className="h3">Calendar Day Selection</h3>
-       <div className="flex flex-wrap gap-2 items-center bg-white dark:bg-[#11131A] p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-wrap gap-2 items-center bg-white dark:bg-[#11131A] p-4 rounded-xl border border-gray-300 dark:border-gray-800">
          <CalendarDay variant="hasDot" day={22} />
          <CalendarDay variant="default" day={22} />
          <CalendarDay variant="selected" day={22} />
@@ -1314,7 +1314,7 @@ export default function Home() {
       {/* Tab variants */}
       <div className="flex flex-col gap-4">
        <h3 className="h3">Tabs</h3>
-       <div className="bg-white dark:bg-[#11131A] p-6 rounded-xl border border-gray-100 dark:border-gray-800">
+       <div className="bg-white dark:bg-[#11131A] p-6 rounded-xl border border-gray-300 dark:border-gray-800">
         <Tabs>
          <TabsTrigger active>TITLE</TabsTrigger>
          <TabsTrigger>TITLE</TabsTrigger>
@@ -1328,11 +1328,11 @@ export default function Home() {
        <h3 className="h3">Pagination</h3>
 
        {/* Light Mode - Full */}
-       <div className="bg-white p-6 rounded-xl border border-gray-100 flex flex-col gap-6">
+       <div className="bg-white p-6 rounded-xl border border-gray-300 flex flex-col gap-6">
         <Pagination>
          <div className="flex items-center gap-2">
           <span className="text-body-sm text-gray-500">Showing 1 to 8 of 50 entries</span>
-          <select className="px-3 py-1.5 text-body-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none">
+          <select className="px-3 py-1.5 text-body-sm bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none">
            <option>Show 8</option>
            <option>Show 16</option>
            <option>Show 32</option>
@@ -1374,7 +1374,7 @@ export default function Home() {
        </div>
 
        {/* Light Mode - Simple */}
-       <div className="bg-white p-6 rounded-xl border border-gray-100 flex flex-col gap-6">
+       <div className="bg-white p-6 rounded-xl border border-gray-300 flex flex-col gap-6">
         <Pagination>
          <PaginationContent>
           <PaginationItem><PaginationPrevious /></PaginationItem>
@@ -1410,9 +1410,9 @@ export default function Home() {
       {/* Dynamic single toasts */}
       <div className="flex flex-col gap-6 w-full max-w-md">
        <h3 className="h3">Single Item Toasts</h3>
-       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800">
+       <div className="flex flex-col gap-4 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-300 dark:border-gray-800">
         {/* Light Mode Toast */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-lg shadow-gray-100/50 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-300 shadow-lg shadow-gray-100/50 overflow-hidden">
          <NotificationItem
           icon={<FaCog className="text-gray-500" />}
           title="New Notif"

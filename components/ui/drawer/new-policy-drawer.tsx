@@ -4,6 +4,7 @@ import * as React from "react";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dropdown } from "@/components/ui/dropdown";
 
 interface NewPolicyDrawerProps {
   isOpen: boolean;
@@ -54,15 +55,15 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
-      <form 
+      <form
         onSubmit={handleSubmit}
         className="relative w-full max-w-lg bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl"
       >
         {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -83,11 +84,11 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                   Policy Name <span className="text-red-500">*</span>
                 </label>
-                <Input 
+                <Input
                   value={policyName}
                   onChange={(e) => setPolicyName(e.target.value)}
-                  placeholder="Annual" 
-                  className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+                  placeholder="Annual"
+                  className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold"
                   required
                 />
               </div>
@@ -96,18 +97,12 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                   Type <span className="text-red-500">*</span>
                 </label>
-                <select
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                  required
-                >
-                  {types.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
+                <Dropdown
+                  label={selectedType || "Select Type"}
+                  options={types}
+                  onSelect={setSelectedType}
+                  className="w-full"
+                />
               </div>
             </div>
 
@@ -116,11 +111,11 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Description <span className="text-red-500">*</span>
               </label>
-              <Input 
+              <Input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Input description about policy" 
-                className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+                placeholder="Input description about policy"
+                className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold"
                 required
               />
             </div>
@@ -135,14 +130,12 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                     Assign Date <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={assignDate}
-                    onChange={(e) => setAssignDate(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                  >
-                    <option value="Upon join date">Upon join date</option>
-                    <option value="Start of calendar year">Start of calendar year</option>
-                  </select>
+                  <Dropdown
+                    label={assignDate || "Upon join date"}
+                    options={["Upon join date", "Start of calendar year"]}
+                    onSelect={setAssignDate}
+                    className="w-full"
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -150,31 +143,24 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                       Accrual Frequency <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      value={frequency}
-                      onChange={(e) => setFrequency(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                    >
-                      <option value="Yearly">Yearly</option>
-                      <option value="Monthly">Monthly</option>
-                      <option value="Weekly">Weekly</option>
-                    </select>
+                    <Dropdown
+                      label={frequency || "Yearly"}
+                      options={["Yearly", "Monthly", "Weekly"]}
+                      onSelect={setFrequency}
+                      className="w-full"
+                    />
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                       Entitlement <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      value={entitlement}
-                      onChange={(e) => setEntitlement(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                    >
-                      <option value="3 (Days per year)">3 (Days per year)</option>
-                      <option value="10 (Days per year)">10 (Days per year)</option>
-                      <option value="15 (Days per year)">15 (Days per year)</option>
-                      <option value="20 (Days per year)">20 (Days per year)</option>
-                    </select>
+                    <Dropdown
+                      label={entitlement || "3 (Days per year)"}
+                      options={["3 (Days per year)", "10 (Days per year)", "15 (Days per year)", "20 (Days per year)"]}
+                      onSelect={setEntitlement}
+                      className="w-full"
+                    />
                   </div>
                 </div>
               </div>
@@ -191,15 +177,12 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                     <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                       Maximum Carry Over <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      value={maxCarryOver}
-                      onChange={(e) => setMaxCarryOver(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                    >
-                      <option value="3 (Days per year)">3 (Days per year)</option>
-                      <option value="5 (Days per year)">5 (Days per year)</option>
-                      <option value="None">None</option>
-                    </select>
+                    <Dropdown
+                      label={maxCarryOver || "3 (Days per year)"}
+                      options={["3 (Days per year)", "5 (Days per year)", "None"]}
+                      onSelect={setMaxCarryOver}
+                      className="w-full"
+                    />
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -207,24 +190,18 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                       Carry Over Expiration <span className="text-red-500">*</span>
                     </label>
                     <div className="grid grid-cols-2 gap-2">
-                      <select
-                        value={expirationMonth}
-                        onChange={(e) => setExpirationMonth(e.target.value)}
-                        className="w-full h-12 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                      >
-                        <option value="Dec">Dec</option>
-                        <option value="Jan">Jan</option>
-                        <option value="Jun">Jun</option>
-                      </select>
-                      <select
-                        value={expirationDay}
-                        onChange={(e) => setExpirationDay(e.target.value)}
-                        className="w-full h-12 px-3 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                      >
-                        <option value="31">31</option>
-                        <option value="15">15</option>
-                        <option value="1">1</option>
-                      </select>
+                      <Dropdown
+                        label={expirationMonth || "Dec"}
+                        options={["Dec", "Jan", "Jun"]}
+                        onSelect={setExpirationMonth}
+                        className="w-full"
+                      />
+                      <Dropdown
+                        label={expirationDay || "31"}
+                        options={["31", "15", "1"]}
+                        onSelect={setExpirationDay}
+                        className="w-full"
+                      />
                     </div>
                   </div>
                 </div>
@@ -239,11 +216,10 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
               <button
                 type="button"
                 onClick={() => setIsHourly(!isHourly)}
-                className={`w-full flex items-start gap-4 p-4 rounded-xl border text-left transition-all ${
-                  isHourly 
-                    ? "border-primary bg-white dark:bg-gray-900" 
-                    : "border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900"
-                }`}
+                className={`w-full flex items-start gap-4 p-4 rounded-xl border text-left transition-all ${isHourly
+                  ? "border-primary bg-white dark:bg-gray-900"
+                  : "border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900"
+                  }`}
               >
                 <div className="flex-1">
                   <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-1">Hourly</h4>
@@ -251,11 +227,10 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
                     Employee can book time off by hours which will be calculated to days based on standard working hours. Ex: Standard working hours = 8 hours/day, 3 hours off = 0.375 days
                   </p>
                 </div>
-                <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all mt-1 ${
-                  isHourly 
-                    ? "border-primary animate-scaleIn" 
-                    : "border-gray-200 dark:border-gray-800"
-                }`}>
+                <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all mt-1 ${isHourly
+                  ? "border-primary animate-scaleIn"
+                  : "border-gray-300 dark:border-gray-800"
+                  }`}>
                   {isHourly && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                 </div>
               </button>
@@ -264,12 +239,12 @@ export function NewPolicyDrawer({ isOpen, onClose, types, onAdd }: NewPolicyDraw
         </div>
 
         {/* Action Footer */}
-        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between gap-4">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center justify-between gap-4">
           <button
             type="button"
             className="text-xs font-bold text-primary hover:underline"
             onClick={() => {
-              handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+              handleSubmit({ preventDefault: () => { } } as React.FormEvent);
             }}
           >
             Save & Assign Employee

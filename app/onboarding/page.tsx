@@ -70,14 +70,14 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Top Navbar Header */}
-      <header className="w-full h-16 border-b border-gray-100 px-6 sm:px-12 flex items-center shrink-0">
+      <header className="w-full h-16 border-b border-gray-300 px-6 sm:px-12 flex items-center shrink-0">
         <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-6 w-auto" />
       </header>
 
       {/* Main Split Screen */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12">
         {/* Left Column (Wizard Info Panel) */}
-        <div className="lg:col-span-5 px-6 py-12 sm:px-16 flex flex-col justify-start border-r border-gray-100 bg-white">
+        <div className="lg:col-span-5 px-6 py-12 sm:px-16 flex flex-col justify-start border-r border-gray-300 bg-white">
           <div className="flex flex-col gap-8 max-w-md">
             {/* Step indicators */}
             <div className="flex flex-col gap-4">
@@ -162,7 +162,7 @@ export default function OnboardingPage() {
 
         {/* Right Column (Interactive Forms Panel) */}
         <div className="lg:col-span-7 bg-[#F8F9FA] px-6 py-12 sm:px-12 md:px-16 flex flex-col justify-center items-center">
-          <div className="w-full max-w-xl bg-white border border-gray-150 rounded-3xl p-6 sm:p-10 shadow-sm animate-fadeIn">
+          <div className="w-full max-w-xl bg-white border border-gray-200 rounded-3xl p-6 sm:p-10 shadow-sm animate-fadeIn">
             {/* Step 1 Form */}
             {step === 1 && (
               <div className="flex flex-col gap-6">
@@ -182,14 +182,14 @@ export default function OnboardingPage() {
                   <label className="text-body-sm font-bold text-gray-900 flex items-center gap-1">
                     Company Domain name
                   </label>
-                  <div className="flex h-12 rounded-xl overflow-hidden border border-gray-200 bg-white hover:border-gray-300 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
+                  <div className="flex h-12 rounded-xl overflow-hidden border border-gray-300 bg-white hover:border-gray-300 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
                     <input
                       className="flex-1 px-4 text-body-md outline-none bg-white placeholder:text-gray-400 border-none"
                       value={companyDomain}
                       onChange={(e) => setCompanyDomain(e.target.value)}
                       placeholder="domain"
                     />
-                    <div className="bg-gray-50 border-l border-gray-200 px-4 flex items-center text-body-md text-gray-500 font-semibold select-none">
+                    <div className="bg-gray-50 border-l border-gray-300 px-4 flex items-center text-body-md text-gray-500 font-semibold select-none">
                       .peoplelyhr.com
                     </div>
                   </div>
@@ -212,7 +212,7 @@ export default function OnboardingPage() {
                           onClick={() => setCompanySize(size)}
                           className={`flex items-center justify-between h-12 px-4 rounded-xl border text-left cursor-pointer transition-all ${isSelected
                             ? "border-primary bg-primary/5 font-semibold text-gray-900"
-                            : "border-gray-200 hover:border-gray-300 bg-white text-gray-600"
+                            : "border-gray-300 hover:border-gray-300 bg-white text-gray-600"
                             }`}
                         >
                           <span className="text-body-sm">{size}</span>
@@ -259,7 +259,7 @@ export default function OnboardingPage() {
                           onClick={() => setIndustry(ind)}
                           className={`flex items-center justify-between h-12 px-4 rounded-xl border text-left cursor-pointer transition-all ${isSelected
                             ? "border-primary bg-primary/5 font-semibold text-gray-900"
-                            : "border-gray-200 hover:border-gray-300 bg-white text-gray-600"
+                            : "border-gray-300 hover:border-gray-300 bg-white text-gray-600"
                             }`}
                         >
                           <span className="text-body-sm">{ind}</span>
@@ -284,7 +284,7 @@ export default function OnboardingPage() {
             {/* Step 3 Form */}
             {step === 3 && (
               <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div className="flex flex-col gap-1 bg-gray-50 p-4 rounded-xl border border-gray-300">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Your Domain Name</span>
                   <span className="text-body-sm font-bold text-gray-900 flex items-center gap-2">
                     <FaGlobe className="text-gray-400 text-xs" /> {companyDomain}.peoplelyhr.com
@@ -305,7 +305,7 @@ export default function OnboardingPage() {
                           onClick={() => setRole(r)}
                           className={`flex items-center justify-between h-12 px-4 rounded-xl border text-left cursor-pointer transition-all ${isSelected
                             ? "border-primary bg-primary/5 font-semibold text-gray-900"
-                            : "border-gray-200 hover:border-gray-300 bg-white text-gray-600"
+                            : "border-gray-300 hover:border-gray-300 bg-white text-gray-600"
                             }`}
                         >
                           <span className="text-body-sm">{r}</span>
@@ -340,7 +340,7 @@ export default function OnboardingPage() {
             {/* Step 4 Form */}
             {step === 4 && (
               <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div className="flex flex-col gap-1 bg-gray-50 p-4 rounded-xl border border-gray-300">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Your Domain Name</span>
                   <span className="text-body-sm font-bold text-gray-900 flex items-center gap-2">
                     <FaGlobe className="text-gray-400 text-xs" /> {companyDomain}.peoplelyhr.com
@@ -361,7 +361,7 @@ export default function OnboardingPage() {
                           onClick={() => setNeeds(opt.id)}
                           className={`flex items-start gap-4 p-4 rounded-2xl border text-left cursor-pointer transition-all ${isSelected
                             ? "border-primary bg-primary/5"
-                            : "border-gray-150 hover:border-gray-250 bg-white"
+                            : "border-gray-200 hover:border-gray-300 bg-white"
                             }`}
                         >
                           <span

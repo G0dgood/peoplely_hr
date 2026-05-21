@@ -20,12 +20,12 @@ export function NewHolidayDrawer({ isOpen, onClose }: NewHolidayDrawerProps) {
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
       <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl">
         {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -45,9 +45,9 @@ export function NewHolidayDrawer({ isOpen, onClose }: NewHolidayDrawerProps) {
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Holiday Name <span className="text-red-500">*</span>
               </label>
-              <Input 
-                placeholder="Eid Mubarak" 
-                className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+              <Input
+                placeholder="Eid Mubarak"
+                className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold"
               />
             </div>
 
@@ -60,7 +60,7 @@ export function NewHolidayDrawer({ isOpen, onClose }: NewHolidayDrawerProps) {
                 <button
                   type="button"
                   onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
                 >
                   <span>{dateRange}</span>
                   <HiOutlineCalendarDays className="text-lg text-gray-400" />
@@ -76,7 +76,7 @@ export function NewHolidayDrawer({ isOpen, onClose }: NewHolidayDrawerProps) {
         </div>
 
         {/* Action Footer */}
-        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4">
           <Button
             variant="outline"
             className="flex-1 font-bold h-12"

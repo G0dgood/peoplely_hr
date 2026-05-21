@@ -34,7 +34,7 @@ export function SettingsSection() {
         <div className="flex items-center justify-between">
           <p className="text-xs font-bold text-gray-400">Who can see your birthday on calendar?</p>
           <div className="relative group min-w-[160px]">
-            <button className="w-full flex items-center justify-between px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+            <button className="w-full flex items-center justify-between px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
               Everyone
               <HiOutlineChevronDown className="text-gray-400 dark:text-gray-500" />
             </button>

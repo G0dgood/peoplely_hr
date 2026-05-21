@@ -44,7 +44,7 @@ export function EditPaidTimeModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="p-8 border border-gray-200 dark:border-gray-800"
+      className="p-8 border border-gray-300 dark:border-gray-800"
     >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
@@ -66,7 +66,7 @@ export function EditPaidTimeModal({
               <button
                 type="button"
                 onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <span>{selectedDate}</span>
                 <HiOutlineCalendarDays className="text-gray-400 text-lg" />
@@ -88,7 +88,7 @@ export function EditPaidTimeModal({
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
                 placeholder="00:00"
-                className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary"
+                className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary"
               />
               <HiOutlineClock className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
             </div>
@@ -103,7 +103,7 @@ export function EditPaidTimeModal({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Input notes here"
-            className="w-full min-h-[100px] px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary resize-none"
+            className="w-full min-h-[100px] px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary resize-none"
           />
         </div>
 

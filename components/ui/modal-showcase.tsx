@@ -59,7 +59,7 @@ export function ModalShowcase() {
 
           <div className="flex flex-col gap-2">
             <label className="text-body-sm font-bold text-gray-900 dark:text-white">Role</label>
-            <select className="w-full h-12 px-4 rounded-xl text-body-md bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white outline-none focus:border-primary">
+            <select className="w-full h-12 px-4 rounded-xl text-body-md bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white outline-none focus:border-primary">
               <option>UI/UX Designer</option>
               <option>Frontend Engineer</option>
               <option>Product Manager</option>
@@ -84,7 +84,7 @@ export function ModalShowcase() {
         <ModalContent>
           <div className="flex flex-col gap-4">
             <p className="text-body-sm text-gray-500 mb-2">Please upload the candidate&apos;s CV here.</p>
-            <div className="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-12 flex flex-col items-center justify-center text-center gap-4 hover:border-primary transition-colors cursor-pointer bg-gray-50 dark:bg-gray-800/50">
+            <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-12 flex flex-col items-center justify-center text-center gap-4 hover:border-primary transition-colors cursor-pointer bg-gray-50 dark:bg-gray-800/50">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl">
                 <FaCloudUploadAlt />
               </div>

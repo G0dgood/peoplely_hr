@@ -48,7 +48,7 @@ export function Dropdown({ label, options, onSelect, className = "", icon }: Dro
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className={`px-4 py-3 border border-gray-100 dark:border-gray-800 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-between gap-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${isFullWidth ? "w-full" : "min-w-[140px]"
+        className={`px-4 py-3 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-between gap-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${isFullWidth ? "w-full" : "min-w-[140px]"
           }`}
       >
         <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export function Dropdown({ label, options, onSelect, className = "", icon }: Dro
 
       {isOpen && (
         <div
-          className={`absolute left-0 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-lg z-50 py-2 ${isFullWidth ? "w-full" : "w-48"
+          className={`absolute left-0 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl shadow-lg z-50 py-2 ${isFullWidth ? "w-full" : "w-48"
             } ${opensUpward
               ? "bottom-full mb-2"   // flip up
               : "top-full mt-2"      // default down

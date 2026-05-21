@@ -121,7 +121,7 @@ export default function OtpVerifyPage() {
                 onChange={(e) => handleChange(e.target, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onPaste={index === 0 ? handlePaste : undefined}
-                className="w-14 h-14 border border-gray-200 rounded-xl text-center text-xl font-bold text-gray-900 bg-white transition-all focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]"
+                className="w-14 h-14 border border-gray-300 rounded-xl text-center text-xl font-bold text-gray-900 bg-white transition-all focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]"
               />
             ))}
           </div>

@@ -21,17 +21,17 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
     <div className="fixed inset-0 z-[110] flex justify-end">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 !bg-black/20 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 !bg-black/20  transition-opacity"
         onClick={onClose}
       />
       {/* Drawer Panel */}
-      <div className="relative w-full max-w-2xl bg-white dark:bg-gray-950 h-full flex flex-col border-l border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out transform translate-x-0">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-gray-950 h-full flex flex-col border-l border-gray-300 dark:border-gray-800 transition-transform duration-300 ease-in-out transform translate-x-0">
         {/* Dismiss slide button on left edge */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
-            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border border-gray-200 dark:border-gray-800 hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
+            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center border border-gray-300 dark:border-gray-800 hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
           >
             <HiOutlineChevronRight className="text-xl" />
           </button>
@@ -45,9 +45,9 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
         </div>
 
         <div className="flex-1 overflow-y-auto px-8 pb-8 bg-white dark:bg-gray-950 flex flex-col gap-6">
-          
+
           {/* Selected Plan Summary Card */}
-          <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
+          <div className="border border-gray-300 dark:border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
               <span className="text-2xl font-bold text-[#0FAF7A]">$6</span>
               <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1">/Employee/month</span>
             </div>
-            
+
             <p className="text-xs font-bold text-gray-900 dark:text-white mt-2">Perform plan, plus Employee Engagement features</p>
             <div className="flex flex-col gap-3">
               {['Peer Feedback & Recognition', 'Polls & Pulse Surveys', 'Company Social Feed', 'Interest Groups', 'Instant Messages'].map(feature => (
@@ -74,7 +74,7 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
               ))}
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/50">
+            <div className="mt-4 pt-4 border-t border-gray-300 dark:border-gray-800/50">
               <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">14-day free trial · No credit card required</span>
             </div>
           </div>
@@ -85,7 +85,7 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
               label="Number of employees *"
               value={employees}
               onChange={(e) => setEmployees(e.target.value)}
-              className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+              className="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800"
             />
 
             <div className="flex flex-col gap-2">
@@ -107,12 +107,12 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-gray-200 dark:border-gray-800 flex items-center justify-end gap-4 bg-white dark:bg-gray-950">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center justify-end gap-4 bg-white dark:bg-gray-950">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
-            className="w-32 font-bold h-12 border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="w-32 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Button>

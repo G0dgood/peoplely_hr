@@ -75,7 +75,7 @@ export default function CheckoutPage() {
         {/* Footer */}
         <div className="mt-20">
           <p className="text-xs font-semibold opacity-70">
-            © 2025 HRDashboard . Alrights reserved.
+            © 2025 Peoplely HR . Alrights reserved.
           </p>
         </div>
       </div>
@@ -96,13 +96,13 @@ export default function CheckoutPage() {
             <span className="text-sm font-bold text-gray-900 dark:text-white">
               Card Information <span className="text-red-500">*</span>
             </span>
-            <div className="flex flex-col border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+            <div className="flex flex-col border border-gray-300 dark:border-gray-800 rounded-xl overflow-hidden">
               <Input
                 placeholder="1234 1234 1234 1234"
-                className="border-0 border-b border-gray-200 dark:border-gray-800 rounded-none focus:ring-0"
+                className="border-0 border-b border-gray-300 dark:border-gray-800 rounded-none focus:ring-0"
               />
               <div className="flex">
-                <div className="w-1/2 border-r border-gray-200 dark:border-gray-800">
+                <div className="w-1/2 border-r border-gray-300 dark:border-gray-800">
                   <Input
                     placeholder="BB/TT"
                     className="border-0 rounded-none focus:ring-0"
@@ -125,7 +125,7 @@ export default function CheckoutPage() {
             </span>
             <Input
               placeholder="Input your full name"
-              className="border-gray-200 dark:border-gray-800"
+              className="border-gray-300 dark:border-gray-800"
             />
           </div>
 
@@ -139,17 +139,17 @@ export default function CheckoutPage() {
                 label="Indonesia"
                 options={["Indonesia", "Singapore", "United States"]}
                 onSelect={() => {}}
-                className="w-full h-12 rounded-xl border-gray-200 dark:border-gray-800"
+                className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
               />
               <Input
                 placeholder="Address"
-                className="border-gray-200 dark:border-gray-800"
+                className="border-gray-300 dark:border-gray-800"
               />
               <Dropdown
                 label="City"
                 options={["Jakarta", "Bandung", "Surabaya"]}
                 onSelect={() => {}}
-                className="w-full h-12 rounded-xl border-gray-200 dark:border-gray-800"
+                className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
               />
               <div className="flex gap-3">
                 <div className="w-1/2">
@@ -157,13 +157,13 @@ export default function CheckoutPage() {
                     label="Province"
                     options={["DKI Jakarta", "West Java"]}
                     onSelect={() => {}}
-                    className="w-full h-12 rounded-xl border-gray-200 dark:border-gray-800"
+                    className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
                   />
                 </div>
                 <div className="w-1/2">
                   <Input
                     placeholder="Code"
-                    className="border-gray-200 dark:border-gray-800"
+                    className="border-gray-300 dark:border-gray-800"
                   />
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function CheckoutPage() {
               Subscribe
             </Button>
             <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 leading-relaxed text-center">
-              By confirming your subscription, you authorize HRDashboard Inc. charge your card for this payment and future payments according to their terms.
+              By confirming your subscription, you authorize Peoplely HR Inc. charge your card for this payment and future payments according to their terms.
             </p>
           </div>
 

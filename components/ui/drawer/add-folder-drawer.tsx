@@ -30,13 +30,13 @@ export function AddFolderDrawer({ isOpen, onClose, onCreate }: AddFolderDrawerPr
     <div className="fixed inset-0 z-[100] flex justify-end">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
       {/* Drawer Panel */}
       <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-all duration-300">
         {/* Dismiss slide button on left edge */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -63,7 +63,7 @@ export function AddFolderDrawer({ isOpen, onClose, onCreate }: AddFolderDrawerPr
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+                  className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold"
                 />
               </div>
 
@@ -76,19 +76,19 @@ export function AddFolderDrawer({ isOpen, onClose, onCreate }: AddFolderDrawerPr
                   placeholder="Input description folder"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="h-12 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold"
+                  className="h-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold"
                 />
               </div>
             </div>
           </div>
 
           {/* Footer actions */}
-          <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
+          <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1 font-bold h-12 border-gray-200 dark:border-gray-850 hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-850 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               Cancel
             </Button>

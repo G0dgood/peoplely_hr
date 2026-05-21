@@ -46,14 +46,14 @@ export function PayrollSection() {
       </Card>
 
       {/* Salary Card */}
-      <Card className="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl">
+      <Card className="p-6 border border-gray-300 dark:border-gray-800 rounded-2xl">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-white">Salary</span>
         </div>
       </Card>
 
       {/* Recurring Card */}
-      <Card className="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl">
+      <Card className="p-6 border border-gray-300 dark:border-gray-800 rounded-2xl">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-white">Recurring</span>
           <div className="flex items-center gap-4">
@@ -64,7 +64,7 @@ export function PayrollSection() {
       </Card>
 
       {/* One-off Card */}
-      <Card className="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl">
+      <Card className="p-6 border border-gray-300 dark:border-gray-800 rounded-2xl">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-white">One-off</span>
           <div className="flex items-center gap-4">
@@ -75,13 +75,13 @@ export function PayrollSection() {
       </Card>
 
       {/* Offset Cards */}
-      <Card className="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl">
+      <Card className="p-6 border border-gray-300 dark:border-gray-800 rounded-2xl">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-white">Offset</span>
         </div>
       </Card>
 
-      <Card className="p-6 border border-gray-100 dark:border-gray-800 rounded-2xl">
+      <Card className="p-6 border border-gray-300 dark:border-gray-800 rounded-2xl">
         <div className="flex items-center justify-between">
           <span className="text-sm font-bold text-gray-900 dark:text-white">Offset</span>
         </div>

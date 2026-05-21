@@ -54,8 +54,8 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
         task.tag === "CHECKLIST"
           ? "Checkbox"
           : task.tag === "UPLOAD"
-          ? "File Upload"
-          : "Input Text"
+            ? "File Upload"
+            : "Input Text"
       );
       setAssigneeType("Specific Employee");
       setAssigneeName(task.assignee);
@@ -92,7 +92,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
     <div className="fixed inset-0 z-[100] flex justify-end">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 "
         onClick={onClose}
       />
       {/* Drawer Panel */}
@@ -101,7 +101,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
         className="relative w-full max-w-xl bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-all duration-300"
       >
         {/* Dismiss button on left edge */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -126,7 +126,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
                 required
-                className="h-11 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold rounded-xl"
+                className="h-11 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
               />
             </div>
 
@@ -162,7 +162,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
                   onChange={(e) => setAssigneeName(e.target.value)}
                   required
                   placeholder="Employee name"
-                  className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold rounded-xl"
+                  className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
                 />
                 <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
               </div>
@@ -179,7 +179,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 required
-                className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 text-xs font-semibold rounded-xl"
+                className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
               />
               <HiOutlineCalendarDays className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
             </div>
@@ -190,9 +190,9 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
             <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
               Description
             </label>
-            <div className="border border-gray-100 dark:border-gray-800 rounded-xl overflow-hidden flex flex-col bg-white dark:bg-gray-900">
+            <div className="border border-gray-300 dark:border-gray-800 rounded-xl overflow-hidden flex flex-col bg-white dark:bg-gray-900">
               {/* Toolbar */}
-              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-gray-100 dark:border-gray-800 text-gray-550 dark:text-gray-455 bg-gray-50/40 dark:bg-gray-900/50">
+              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-gray-300 dark:border-gray-800 text-gray-550 dark:text-gray-455 bg-gray-50/40 dark:bg-gray-900/50">
                 <button
                   type="button"
                   className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-sm transition-colors"
@@ -251,12 +251,12 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave }: EditTaskDrawer
         </div>
 
         {/* Footer actions */}
-        <div className="p-8 border-t border-gray-100 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
-            className="flex-1 font-bold h-12 border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Button>

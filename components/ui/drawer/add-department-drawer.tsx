@@ -20,12 +20,12 @@ export function AddDepartmentDrawer({ isOpen, onClose }: AddDepartmentDrawerProp
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div
-        className="absolute inset-0 !bg-black/20 dark:bg-black/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 !bg-black/20 dark:bg-black/40  transition-opacity"
         onClick={onClose}
       />
       <div className="relative w-full max-w-md bg-white dark:bg-gray-950 h-full shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out translate-x-0">
         {/* Floating Close Button */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -73,14 +73,14 @@ export function AddDepartmentDrawer({ isOpen, onClose }: AddDepartmentDrawerProp
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center gap-4 relative z-10">
-          <button 
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center gap-4 relative z-10">
+          <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="flex-1 h-12 rounded-xl border border-gray-300 dark:border-gray-700 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Cancel
           </button>
-          <button 
+          <button
             onClick={onClose}
             className="flex-1 h-12 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-sm font-bold hover:opacity-90 transition-opacity"
           >

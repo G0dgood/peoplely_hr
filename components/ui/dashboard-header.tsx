@@ -38,7 +38,7 @@ export function DashboardHeader({
                 ⌘ F
               </span>
             }
-            className="h-11 rounded-xl text-sm bg-gray-50 border-gray-100 placeholder:text-gray-400 dark:bg-gray-900 dark:border-gray-800 dark:text-white dark:placeholder:text-gray-600"
+            className="h-11 rounded-xl text-sm bg-gray-50 border-gray-200 placeholder:text-gray-400 dark:bg-gray-900 dark:border-gray-800 dark:text-white dark:placeholder:text-gray-600"
           />
         </div>
 

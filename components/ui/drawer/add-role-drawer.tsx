@@ -1,0 +1,101 @@
+"use client";
+
+import * as React from "react";
+import { HiOutlineChevronRight } from "react-icons/hi2";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+interface AddRoleDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate?: (name: string, description: string) => void;
+}
+
+export function AddRoleDrawer({ isOpen, onClose, onCreate }: AddRoleDrawerProps) {
+  const [name, setName] = React.useState("RND");
+  const [description, setDescription] = React.useState("");
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    onCreate?.(name, description);
+    setName("RND");
+    setDescription("");
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex justify-end">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 !bg-black/20 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      />
+      {/* Drawer Panel */}
+      <div className="relative w-full max-w-md bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-transform duration-300 ease-in-out transform translate-x-0">
+        {/* Dismiss slide button on left edge */}
+        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
+          >
+            <HiOutlineChevronRight className="text-xl" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
+          <div className="p-8 flex-1 overflow-y-auto">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-8">
+              Add New Role
+            </h2>
+
+            <div className="flex flex-col gap-6">
+              {/* Role Name */}
+              <div className="flex flex-col gap-2">
+                <Input
+                  label="Role Name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+                />
+              </div>
+
+              {/* Description */}
+              <div className="flex flex-col gap-2">
+                <Input
+                  label="Description"
+                  placeholder="Input description role"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer actions */}
+          <div className="p-8 border-t border-gray-200 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-950">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="flex-1 font-bold h-12 border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="flex-1 font-bold h-12 !bg-black dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
+            >
+              Create
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

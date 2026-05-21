@@ -2,12 +2,14 @@
 
 import * as React from "react";
 import { Avatar } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import {
   HiOutlineMagnifyingGlass,
   HiOutlineEllipsisVertical,
   HiOutlineFaceSmile,
   HiOutlinePaperAirplane,
+  HiOutlinePaperClip,
+  HiOutlinePhoto,
+  HiOutlineDocument,
 } from "react-icons/hi2";
 import { HiMicrophone } from "react-icons/hi";
 
@@ -37,6 +39,7 @@ interface Message {
   imageCaption?: string;
   reactions?: string[];
   status?: "sent" | "read";
+  file?: { name: string; size: string };
 }
 
 /* ─── Data ─── */
@@ -55,7 +58,7 @@ const MARILYN: Conversation = {
   preview: "", time: "", unread: 0, online: false,
 };
 
-const MESSAGES: Message[] = [
+const INITIAL_MESSAGES: Message[] = [
   { id: "1", type: "sent",     text: "Hello Marilyn! consectetur adipiscing elit ames.", time: "09:10", status: "read" },
   { id: "2", type: "received", text: "Fames eros urna, felis morbi a est est.",           time: "09:40", reactions: ["😍","😍","❤️","👍","🍊"] },
   { id: "3", type: "received", audio: true, audioDuration: "00:24",                        time: "09:40" },
@@ -70,28 +73,49 @@ function OnlineDot({ online }: { online: boolean }) {
   ) : null;
 }
 
-function AvatarOrInitials({ conv, size = "md" }: { conv: Conversation; size?: "sm" | "md" }) {
-  const dim = size === "sm" ? "w-9 h-9 text-xs" : "w-11 h-11 text-sm";
+function AvatarOrInitials({ conv }: { conv: Conversation }) {
   if (conv.initials) {
     return (
-      <div className={`${dim} ${conv.accentBg} rounded-full flex items-center justify-center text-white font-bold flex-shrink-0`}>
+      <div className={`w-11 h-11 ${conv.accentBg} rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
         {conv.initials}
       </div>
     );
   }
-  return <Avatar src={conv.avatar} size={size === "sm" ? "sm" : "sm"} className="rounded-full flex-shrink-0" />;
+  return <Avatar src={conv.avatar} size="sm" className="rounded-full flex-shrink-0" />;
+}
+
+function getNow() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
 /* ─── Main Component ─── */
 export default function MessagePage() {
-  const [tab, setTab]           = React.useState<"all" | "unread">("all");
-  const [search, setSearch]     = React.useState("");
-  const [active, setActive]     = React.useState("1");
-  const [input, setInput]       = React.useState("");
-  const bottomRef               = React.useRef<HTMLDivElement>(null);
+  const [tab, setTab]             = React.useState<"all" | "unread">("all");
+  const [search, setSearch]       = React.useState("");
+  const [active, setActive]       = React.useState("1");
+  const [input, setInput]         = React.useState("");
+  const [messages, setMessages]   = React.useState<Message[]>(INITIAL_MESSAGES);
+  const [attachMenu, setAttachMenu] = React.useState(false);
+  const bottomRef                 = React.useRef<HTMLDivElement>(null);
+  const fileInputRef              = React.useRef<HTMLInputElement>(null);
+  const docInputRef               = React.useRef<HTMLInputElement>(null);
+  const attachRef                 = React.useRef<HTMLDivElement>(null);
 
+  // Scroll to bottom on new messages
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Close attach menu on outside click
+  React.useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (attachRef.current && !attachRef.current.contains(e.target as Node)) {
+        setAttachMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   const conversations = CONVERSATIONS.filter((c) => {
@@ -100,7 +124,51 @@ export default function MessagePage() {
     return true;
   });
 
-  const activeConv = active === "m" ? MARILYN : (CONVERSATIONS.find((c) => c.id === active) ?? MARILYN);
+  const sendText = () => {
+    if (!input.trim()) return;
+    const msg: Message = {
+      id: `sent-${Date.now()}`,
+      type: "sent",
+      text: input.trim(),
+      time: getNow(),
+      status: "sent",
+    };
+    setMessages((prev) => [...prev, msg]);
+    setInput("");
+  };
+
+  const handleImageAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const msg: Message = {
+      id: `img-${Date.now()}`,
+      type: "sent",
+      image: url,
+      imageCaption: file.name,
+      time: getNow(),
+      status: "sent",
+    };
+    setMessages((prev) => [...prev, msg]);
+    setAttachMenu(false);
+    e.target.value = "";
+  };
+
+  const handleDocAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const sizeStr = file.size < 1024 ? `${file.size} B` : file.size < 1048576 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1048576).toFixed(1)} MB`;
+    const msg: Message = {
+      id: `doc-${Date.now()}`,
+      type: "sent",
+      file: { name: file.name, size: sizeStr },
+      time: getNow(),
+      status: "sent",
+    };
+    setMessages((prev) => [...prev, msg]);
+    setAttachMenu(false);
+    e.target.value = "";
+  };
 
   return (
     <div className="flex h-[calc(100vh-80px)] bg-[#FAFCFF] dark:bg-gray-950 overflow-hidden">
@@ -109,13 +177,15 @@ export default function MessagePage() {
       <div className="w-[340px] flex-shrink-0 flex flex-col border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
         {/* Search */}
         <div className="px-5 pt-6 pb-4">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search message..."
-            leftIcon={<HiOutlineMagnifyingGlass className="text-sm" />}
-            className="h-10 rounded-xl text-xs font-semibold bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-800 placeholder:text-gray-400"
-          />
+          <div className="relative">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search message..."
+              className="w-full h-10 pl-4 pr-10 text-xs font-semibold rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-600 outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+            <HiOutlineMagnifyingGlass className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+          </div>
         </div>
 
         {/* Tabs */}
@@ -194,7 +264,7 @@ export default function MessagePage() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-7 py-6 flex flex-col gap-5 bg-[#FAFCFF] dark:bg-gray-950">
-          {MESSAGES.map((msg) => (
+          {messages.map((msg) => (
             <div key={msg.id} className={`flex flex-col gap-1 max-w-sm ${msg.type === "sent" ? "self-end items-end" : "self-start items-start"}`}>
 
               {/* Text bubble */}
@@ -223,8 +293,8 @@ export default function MessagePage() {
                 </div>
               )}
 
-              {/* Reactions */}
-              {msg.reactions && (
+              {/* Reactions (only for non-image messages) */}
+              {msg.reactions && !msg.image && (
                 <div className="flex items-center gap-0.5 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full px-2 py-1 shadow-xs self-start">
                   {msg.reactions.map((r, i) => <span key={i} className="text-sm">{r}</span>)}
                 </div>
@@ -233,7 +303,7 @@ export default function MessagePage() {
               {/* Image */}
               {msg.image && (
                 <div className="flex flex-col gap-1.5 max-w-[240px]">
-                  <img src={msg.image} alt="attachment" className="rounded-2xl rounded-bl-sm object-cover w-full h-44 shadow-xs" />
+                  <img src={msg.image} alt="attachment" className={`rounded-2xl object-cover w-full h-44 shadow-xs ${msg.type === "sent" ? "rounded-br-sm" : "rounded-bl-sm"}`} />
                   {msg.imageCaption && (
                     <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 leading-relaxed">{msg.imageCaption}</p>
                   )}
@@ -245,39 +315,98 @@ export default function MessagePage() {
                 </div>
               )}
 
+              {/* File attachment */}
+              {msg.file && (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${
+                  msg.type === "sent"
+                    ? "bg-[#E8FAF4] dark:bg-[#0FAF7A]/15 rounded-br-sm"
+                    : "bg-white dark:bg-gray-800 shadow-xs border border-gray-50 dark:border-gray-700 rounded-bl-sm"
+                }`}>
+                  <div className="w-9 h-9 rounded-lg bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center flex-shrink-0">
+                    <HiOutlineDocument className="text-lg text-gray-400 dark:text-gray-500" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="text-xs font-bold text-gray-900 dark:text-white truncate">{msg.file.name}</span>
+                    <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{msg.file.size}</span>
+                  </div>
+                </div>
+              )}
+
               {/* Time + status */}
               <div className={`flex items-center gap-1 text-[10px] font-semibold text-gray-400 dark:text-gray-600 ${msg.type === "sent" ? "flex-row-reverse" : ""}`}>
                 <span>{msg.time}</span>
                 {msg.status === "read" && <span className="text-[#0FAF7A]">✓✓</span>}
+                {msg.status === "sent" && <span className="text-gray-300 dark:text-gray-600">✓✓</span>}
               </div>
             </div>
           ))}
           <div ref={bottomRef} />
         </div>
 
-        {/* Message Input */}
-        <div className="flex items-center gap-4 px-7 py-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+        {/* Message Input Bar */}
+        <div className="flex items-center gap-3 px-7 py-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+          {/* Emoji */}
           <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500 transition-colors flex-shrink-0">
             <HiOutlineFaceSmile className="text-xl" />
           </button>
 
-          <Input
+          {/* Attachment */}
+          <div className="relative flex-shrink-0" ref={attachRef}>
+            <button
+              onClick={() => setAttachMenu((p) => !p)}
+              className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors flex-shrink-0 ${
+                attachMenu
+                  ? "bg-[#0FAF7A] text-white"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500"
+              }`}
+            >
+              <HiOutlinePaperClip className="text-xl" />
+            </button>
+
+            {/* Attach popup */}
+            {attachMenu && (
+              <div className="absolute bottom-full left-0 mb-2 w-48 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-lg z-50 py-1.5 overflow-hidden">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <HiOutlinePhoto className="text-base text-[#0FAF7A]" />
+                  Photo or Video
+                </button>
+                <button
+                  onClick={() => docInputRef.current?.click()}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <HiOutlineDocument className="text-base text-blue-500" />
+                  Document
+                </button>
+              </div>
+            )}
+
+            {/* Hidden file inputs */}
+            <input ref={fileInputRef} type="file" accept="image/*,video/*" className="hidden" onChange={handleImageAttach} />
+            <input ref={docInputRef}  type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip" className="hidden" onChange={handleDocAttach} />
+          </div>
+
+          {/* Text input */}
+          <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter" && input.trim()) setInput(""); }}
+            onKeyDown={(e) => { if (e.key === "Enter") sendText(); }}
             placeholder="Write message here..."
-            className="h-10 border-none bg-transparent shadow-none text-xs font-semibold text-gray-700 dark:text-gray-300 placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:ring-0"
+            className="flex-1 h-10 text-xs font-semibold text-gray-700 dark:text-gray-300 placeholder:text-gray-300 dark:placeholder:text-gray-600 bg-transparent outline-none"
           />
 
+          {/* Send / Mic */}
           {input.trim() ? (
             <button
-              onClick={() => setInput("")}
-              className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity"
+              onClick={sendText}
+              className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer"
             >
-              <HiOutlinePaperAirplane className="text-lg rotate-45" />
+              <HiOutlinePaperAirplane className="text-lg -rotate-45" />
             </button>
           ) : (
-            <button className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity">
+            <button className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer">
               <HiMicrophone className="text-lg" />
             </button>
           )}

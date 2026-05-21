@@ -205,7 +205,7 @@ export default function DocumentsPage() {
           <Button
             variant="primary"
             onClick={() => setIsDrawerOpen(true)}
-            className="h-12 px-5 bg-[#11131A] text-white dark:bg-white dark:text-gray-900 hover:opacity-90 font-bold"
+            className="h-11 px-5 bg-[#11131A] text-white dark:bg-white dark:text-gray-900 hover:opacity-90 font-bold"
             leftIcon={<HiOutlinePlus className="text-lg" />}
           >
             New Folder

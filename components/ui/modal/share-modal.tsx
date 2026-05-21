@@ -27,7 +27,7 @@ export function ShareModal({ isOpen, onClose, onShare, initialTags = ["Manager",
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="max-w-3xl">
+    <Modal isOpen={isOpen} onClose={onClose} className="max-w-xl">
       <ModalHeader onClose={onClose}>
         <ModalTitle className="text-center w-full block text-lg font-bold text-gray-900 dark:text-white">
           Share With
@@ -35,28 +35,26 @@ export function ShareModal({ isOpen, onClose, onShare, initialTags = ["Manager",
       </ModalHeader>
       <ModalContent className="flex flex-col gap-6">
         {/* Share target selection options grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {(["Everyone", "Department", "Offices", "Employee Group"] as ShareOption[]).map((option) => {
             const isSelected = selectedShareOption === option;
             return (
               <div
                 key={option}
                 onClick={() => setSelectedShareOption(option)}
-                className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all select-none ${
-                  isSelected
-                    ? "border-teal-500/80 bg-teal-500/[0.02]"
-                    : "border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300"
-                }`}
+                className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all select-none ${isSelected
+                  ? "border-teal-500/80 bg-teal-500/[0.02]"
+                  : "border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300"
+                  }`}
               >
                 <span className={`text-[11px] font-bold ${isSelected ? "text-teal-600 dark:text-teal-400" : "text-gray-700 dark:text-gray-300"}`}>
                   {option}
                 </span>
                 <div
-                  className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center transition-all ${
-                    isSelected
-                      ? "border-teal-500 bg-teal-500"
-                      : "border-gray-300 dark:border-gray-700 bg-transparent"
-                  }`}
+                  className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center transition-all ${isSelected
+                    ? "border-teal-500 bg-teal-500"
+                    : "border-gray-300 dark:border-gray-700 bg-transparent"
+                    }`}
                 >
                   {isSelected && (
                     <div className="w-1.5 h-1.5 rounded-full bg-white" />
@@ -73,12 +71,12 @@ export function ShareModal({ isOpen, onClose, onShare, initialTags = ["Manager",
             {tags.map((tag) => (
               <div
                 key={tag}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-300/50 dark:border-gray-750 text-[10px] font-bold text-gray-400 dark:text-gray-450"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 text-[10px] font-bold text-gray-800 dark:text-gray-200 h-8"
               >
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag)}
-                  className="hover:text-red-500 transition-colors"
+                  className="hover:text-red-500 transition-colors cursor-pointer"
                 >
                   <HiOutlineXMark className="text-xs" />
                 </button>

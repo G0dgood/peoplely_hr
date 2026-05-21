@@ -12,8 +12,9 @@ import {
   HiOutlineTrash,
   HiOutlineClipboardDocumentList,
 } from "react-icons/hi2";
-import { NewTemplateDrawer } from "@/components/ui/drawer";
+import { NewTemplateDrawer, LinkTaskDrawer } from "@/components/ui/drawer";
 import { EmptyState } from "@/components/ui/empty-state";
+import { DeleteModal } from "@/components/ui/modal";
 
 interface TemplateItem {
   id: string;
@@ -24,6 +25,8 @@ interface TemplateItem {
 export default function ChecklistSettingPage() {
   const [activeTab, setActiveTab] = React.useState<"onboarding" | "offboarding">("onboarding");
   const [isNewTemplateOpen, setIsNewTemplateOpen] = React.useState(false);
+  const [templateToDelete, setTemplateToDelete] = React.useState<TemplateItem | null>(null);
+  const [templateToLink, setTemplateToLink] = React.useState<TemplateItem | null>(null);
 
   // Mock template states
   const [onboardingTemplates, setOnboardingTemplates] = React.useState<TemplateItem[]>([
@@ -147,7 +150,7 @@ export default function ChecklistSettingPage() {
 
                 <div className="flex items-center gap-2 shrink-0">
                   <Link
-                    href="/dashboard/checklist/setting/detail"
+                    href="/checklist/setting/detail"
                     title="View details"
                     className="w-8 h-8 rounded-full bg-[#EAFBEF] text-[#10B981] dark:bg-[#10B981]/10 dark:text-[#10B981] flex items-center justify-center hover:scale-105 transition-transform"
                   >
@@ -156,6 +159,7 @@ export default function ChecklistSettingPage() {
 
                   <button
                     title="Link tasks"
+                    onClick={() => setTemplateToLink(template)}
                     className="w-8 h-8 rounded-full bg-[#EBF5FF] text-[#3B82F6] dark:bg-[#3B82F6]/10 dark:text-[#3B82F6] flex items-center justify-center hover:scale-105 transition-transform"
                   >
                     <HiOutlineLink className="text-sm" />
@@ -163,7 +167,7 @@ export default function ChecklistSettingPage() {
 
                   <button
                     title="Delete template"
-                    onClick={() => handleDeleteTemplate(template.id)}
+                    onClick={() => setTemplateToDelete(template)}
                     className="w-8 h-8 rounded-full bg-[#FEE2E2] text-[#EF4444] dark:bg-[#EF4444]/10 dark:text-[#EF4444] flex items-center justify-center hover:scale-105 transition-transform"
                   >
                     <HiOutlineTrash className="text-sm" />
@@ -189,6 +193,28 @@ export default function ChecklistSettingPage() {
         isOpen={isNewTemplateOpen}
         onClose={() => setIsNewTemplateOpen(false)}
         onCreate={handleCreateTemplate}
+      />
+
+      <DeleteModal
+        isOpen={templateToDelete !== null}
+        onClose={() => setTemplateToDelete(null)}
+        onConfirm={() => {
+          if (templateToDelete) {
+            handleDeleteTemplate(templateToDelete.id);
+          }
+        }}
+        itemName={templateToDelete?.name}
+        title="Delete Template"
+      />
+
+      <LinkTaskDrawer
+        isOpen={templateToLink !== null}
+        onClose={() => setTemplateToLink(null)}
+        templateName={templateToLink?.name}
+        onSave={(selectedTaskIds) => {
+          // Placeholder for saving logic
+          console.log(`Linked tasks ${selectedTaskIds} to template ${templateToLink?.id}`);
+        }}
       />
     </div>
   );

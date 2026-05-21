@@ -6,6 +6,7 @@ export * from "./profile-drawer";
 export * from "./time-off-drawer";
 export * from "./add-folder-drawer";
 export * from "./checklist-detail-drawer";
+export * from "./link-task-drawer";
 export * from "./new-task-drawer";
 export * from "./new-template-drawer";
 export * from "./edit-task-drawer";

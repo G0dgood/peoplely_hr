@@ -76,7 +76,7 @@ const EMPLOYEES = [
 
 export default function DashboardPage() {
  return (
-  <div className="flex flex-col gap-8 p-8">
+  <div className="flex flex-col gap-8 p-2 md:p-2 md:p-8">
    {/* Welcome Section */}
    <PageHeader title="Hi, Pristia" description="This is your HR report so far" />
 
@@ -107,7 +107,7 @@ export default function DashboardPage() {
     </div>
 
     {/* Performance Chart Card */}
-    <Card className="p-8 xl:col-span-2">
+    <Card className="p-4 md:p-8 xl:col-span-2">
      <div className="flex items-center justify-between mb-8">
       <h3 className="font-bold text-gray-900 dark:text-white">Team Performance</h3>
       <div className="flex items-center gap-6">
@@ -152,7 +152,7 @@ export default function DashboardPage() {
    {/* Employees Table and Total Employee Chart Row */}
    <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
     {/* Employees Table */}
-    <Card className="p-8 xl:col-span-3">
+    <Card className="p-4 md:p-8 xl:col-span-3">
      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
       <h3 className="font-bold text-gray-900 dark:text-white">Employees</h3>
       <div className="flex items-center gap-3">
@@ -221,7 +221,7 @@ export default function DashboardPage() {
     </Card>
 
     {/* Total Employee Chart */}
-    <Card className="p-8 xl:col-span-1">
+    <Card className="p-4 md:p-8 xl:col-span-1">
      <div className="flex items-center justify-between mb-8">
       <h3 className="font-bold text-gray-900 dark:text-white">Total Employee</h3>
       <Dropdown

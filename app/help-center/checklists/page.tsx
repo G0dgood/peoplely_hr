@@ -12,7 +12,7 @@ export default function ChecklistsHelpPage() {
   const [searchQuery, setSearchQuery] = React.useState("");
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Title area with Breadcrumbs and Search */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -44,7 +44,7 @@ export default function ChecklistsHelpPage() {
           <HiOutlineInformationCircle className="text-gray-400 text-lg" />
         </div>
 
-        <Card className="p-8 flex flex-col gap-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 shadow-sm leading-relaxed text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">
+        <Card className="p-2 md:p-8 flex flex-col gap-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 shadow-sm leading-relaxed text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">
           {/* Introduction */}
           <div className="flex flex-col gap-3">
             <h2 className="text-sm md:text-base font-bold text-gray-900 dark:text-white">

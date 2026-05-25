@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { NotificationPopup } from "@/components/ui/notification-popup";
 import { FaSearch } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
+import { HiOutlineBars3 } from "react-icons/hi2";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,12 +15,14 @@ export interface DashboardHeaderProps {
   userName?: string;
   userRole?: string;
   userAvatar?: string;
+  onMenuClick?: () => void;
 }
 
 export function DashboardHeader({
   userName = "Pristia",
   userRole = "Administrator",
   userAvatar = "https://i.pravatar.cc/150?u=pristia",
+  onMenuClick,
 }: DashboardHeaderProps) {
   const pathname = usePathname();
 
@@ -28,7 +31,16 @@ export function DashboardHeader({
       className="flex items-center justify-between px-8 h-20 transition-colors bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-800"
     >
       {/* Search and Nav links */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 md:gap-8">
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="md:hidden p-2 text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition-colors cursor-pointer"
+            aria-label="Toggle navigation menu"
+          >
+            <HiOutlineBars3 className="text-xl" />
+          </button>
+        )}
         <div className="flex items-center w-64 sm:w-80 relative">
           <Input
             placeholder="Search anything..."

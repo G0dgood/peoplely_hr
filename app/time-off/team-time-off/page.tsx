@@ -131,7 +131,7 @@ export default function TeamTimeOffPage() {
   const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 10 Mar 2023");
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Team Time Off" />
@@ -154,7 +154,7 @@ export default function TeamTimeOffPage() {
       </div>
 
       {view === "list" ? (
-        <Card className="p-8">
+        <Card className="p-4 md:p-8">
           {/* Filters Row */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
             <div className="relative">

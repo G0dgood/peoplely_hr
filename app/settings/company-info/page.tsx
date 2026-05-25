@@ -25,7 +25,7 @@ export default function CompanyInfoPage() {
       </div>
 
       {/* Form Content */}
-      <div className="p-8 flex flex-col gap-6">
+      <div className="p-4 md:p-8 flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Company Name"

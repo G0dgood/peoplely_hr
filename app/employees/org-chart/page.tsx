@@ -102,41 +102,41 @@ const OrgNode = ({ node, toggleNode }: { node: OrgNodeData; toggleNode: (id: str
 
       {/* Children Tree */}
       <AnimatePresence>
-      {hasChildren && node.isExpanded && node.children && node.children.length > 0 && (
-        <motion.div 
-          layout
-          initial={{ opacity: 0, y: -20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-          className="org-tree-children relative pt-8 flex justify-center origin-top"
-        >
-          {/* Vertical line from parent to horizontal line */}
-          <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
+        {hasChildren && node.isExpanded && node.children && node.children.length > 0 && (
+          <motion.div
+            layout
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="org-tree-children relative pt-8 flex justify-center origin-top"
+          >
+            {/* Vertical line from parent to horizontal line */}
+            <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
 
-          {node.children.map((child, index) => (
-            <motion.div layout key={child.id} className="org-tree-node relative px-2 sm:px-4 pt-8 flex flex-col items-center">
-              
-              {/* Horizontal line connections */}
-              {node.children!.length > 1 && (
-                <>
-                  {index !== 0 && (
-                    <motion.div layout className="absolute top-0 left-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
-                  )}
-                  {index !== node.children!.length - 1 && (
-                    <motion.div layout className="absolute top-0 right-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
-                  )}
-                </>
-              )}
+            {node.children.map((child, index) => (
+              <motion.div layout key={child.id} className="org-tree-node relative px-2 sm:px-4 pt-8 flex flex-col items-center">
 
-              {/* Vertical line to child */}
-              <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
+                {/* Horizontal line connections */}
+                {node.children!.length > 1 && (
+                  <>
+                    {index !== 0 && (
+                      <motion.div layout className="absolute top-0 left-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
+                    )}
+                    {index !== node.children!.length - 1 && (
+                      <motion.div layout className="absolute top-0 right-0 w-1/2 h-px bg-gray-300 dark:bg-gray-700"></motion.div>
+                    )}
+                  </>
+                )}
 
-              <OrgNode node={child} toggleNode={toggleNode} />
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
+                {/* Vertical line to child */}
+                <motion.div layout className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-8 bg-gray-300 dark:bg-gray-700"></motion.div>
+
+                <OrgNode node={child} toggleNode={toggleNode} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </AnimatePresence>
     </motion.div>
   );
@@ -164,10 +164,10 @@ export default function OrgChartPage() {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      <div className="p-8 flex-1 overflow-y-auto">
+      <div className="p-2 md:p-4 md:p-8 flex-1 overflow-y-auto">
         <div className="flex flex-col gap-8 bg-white dark:bg-gray-900">
-          
-          <div className="border border-gray-300 dark:border-gray-700 rounded-2xl p-8 flex flex-col bg-white dark:bg-gray-900 min-h-[600px] overflow-x-auto">
+
+          <div className="border border-gray-300 dark:border-gray-700 rounded-2xl p-4 md:p-8 flex flex-col bg-white dark:bg-gray-900 min-h-[600px] overflow-x-auto">
             {/* Header */}
             <div className="pb-6 border-b border-gray-300 dark:border-gray-700 mb-12">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">

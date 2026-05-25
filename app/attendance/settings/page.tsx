@@ -31,7 +31,7 @@ export default function AttendanceSettingsPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header Section */}
       <PageHeader title="Setting Attendance" description="Setting your Attendance" />
 
@@ -46,7 +46,7 @@ export default function AttendanceSettingsPage() {
         />
 
         {/* Right Side Settings Form Container */}
-        <Card className="p-8 border border-gray-200 dark:border-gray-800 md:col-span-3">
+        <Card className="p-4 md:p-8 border border-gray-200 dark:border-gray-800 md:col-span-3">
           {activeTab === "general" && (
             <div className="flex flex-col gap-6 max-w-2xl">
               <div>

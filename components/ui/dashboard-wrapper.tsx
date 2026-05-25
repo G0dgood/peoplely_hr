@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { DashboardSidenav } from "@/components/ui/dashboard-sidenav";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
@@ -12,6 +12,7 @@ export function DashboardWrapper({
 }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const pathname = usePathname();
 
   const isAuthPage = ["/", "/login", "/register", "/forgot-password", "/onboarding", "/otp-verify", "/password-success", "/update-password", "/checkout"].includes(pathname);
@@ -24,14 +25,25 @@ export function DashboardWrapper({
 
   const isMainRoute = knownMainRoutes.some(route => pathname.startsWith(route));
 
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
+
   // If it's an auth page OR an unknown page (404), hide the Sidebar/Header.
   if (isAuthPage || !isMainRoute) {
     return <main className={isDarkMode ? "dark bg-[#0a0a0a]" : "bg-white"}>{children}</main>;
   }
 
   return (
-    <div id="page-wrapper" className={isDarkMode ? "dark" : ""}>
-      <DashboardHeader />
+    <div id="page-wrapper" className={`${isDarkMode ? "dark" : ""} ${mobileNavOpen ? "mobile-nav-open" : ""}`}>
+      {/* Mobile Sidenav Backdrop */}
+      {mobileNavOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden transition-opacity duration-300"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
+      <DashboardHeader onMenuClick={() => setMobileNavOpen(!mobileNavOpen)} />
       <DashboardSidenav
         isDarkMode={isDarkMode}
         collapsed={collapsed}

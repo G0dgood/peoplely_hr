@@ -77,7 +77,7 @@ export default function FAQPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Title area with Breadcrumbs and Search */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

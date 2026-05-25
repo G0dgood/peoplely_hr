@@ -61,7 +61,7 @@ export default function JobTitlesPage() {
       </div>
 
       {/* Content Area / Table */}
-      <div className="p-8 flex-1 overflow-x-auto">
+      <div className="p-4 md:p-8 flex-1 overflow-x-auto">
         <div className="min-w-[700px] flex flex-col">
           {/* Table Header */}
           <div className="flex items-center pb-4 border-b border-gray-300 dark:border-gray-800 text-xs font-bold text-gray-400 dark:text-gray-500">

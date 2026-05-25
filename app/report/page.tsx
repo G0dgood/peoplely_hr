@@ -75,13 +75,13 @@ const REPORT_CARDS: ReportCardProps[] = [
 
 export default function ReportPage() {
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       <PageHeader title="Report" description="Here's report so far" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {REPORT_CARDS.map((card, index) => (
           <Link key={index} href={card.href}>
-            <Card className="p-8 border border-gray-300 dark:border-gray-800/80 bg-white dark:bg-gray-900 rounded-2xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer group h-full">
+            <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800/80 bg-white dark:bg-gray-900 rounded-2xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer group h-full">
               {/* Icon badge */}
               <div className="w-10 h-10 rounded-xl bg-[#E8FAF4] dark:bg-[#0FAF7A]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 {card.icon}

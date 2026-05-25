@@ -87,7 +87,7 @@ export default function MyTimeOffPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Leave Summary Row */}
       <div className="relative group">
         <div className="flex items-center gap-6 overflow-x-auto pb-4 no-scrollbar">
@@ -110,7 +110,7 @@ export default function MyTimeOffPage() {
       </div>
 
       {/* Request Time List Section */}
-      <Card className="p-8">
+      <Card className="p-4 md:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">Request Time List</h3>
           <div className="flex items-center gap-3">
@@ -188,7 +188,7 @@ export default function MyTimeOffPage() {
       </Card>
 
       {/* Balance History Section */}
-      <Card className="p-8">
+      <Card className="p-4 md:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">Balance History</h3>
           <div className="flex items-center gap-4">

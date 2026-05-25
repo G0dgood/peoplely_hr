@@ -209,7 +209,7 @@ export default function PayrollListPage() {
   }, 0);
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Payroll" description="Manage your team's payroll" />
@@ -247,7 +247,7 @@ export default function PayrollListPage() {
       </div>
 
       {/* Main Table Card */}
-      <Card className="p-8 border border-gray-300 dark:border-gray-800">
+      <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800">
         <div className="flex flex-col gap-8">
 
           {/* Filters Row */}

@@ -36,7 +36,7 @@ export default function LoginPage() {
     <main className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
       
       {/* LEFT PANEL: HERO BANNER */}
-      <section className="w-full lg:w-1/2 bg-[#0F1116] flex flex-col justify-between p-8 lg:p-12 relative">
+      <section className="w-full lg:w-1/2 bg-[#0F1116] flex flex-col justify-between p-4 md:p-8 lg:p-12 relative">
         {/* Banner image layout */}
         <div className="w-full flex-1 flex flex-col rounded-2xl overflow-hidden bg-cover bg-center min-h-[300px] lg:min-h-0"
              style={{ backgroundImage: `url('/login_banner.png')` }}>
@@ -58,7 +58,7 @@ export default function LoginPage() {
       </section>
 
       {/* RIGHT PANEL: LOGIN FORM */}
-      <section className="w-full lg:w-1/2 flex flex-col justify-between p-8 lg:p-12 bg-white">
+      <section className="w-full lg:w-1/2 flex flex-col justify-between p-4 md:p-8 lg:p-12 bg-white">
         
         {/* Top Spacer or helper for vertical centering */}
         <div className="hidden lg:block"></div>

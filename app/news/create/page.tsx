@@ -31,7 +31,7 @@ export default function CreateNewsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with back button */}
       <div>
         <Link
@@ -44,7 +44,7 @@ export default function CreateNewsPage() {
       </div>
 
       <form onSubmit={(e) => handleSubmit(e, "PUBLISHED")} className="flex flex-col gap-6">
-        <Card className="p-8 border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl shadow-sm flex flex-col gap-6">
+        <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl shadow-sm flex flex-col gap-6">
           {/* Title & Share Options */}
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
             <div className="xl:col-span-3 flex flex-col gap-2">

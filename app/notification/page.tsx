@@ -76,7 +76,7 @@ export default function AllNotificationsPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Page Header */}
       <div className="flex items-start justify-between gap-4">
         <div>

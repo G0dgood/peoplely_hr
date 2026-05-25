@@ -703,7 +703,7 @@ function SuccessModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-[400px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-2xl p-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-[400px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-2xl p-4 md:p-8 flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
 
         {/* Animated Check & Confetti Illustration Container */}
         <div className="relative w-36 h-36 flex items-center justify-center mb-6">
@@ -764,7 +764,7 @@ export default function RecruitmentJobsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <PageHeader title="Recruitment" description="Here's all job list" />

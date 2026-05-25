@@ -28,7 +28,7 @@ export default function EmployeeDetailPage() {
  const [activeTab, setActiveTab] = React.useState("General");
 
  return (
-  <div className="flex flex-col gap-8 p-8 min-h-full">
+  <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
    {/* Back Button */}
    <Link
     href="/employees"
@@ -41,7 +41,7 @@ export default function EmployeeDetailPage() {
    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
     {/* Left Column - Profile Card */}
     <div className="lg:col-span-4 flex flex-col gap-6">
-     <Card className="p-8 flex flex-col items-center text-center">
+     <Card className="p-4 md:p-8 flex flex-col items-center text-center">
       <Avatar
        src="https://i.pravatar.cc/150?u=pristia"
        alt="Pristia Candra"
@@ -132,7 +132,7 @@ export default function EmployeeDetailPage() {
       ) : activeTab === "Setting" ? (
        <SettingsSection />
       ) : (
-       <Card className="p-8 flex items-center justify-center text-gray-400">
+       <Card className="p-4 md:p-8 flex items-center justify-center text-gray-400">
         Content for {activeTab} tab is coming soon.
        </Card>
       )}

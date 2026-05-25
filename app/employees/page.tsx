@@ -178,7 +178,7 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 relative min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-2 md:p-8 relative min-h-full">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <PageHeader title="Employees" description="Manage your Employee" />
@@ -252,75 +252,75 @@ export default function EmployeesPage() {
                 {EMPLOYEES.map((emp, index) => {
                   const isMenuOpen = activeMenuIndex === index;
                   return (
-                  <TableRow key={emp.email} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
-                    <TableCell className="py-4 px-2">
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar src={emp.avatar} size="sm" />
-                        <div>
-                          <p className="text-xs font-bold text-gray-900 dark:text-white">{emp.name}</p>
-                          <p className="text-[10px] text-gray-400 dark:text-gray-500">{emp.email}</p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.role}</TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.manager}</TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.department}</TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.office}</TableCell>
-                    <TableCell className="py-4 px-4 text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Badge
-                          variant={emp.status === "ACTIVE" ? "success" : emp.status === "ON BOARDING" ? "secondary" : emp.status === "PROBATION" ? "primary" : "error"}
-                          tinted
-                          className="text-[9px] uppercase tracking-wider"
-                        >
-                          {emp.status}
-                        </Badge>
-                        <HiOutlineChevronDown className="text-gray-300 dark:text-gray-600 text-xs" />
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.account}</TableCell>
-                    <TableCell className="py-4 px-4 text-right">
-                      <div className="relative inline-block text-left action-menu-container">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuIndex(isMenuOpen ? null : index);
-                          }}
-                          className="inline-flex w-8 h-8 items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
-                        >
-                          <HiOutlineEllipsisVertical className="text-sm" />
-                        </button>
-
-                        {isMenuOpen && (
-                          <div className="absolute right-4 mt-1 w-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
-                            <button
-                              onClick={() => {
-                                router.push("/employees/1");
-                                setActiveMenuIndex(null);
-                              }}
-                              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                            >
-                              <HiOutlineEye className="text-gray-400 text-sm" />
-                              View
-                            </button>
-                            <button
-                              onClick={() => {
-                                handleEditClick(emp);
-                                setActiveMenuIndex(null);
-                              }}
-                              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-t border-gray-100 dark:border-gray-800/60 transition-colors"
-                            >
-                              <HiOutlinePencilSquare className="text-gray-400 text-sm" />
-                              Edit
-                            </button>
+                    <TableRow key={emp.email} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
+                      <TableCell className="py-4 px-2">
+                        <Checkbox />
+                      </TableCell>
+                      <TableCell className="py-4 px-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar src={emp.avatar} size="sm" />
+                          <div>
+                            <p className="text-xs font-bold text-gray-900 dark:text-white">{emp.name}</p>
+                            <p className="text-[10px] text-gray-400 dark:text-gray-500">{emp.email}</p>
                           </div>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.role}</TableCell>
+                      <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.manager}</TableCell>
+                      <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.department}</TableCell>
+                      <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.office}</TableCell>
+                      <TableCell className="py-4 px-4 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Badge
+                            variant={emp.status === "ACTIVE" ? "success" : emp.status === "ON BOARDING" ? "secondary" : emp.status === "PROBATION" ? "primary" : "error"}
+                            tinted
+                            className="text-[9px] uppercase tracking-wider"
+                          >
+                            {emp.status}
+                          </Badge>
+                          <HiOutlineChevronDown className="text-gray-300 dark:text-gray-600 text-xs" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.account}</TableCell>
+                      <TableCell className="py-4 px-4 text-right">
+                        <div className="relative inline-block text-left action-menu-container">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuIndex(isMenuOpen ? null : index);
+                            }}
+                            className="inline-flex w-8 h-8 items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                          >
+                            <HiOutlineEllipsisVertical className="text-sm" />
+                          </button>
+
+                          {isMenuOpen && (
+                            <div className="absolute right-4 mt-1 w-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
+                              <button
+                                onClick={() => {
+                                  router.push("/employees/1");
+                                  setActiveMenuIndex(null);
+                                }}
+                                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                              >
+                                <HiOutlineEye className="text-gray-400 text-sm" />
+                                View
+                              </button>
+                              <button
+                                onClick={() => {
+                                  handleEditClick(emp);
+                                  setActiveMenuIndex(null);
+                                }}
+                                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-t border-gray-100 dark:border-gray-800/60 transition-colors"
+                              >
+                                <HiOutlinePencilSquare className="text-gray-400 text-sm" />
+                                Edit
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
               </TableBody>

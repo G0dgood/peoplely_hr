@@ -108,7 +108,7 @@ export default function WorkSchedulePage() {
       </div>
 
       {/* Content Area */}
-      <div className="p-8 flex-1 overflow-y-auto flex flex-col gap-6">
+      <div className="p-4 md:p-8 flex-1 overflow-y-auto flex flex-col gap-6">
         {schedules.map((schedule) => {
           const isExpanded = expanded.includes(schedule.id);
 

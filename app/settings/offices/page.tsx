@@ -60,7 +60,7 @@ export default function OfficesPage() {
       </div>
 
       {/* Content */}
-      <div className="p-8 flex flex-col gap-6">
+      <div className="p-4 md:p-8 flex flex-col gap-6">
         {offices.map((office) => (
           <div
             key={office.id}

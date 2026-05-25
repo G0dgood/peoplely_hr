@@ -90,7 +90,7 @@ export default function TimeOffSettingsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header Section */}
       <PageHeader title="Setting Time Off" description="Setting your Time off here" />
 
@@ -105,7 +105,7 @@ export default function TimeOffSettingsPage() {
         />
 
         {/* Content Area */}
-        <Card className="lg:col-span-9 p-8">
+        <Card className="lg:col-span-9 p-4 md:p-8">
           {activeTab === "holiday" ? (
             <div className="flex flex-col gap-8">
               <div className="flex items-center justify-between">

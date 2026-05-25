@@ -59,7 +59,7 @@ export default function SubscriptionPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="p-8 flex-1 overflow-y-auto">
+      <div className="p-4 md:p-8 flex-1 overflow-y-auto">
         <div className="max-w-4xl flex flex-col gap-8">
           {activeTab === "Plan" ? (
             <div className="border border-gray-300 dark:border-gray-800 rounded-2xl flex flex-col bg-white dark:bg-gray-900">

@@ -821,7 +821,7 @@ export default function JobDetailPage() {
  };
 
  return (
-  <div className="flex flex-col gap-6 p-8 min-h-full">
+  <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full">
    {/* Header */}
    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
     <div>

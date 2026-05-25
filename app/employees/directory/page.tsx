@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { 
-  HiOutlineEnvelope, 
-  HiOutlinePhone 
+import {
+  HiOutlineEnvelope,
+  HiOutlinePhone
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -100,7 +100,7 @@ const DIRECTORY_DATA = [
 
 export default function DirectoryPage() {
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-2 md:p-8 min-h-full">
       {/* Header Section */}
       <PageHeader title="Directory" description="This is director board" />
 
@@ -108,31 +108,31 @@ export default function DirectoryPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {DIRECTORY_DATA.map((person, index) => (
           <Link key={index} href={`/employees/${index + 1}`}>
-            <Card className="p-8 flex flex-col items-center text-center group hover:border-primary dark:hover:border-primary hover:shadow-md transition-all h-full cursor-pointer">
-            <Avatar 
-              src={person.avatar} 
-              size="lg" 
-              className="mb-6 ring-4 ring-gray-50 dark:ring-gray-800 group-hover:ring-primary/10 transition-all"
-            />
-            
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">
-              {person.name}
-            </h3>
-            <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-6">
-              {person.role}
-            </p>
+            <Card className="p-4 md:p-8 flex flex-col items-center text-center group hover:border-primary dark:hover:border-primary hover:shadow-md transition-all h-full cursor-pointer">
+              <Avatar
+                src={person.avatar}
+                size="lg"
+                className="mb-6 ring-4 ring-gray-50 dark:ring-gray-800 group-hover:ring-primary/10 transition-all"
+              />
 
-            <div className="w-full flex flex-col gap-3 pt-6 border-t border-gray-50 dark:border-gray-800 text-left">
-              <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                <HiOutlineEnvelope className="text-lg shrink-0" />
-                <span className="text-xs font-bold truncate">{person.email}</span>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">
+                {person.name}
+              </h3>
+              <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-6">
+                {person.role}
+              </p>
+
+              <div className="w-full flex flex-col gap-3 pt-6 border-t border-gray-50 dark:border-gray-800 text-left">
+                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                  <HiOutlineEnvelope className="text-lg shrink-0" />
+                  <span className="text-xs font-bold truncate">{person.email}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                  <HiOutlinePhone className="text-lg shrink-0" />
+                  <span className="text-xs font-bold">{person.phone}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                <HiOutlinePhone className="text-lg shrink-0" />
-                <span className="text-xs font-bold">{person.phone}</span>
-              </div>
-            </div>
-          </Card>
+            </Card>
           </Link>
         ))}
       </div>

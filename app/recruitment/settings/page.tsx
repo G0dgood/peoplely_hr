@@ -370,7 +370,7 @@ export default function RecruitmentSettingsPage() {
  });
 
  return (
-  <div className="flex flex-col gap-8 p-8 min-h-full">
+  <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
    <PageHeader title="Setting Recruitment" description={`${activeTab === "workflow" && "Hiring Workflow"}
    ${activeTab === "tags" && "Tag & Resource"}
    ${activeTab === "emails" && "Email Template"}`}
@@ -386,7 +386,7 @@ export default function RecruitmentSettingsPage() {
     />
 
     {/* Right Content */}
-    <Card className="p-8 border border-gray-300 dark:border-gray-800 md:col-span-3">
+    <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 md:col-span-3">
      {/* Tab 1: Hiring Workflow */}
      {activeTab === "workflow" && (
       <div className="flex flex-col gap-6">

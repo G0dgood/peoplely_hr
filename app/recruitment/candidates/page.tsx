@@ -274,7 +274,7 @@ export default function CandidatesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <PageHeader title="Candidates" description="This is the data of all candidates who applied" />

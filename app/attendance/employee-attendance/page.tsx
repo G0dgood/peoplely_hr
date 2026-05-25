@@ -186,14 +186,14 @@ export default function EmployeeAttendancePage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Employee Attendance" description="Manage your Team Attendance" />
       </div>
 
       {/* Main Content Area */}
-      <Card className="p-8 border border-gray-200 dark:border-gray-800">
+      <Card className="p-4 md:p-8 border border-gray-200 dark:border-gray-800">
         <div className="flex flex-col gap-8">
           {/* Info Alert Banner */}
           <div className="flex items-center gap-3 px-4 py-3.5 bg-blue-50/55 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-2xl">

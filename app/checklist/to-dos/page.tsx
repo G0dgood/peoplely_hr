@@ -154,12 +154,12 @@ export default function ChecklistToDosPage() {
   });
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with title and search filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Checklist - To Dos" description="These are some of the tasks that must be completed" />
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3  flex-col justify-start md:flex">
           {/* Custom interactive status select dropdown */}
           <div className="relative">
             <button
@@ -217,7 +217,7 @@ export default function ChecklistToDosPage() {
       </div>
 
       {/* Main Checklist Card wrapper */}
-      <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 flex flex-col gap-4">
+      <Card className="p-4 md:p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 flex flex-col gap-4">
         <div className="flex justify-end">
           <RowPerPage itemsPerPage={10} />
         </div>
@@ -254,7 +254,7 @@ export default function ChecklistToDosPage() {
                   {/* Task name with circular checkbox */}
                   <TableCell className="py-4 px-4">
                     <div className="flex items-center gap-3.5">
-                      <div 
+                      <div
                         className="relative flex items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -279,11 +279,10 @@ export default function ChecklistToDosPage() {
                         )}
                       </div>
                       <span
-                        className={`text-xs font-bold transition-all ${
-                          task.completed
-                            ? "text-gray-400 line-through dark:text-gray-550"
-                            : "text-gray-900 dark:text-white"
-                        }`}
+                        className={`text-xs font-bold transition-all ${task.completed
+                          ? "text-gray-400 line-through dark:text-gray-550"
+                          : "text-gray-900 dark:text-white"
+                          }`}
                       >
                         {task.taskName}
                       </span>
@@ -335,9 +334,9 @@ export default function ChecklistToDosPage() {
           </Table>
         </div>
 
-          <div className="mt-4">
-            <Pagination className="mt-0 w-full" />
-          </div>
+        <div className="mt-4">
+          <Pagination className="mt-0 w-full" />
+        </div>
       </Card>
 
       {/* Checklist Detail Drawer */}

@@ -138,7 +138,7 @@ export default function DepartmentPage() {
       </div>
 
       {/* Content */}
-      <div className="p-8 flex flex-col items-center overflow-x-auto min-h-[500px]">
+      <div className="p-4 md:p-8 flex flex-col items-center overflow-x-auto min-h-[500px]">
         <div className="min-w-max py-8">
           <OrgNode node={ORG_DATA} isRoot={true} onAddClick={handleAddClick} />
         </div>

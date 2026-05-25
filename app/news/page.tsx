@@ -110,7 +110,7 @@ export default function NewsListPage() {
   });
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with breadcrumbs and filters */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <PageHeader title="Latest News" description="List News" />

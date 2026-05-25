@@ -12,10 +12,10 @@ export default function PasswordPage() {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      <div className="p-8 flex-1 overflow-y-auto">
+      <div className="p-4 md:p-8 flex-1 overflow-y-auto">
         <div className="max-w-4xl flex flex-col">
 
-          <div className="border border-gray-300 dark:border-gray-800 rounded-2xl p-8 flex flex-col gap-8 bg-white dark:bg-gray-900">
+          <div className="border border-gray-300 dark:border-gray-800 rounded-2xl p-2 md:p-8 flex flex-col gap-8 bg-white dark:bg-gray-900">
             {/* Header */}
             <div className="pb-6 border-b border-gray-300 dark:border-gray-800">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">

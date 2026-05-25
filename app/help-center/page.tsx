@@ -92,7 +92,7 @@ export default function HelpCenterPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with title and search bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PageHeader title="Help Center" description="What can we help you with?" />
@@ -113,7 +113,7 @@ export default function HelpCenterPage() {
         {filteredCategories.map((category) => {
           const CardContent = (
             <Card
-              className="p-8 h-full flex flex-col gap-6 hover:shadow-lg transition-all cursor-pointer group hover:-translate-y-0.5 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900"
+              className="p-4 md:p-8 h-full flex flex-col gap-6 hover:shadow-lg transition-all cursor-pointer group hover:-translate-y-0.5 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900"
             >
               <div className="w-12 h-12 rounded-full bg-teal-50 dark:bg-teal-950/20 flex items-center justify-center text-teal-600 dark:text-teal-400 text-xl transition-all group-hover:scale-105">
                 {category.icon}

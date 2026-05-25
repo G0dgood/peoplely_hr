@@ -14,7 +14,7 @@ export default function CheckoutPage() {
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-white dark:bg-gray-950">
 
       {/* Left Panel - Summary (Green Background) */}
-      <div className="w-full md:w-1/2 bg-[#0FAF7A] p-8 md:p-16 lg:p-24 flex flex-col justify-between text-white relative">
+      <div className="w-full md:w-1/2 bg-[#0FAF7A] p-4 md:p-8 md:p-16 lg:p-24 flex flex-col justify-between text-white relative">
         <div className="flex flex-col gap-12">
           {/* Header */}
           <div className="flex flex-col gap-6">
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
       </div>
 
       {/* Right Panel - Payment Form (White Background) */}
-      <div className="w-full md:w-1/2 p-8 md:p-16 lg:p-24 flex flex-col justify-center max-w-2xl mx-auto">
+      <div className="w-full md:w-1/2 p-4 md:p-8 md:p-16 lg:p-24 flex flex-col justify-center max-w-2xl mx-auto">
         <div className="flex flex-col gap-2 mb-10">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Pay with card</h1>
           <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">

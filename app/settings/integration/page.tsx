@@ -40,7 +40,7 @@ export default function IntegrationPage() {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      <div className="p-8 flex-1 overflow-y-auto">
+      <div className="p-4 md:p-8 flex-1 overflow-y-auto">
         <div className="max-w-4xl flex flex-col gap-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

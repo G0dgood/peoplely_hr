@@ -43,7 +43,7 @@ export default function PayslipDetailPage() {
   const netPay = totalEarnings - totalDeductions;
 
   return (
-    <div className="flex flex-col gap-6 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header & Breadcrumbs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

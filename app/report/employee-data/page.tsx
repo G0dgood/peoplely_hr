@@ -209,7 +209,7 @@ export default function EmployeeDataReportsPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header & Breadcrumb */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -249,7 +249,7 @@ export default function EmployeeDataReportsPage() {
         </Card>
 
         {/* Right Side Main Content Panel */}
-        <Card className="flex-1 p-8 border border-gray-300 dark:border-gray-800/80 bg-white dark:bg-gray-900 rounded-2xl shadow-xs flex flex-col gap-8">
+        <Card className="flex-1 p-2 md:p-8 border border-gray-300 dark:border-gray-800/80 bg-white dark:bg-gray-900 rounded-2xl shadow-xs flex flex-col gap-8">
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-lg font-bold text-gray-900 dark:text-white capitalize">

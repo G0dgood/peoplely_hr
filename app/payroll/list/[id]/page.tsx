@@ -103,7 +103,7 @@ export default function PayrollDetailPage() {
  const e = EMPLOYEE_PAYROLL;
 
  return (
-  <div className="flex flex-col gap-8 p-8 min-h-full">
+  <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
    {/* Back Header */}
    <div className="flex items-center justify-between">
     <button
@@ -141,7 +141,7 @@ export default function PayrollDetailPage() {
    </div>
 
    {/* Main Detail Card */}
-   <Card className="p-8 border border-gray-300 dark:border-gray-800">
+   <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800">
 
     {/* Employee Profile Header */}
     <div className="flex items-center gap-5 mb-8">

@@ -80,7 +80,7 @@ export default function PayslipListPage() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -100,7 +100,7 @@ export default function PayslipListPage() {
       </div>
 
       {/* Payslips Table */}
-      <Card className="p-8 border border-gray-300 dark:border-gray-800">
+      <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800">
         <div className="flex flex-col gap-6">
           <div className="overflow-x-auto">
             <Table>

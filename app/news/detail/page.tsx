@@ -24,7 +24,7 @@ export default function NewsDetailPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+    <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Header section with breadcrumbs and actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex flex-col gap-1.5">
@@ -142,7 +142,7 @@ export default function NewsDetailPage() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={18}
-          className="p-8 bg-transparent outline-none text-xs font-semibold text-gray-700 dark:text-gray-300 resize-none leading-relaxed"
+          className="p-4 md:p-8 bg-transparent outline-none text-xs font-semibold text-gray-700 dark:text-gray-300 resize-none leading-relaxed"
         />
       </Card>
     </div>

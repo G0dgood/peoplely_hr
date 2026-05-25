@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { HiOutlineChevronDown, HiOutlineChevronRight } from "react-icons/hi2";
+import { HiOutlineChevronDown, HiOutlineChevronRight, HiOutlineXMark } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -116,8 +116,8 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
         onSubmit={handleSubmit}
         className="relative w-full max-w-2xl bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-all duration-300"
       >
-        {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
+        {/* Dismiss slide button (vertically centered on the left border of the drawer panel) - Hidden on mobile */}
+        <div className="hidden md:block absolute top-1/2 -translate-y-1/2 -left-30 z-50">
           <button
             type="button"
             onClick={onClose}
@@ -127,11 +127,23 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="p-8 flex-1 overflow-y-auto flex flex-col gap-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+        {/* Sticky Header with Close Button */}
+        <div className="flex items-center justify-between px-6 py-5 sm:px-8 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
             {candidate ? "Edit Candidate" : "New Candidate"}
           </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            aria-label="Close drawer"
+          >
+            <HiOutlineXMark className="text-xl" />
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="p-6 sm:p-8 flex-1 overflow-y-auto flex flex-col gap-6">
 
           {/* File Upload Fields Grid */}
           <div className="flex flex-col sm:flex-row gap-4">
@@ -212,7 +224,7 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
           </div>
 
           {/* First Name & Last Name */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="First Name"
               required
@@ -232,7 +244,7 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
           </div>
 
           {/* Email Address & Phone Number */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Email Address"
               required
@@ -253,14 +265,14 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
           </div>
 
           {/* Job & Source */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="relative flex flex-col gap-1.5">
               <label className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Job</label>
               <div className="relative">
                 <select
                   value={job}
                   onChange={(e) => setJob(e.target.value)}
-                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
+                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-355 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
                 >
                   <option value="">Select job</option>
                   <option value="Designer">Designer</option>
@@ -296,13 +308,13 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
               placeholder="Input cover letter"
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
-              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
+              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-355 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
             />
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
+        <div className="p-6 sm:p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
           <Button
             type="button"
             variant="outline"

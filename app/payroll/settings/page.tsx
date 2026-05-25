@@ -26,7 +26,7 @@ export default function PayrollSettingsPage() {
  ];
 
  return (
-  <div className="flex flex-col gap-8 p-8 min-h-full">
+  <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
    {/* Header */}
    <PageHeader title="Setting Payroll" description="Setting your payroll" />
 
@@ -42,7 +42,7 @@ export default function PayrollSettingsPage() {
     />
 
     {/* Right Content */}
-    <Card className="p-8 border border-gray-300 dark:border-gray-800 md:col-span-3">
+    <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 md:col-span-3">
 
      {/* ── General ── */}
      {activeTab === "general" && (

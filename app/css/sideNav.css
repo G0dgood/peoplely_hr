@@ -25,15 +25,14 @@
 @media screen and (max-width: 768px) {
 
   #sidenav {
-    /* display: none; */
-     position: fixed !important;
+    position: fixed !important;
     top: 0;
     left: 0;
     bottom: 0;
     z-index: 50;
-    background-color: white;
-    /* Ensure it doesn't mess with grid area since it's fixed */
     grid-area: auto; 
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
 
 }

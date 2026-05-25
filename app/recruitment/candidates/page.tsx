@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
-import { EditCandidateModal } from "@/components/ui/modal";
+import { EditCandidateDrawer } from "@/components/ui/drawer";
 import {
   Table,
   TableBody,
@@ -474,8 +474,8 @@ export default function CandidatesPage() {
         </div>
       </Card>
 
-      {/* Add / Edit Modal */}
-      <EditCandidateModal
+      {/* Add / Edit Drawer */}
+      <EditCandidateDrawer
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);

@@ -77,7 +77,7 @@ export default function KeyboardShortcutPage() {
           <HiOutlineInformationCircle className="text-gray-400 text-lg" />
         </div>
 
-        <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 shadow-sm flex flex-col gap-6">
+        <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 flex flex-col gap-6">
           <div>
             <h2 className="text-sm md:text-base font-bold text-gray-900 dark:text-white mb-1.5">
               A list of Keyboard Shortcuts to help you navigate Peoplely HR quicker

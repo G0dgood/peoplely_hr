@@ -1,16 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { HiOutlineChevronDown } from "react-icons/hi2";
+import { HiOutlineChevronDown, HiOutlineChevronRight } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Modal,
-  ModalHeader,
-  ModalTitle,
-  ModalContent,
-  ModalFooter,
-} from "./modal";
 
 interface Candidate {
   id: number;
@@ -24,7 +17,7 @@ interface Candidate {
   stage: "Applied" | "Screening" | "1st Interview" | "2nd Interview" | "Hiring" | "Rejected";
 }
 
-export interface EditCandidateModalProps {
+export interface EditCandidateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (c: Omit<Candidate, "id" | "avatar" | "createdDate">) => void;
@@ -49,7 +42,7 @@ const AttachmentUploadIcon = () => (
   </svg>
 );
 
-export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditCandidateModalProps) {
+export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: EditCandidateDrawerProps) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -109,20 +102,42 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
     onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} position="right" className="sm:max-w-2xl h-full !rounded-none">
-      <form onSubmit={handleSubmit} className="flex flex-col h-full bg-white dark:bg-gray-950">
-        <ModalHeader className="border-b-0 pb-0">
-          <ModalTitle className="text-xl font-bold text-gray-900 dark:text-white">
+    <div className="fixed inset-0 z-[100] flex justify-end">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/20"
+        onClick={onClose}
+      />
+      {/* Drawer Panel */}
+      <form
+        onSubmit={handleSubmit}
+        className="relative w-full max-w-2xl bg-white dark:bg-gray-900 h-full flex flex-col shadow-2xl transition-all duration-300"
+      >
+        {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
+        <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-355"
+          >
+            <HiOutlineChevronRight className="text-xl" />
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="p-8 flex-1 overflow-y-auto flex flex-col gap-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
             {candidate ? "Edit Candidate" : "New Candidate"}
-          </ModalTitle>
-        </ModalHeader>
-        <ModalContent className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-5">
+          </h2>
+
           {/* File Upload Fields Grid */}
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Upload CV */}
             <div className="flex flex-col gap-1.5 flex-1">
-              <span className="text-[11px] font-bold text-gray-550 dark:text-gray-400">Upload CV</span>
+              <span className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Upload CV</span>
               <div
                 onClick={() => cvInputRef.current?.click()}
                 className="border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between bg-gray-55/20 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-55 dark:hover:bg-gray-800 transition-colors cursor-pointer h-[52px]"
@@ -245,7 +260,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
                 <select
                   value={job}
                   onChange={(e) => setJob(e.target.value)}
-                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
+                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
                 >
                   <option value="">Select job</option>
                   <option value="Designer">Designer</option>
@@ -262,7 +277,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
                 <select
                   value={source}
                   onChange={(e) => setSource(e.target.value)}
-                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
+                  className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-355 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
                 >
                   <option value="">Add source</option>
                   <option value="LinkedIn">LinkedIn</option>
@@ -281,19 +296,29 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
               placeholder="Input cover letter"
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
-              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
+              className="w-full min-h-[96px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl p-4 text-xs font-bold text-gray-700 dark:text-gray-350 focus:outline-none placeholder:text-gray-400 resize-y transition-colors"
             />
           </div>
-        </ModalContent>
-        <ModalFooter className="border-t-0 pt-0 pb-8 flex items-center justify-end gap-3 px-6">
-          <Button type="button" variant="outline" onClick={onClose} className="px-8 h-12 rounded-xl text-xs font-bold">
+        </div>
+
+        {/* Footer Actions */}
+        <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4 bg-white dark:bg-gray-900">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
             Cancel
           </Button>
-          <Button type="submit" variant="primary" className="px-8 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900">
+          <Button
+            type="submit"
+            className="flex-1 font-bold h-12 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
+          >
             {candidate ? "Save Changes" : "Create"}
           </Button>
-        </ModalFooter>
+        </div>
       </form>
-    </Modal>
+    </div>
   );
 }

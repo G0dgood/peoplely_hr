@@ -17,7 +17,7 @@ export default function LoginPage() {
   // - duarte@gmail.com -> error state (red border & alert message)
   const isPristia = email.trim().toLowerCase() === "pristia@gmail.com";
   const isDuarte = email.trim().toLowerCase() === "duarte@gmail.com";
-  
+
   const hasEmail = email.trim().length > 0;
   const hasPassword = password.length > 0;
   const isFormFilled = hasEmail && hasPassword;
@@ -33,13 +33,13 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
-      
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
+
       {/* LEFT PANEL: HERO BANNER */}
       <section className="w-full lg:w-1/2 bg-[#0F1116] flex flex-col justify-between p-4 md:p-8 lg:p-12 relative">
         {/* Banner image layout */}
         <div className="w-full flex-1 flex flex-col rounded-2xl overflow-hidden bg-cover bg-center min-h-[300px] lg:min-h-0"
-             style={{ backgroundImage: `url('/login_banner.png')` }}>
+          style={{ backgroundImage: `url('/login_banner.png')` }}>
         </div>
 
         {/* Text Details Area */}
@@ -59,7 +59,7 @@ export default function LoginPage() {
 
       {/* RIGHT PANEL: LOGIN FORM */}
       <section className="w-full lg:w-1/2 flex flex-col justify-between p-4 md:p-8 lg:p-12 bg-white">
-        
+
         {/* Top Spacer or helper for vertical centering */}
         <div className="hidden lg:block"></div>
 
@@ -72,7 +72,7 @@ export default function LoginPage() {
           </div>
 
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-            
+
             {/* Email Input Group */}
             <div className="flex flex-col gap-1.5">
               <label className="text-body-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -84,13 +84,12 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Input your registered email"
-                  className={`w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 ${
-                    emailHasError
+                  className={`w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 ${emailHasError
                       ? "border-error focus:ring-error/20 focus:border-error"
                       : emailIsValidated
                         ? "border-[#10B981] focus:ring-primary/20 focus:border-primary"
                         : "border-gray-300 focus:ring-primary/20 focus:border-primary"
-                  }`}
+                    }`}
                 />
                 {emailIsValidated && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#10B981] flex items-center justify-center">
@@ -131,15 +130,14 @@ export default function LoginPage() {
 
             {/* Checkbox and Forgot Link */}
             <div className="flex items-center justify-between text-body-xs select-none">
-              <label 
+              <label
                 className="flex items-center gap-2 font-semibold text-gray-600 cursor-pointer"
                 onClick={() => setRememberMe(!rememberMe)}
               >
-                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                  rememberMe 
-                    ? "bg-[#10B981] border-[#10B981] text-white" 
+                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${rememberMe
+                    ? "bg-[#10B981] border-[#10B981] text-white"
                     : "border-gray-300 hover:border-gray-300 bg-white"
-                }`}>
+                  }`}>
                   {rememberMe && <FaCheck className="text-[10px]" />}
                 </div>
                 <span>Remember Me</span>
@@ -153,11 +151,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={!isFormFilled}
-              className={`w-full py-3.5 rounded-xl font-bold text-body-sm transition-all ${
-                isFormFilled
+              className={`w-full py-3.5 rounded-xl font-bold text-body-sm transition-all ${isFormFilled
                   ? "bg-[#11131A] text-white hover:bg-black active:scale-[0.98] cursor-pointer"
                   : "bg-gray-100 text-gray-400 cursor-not-allowed"
-              }`}
+                }`}
             >
               Login
             </button>
@@ -218,6 +215,6 @@ export default function LoginPage() {
 
       </section>
 
-    </main>
+    </div>
   );
 }

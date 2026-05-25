@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash, FaGoogle, FaApple } from "react-icons/fa";
+import { AuthFooter } from "@/components/ui/auth-footer";
+import { DemoHelper } from "@/components/ui/demo-helper";
 
 export default function RegisterPage() {
  const router = useRouter();
@@ -162,18 +164,12 @@ export default function RegisterPage() {
        Login Here
       </Link>
      </div>
+      {/* Quick Demo Helper */}
+      <DemoHelper className="mt-4" />
     </div>
 
     {/* Footer Area */}
-    <footer className="text-center text-[10px] text-gray-400 py-4 lg:py-0 border-t lg:border-t-0 border-gray-50 mt-8">
-     <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-      <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
-      <div className="flex gap-3">
-       <a href="#" className="hover:underline font-medium">Terms &amp; Conditions</a>
-       <a href="#" className="hover:underline font-medium">Privacy Policy</a>
-      </div>
-     </div>
-    </footer>
+    <AuthFooter className="py-4 lg:py-0 border-t lg:border-t-0 border-gray-50 mt-8 w-full max-w-xl" />
 
    </section>
 

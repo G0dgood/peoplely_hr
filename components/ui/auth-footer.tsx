@@ -1,8 +1,12 @@
 import * as React from "react";
 
-export function AuthFooter() {
+interface AuthFooterProps {
+  className?: string;
+}
+
+export function AuthFooter({ className = "mt-12 w-full max-w-xl" }: AuthFooterProps) {
   return (
-    <footer className="text-center text-[10px] text-gray-400 mt-12 w-full max-w-xl">
+    <footer className={`text-center text-[10px] text-gray-400 ${className}`}>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
         <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
         <div className="flex gap-3">

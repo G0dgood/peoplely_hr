@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaRegEye, FaRegEyeSlash, FaCheck, FaGoogle, FaApple, FaExclamationCircle } from "react-icons/fa";
+import { AuthFooter } from "@/components/ui/auth-footer";
+import { DemoHelper } from "@/components/ui/demo-helper";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -195,23 +197,11 @@ export default function LoginPage() {
           </div>
 
           {/* Quick Demo Helper */}
-          <div className="bg-gray-50 border border-gray-300 rounded-xl p-3 flex flex-col gap-1 text-[11px] text-gray-500">
-            <span className="font-bold text-gray-700">Quick Test Inputs:</span>
-            <span>Type <strong className="text-primary select-all">pristia@gmail.com</strong> for a valid state mockup.</span>
-            <span>Type <strong className="text-error select-all">duarte@gmail.com</strong> for an error state mockup.</span>
-          </div>
+          <DemoHelper />
         </div>
 
         {/* Footer Area */}
-        <footer className="text-center text-[10px] text-gray-400 py-4 lg:py-0 border-t lg:border-t-0 border-gray-50 mt-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-            <span>&copy; 2025 Peoplely HR. All rights reserved.</span>
-            <div className="flex gap-3">
-              <a href="#" className="hover:underline font-medium">Terms &amp; Conditions</a>
-              <a href="#" className="hover:underline font-medium">Privacy Policy</a>
-            </div>
-          </div>
-        </footer>
+        <AuthFooter className="py-4 lg:py-0 border-t lg:border-t-0 border-gray-50 mt-8 w-full max-w-xl" />
 
       </section>
 

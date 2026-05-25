@@ -159,7 +159,7 @@ export default function ChecklistToDosPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Checklist - To Dos" description="These are some of the tasks that must be completed" />
 
-        <div className="flex items-center gap-3  flex-col justify-start md:flex">
+        <div className="flex items-center gap-3">
           {/* Custom interactive status select dropdown */}
           <div className="relative">
             <button

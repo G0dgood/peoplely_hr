@@ -91,7 +91,7 @@ export default function PayslipListPage() {
             >
               <HiOutlineChevronLeft className="text-lg" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Payslip History</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Payslip History</h1>
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 pl-11">
             View all past payslips for Pristia Candra

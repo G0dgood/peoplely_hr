@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   HiOutlineBell,
   HiOutlineCog6Tooth,
@@ -79,14 +80,7 @@ export default function AllNotificationsPage() {
     <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
       {/* Page Header */}
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Notification
-          </h1>
-          <p className="text-sm font-semibold text-gray-400 dark:text-gray-500 mt-1">
-            This is All your notification
-          </p>
-        </div>
+        <PageHeader title="Notification" description="This is All your notification" />
 
         {/* Search */}
         <div className="relative w-64">

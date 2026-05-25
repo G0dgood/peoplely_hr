@@ -36,15 +36,15 @@ export default function CreateNewsPage() {
       <div>
         <Link
           href="/news"
-          className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors select-none"
+          className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors select-none"
         >
-          <HiOutlineChevronLeft className="text-2xl font-bold" />
+          <HiOutlineChevronLeft className="text-xl font-bold" />
           <span>Create News</span>
         </Link>
       </div>
 
       <form onSubmit={(e) => handleSubmit(e, "PUBLISHED")} className="flex flex-col gap-6">
-        <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl shadow-sm flex flex-col gap-6">
+        <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl flex flex-col gap-6">
           {/* Title & Share Options */}
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
             <div className="xl:col-span-3 flex flex-col gap-2">
@@ -140,7 +140,7 @@ export default function CreateNewsPage() {
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center gap-4 max-w-xs">
+          <div className="flex items-center justify-start gap-4 max-w-xs">
             <Button
               type="button"
               variant="outline"

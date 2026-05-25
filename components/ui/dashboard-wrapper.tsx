@@ -14,12 +14,12 @@ export function DashboardWrapper({
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
-  const isAuthPage = ["/", "/login", "/register", "/forgot-password", "/onboarding", "/otp-verify", "/password-success", "/update-password"].includes(pathname);
+  const isAuthPage = ["/", "/login", "/register", "/forgot-password", "/onboarding", "/otp-verify", "/password-success", "/update-password", "/checkout"].includes(pathname);
 
   const knownMainRoutes = [
     "/dashboard", "/employees", "/report", "/documents", "/attendance",
     "/time-off", "/checklist", "/news", "/message", "/payroll",
-    "/settings", "/notification", "/help-center", "/recruitment", "/checkout"
+    "/settings", "/notification", "/help-center", "/recruitment"
   ];
 
   const isMainRoute = knownMainRoutes.some(route => pathname.startsWith(route));

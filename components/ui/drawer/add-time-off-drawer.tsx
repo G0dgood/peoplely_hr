@@ -9,6 +9,8 @@ import {
 } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dropdown } from "@/components/ui/dropdown";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface AddTimeOffDrawerProps {
   isOpen: boolean;
@@ -17,6 +19,10 @@ interface AddTimeOffDrawerProps {
 
 export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
   const [dayType, setDayType] = React.useState<"single" | "multiple">("multiple");
+  const [isStartDateOpen, setIsStartDateOpen] = React.useState(false);
+  const [isEndDateOpen, setIsEndDateOpen] = React.useState(false);
+  const [startDate, setStartDate] = React.useState("Select Date");
+  const [endDate, setEndDate] = React.useState("Select Date");
 
   if (!isOpen) return null;
 
@@ -48,12 +54,11 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
               <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Time Off Type <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <button className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-400 dark:text-gray-500 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left">
-                  Select date
-                  <HiOutlineCalendarDays className="text-lg" />
-                </button>
-              </div>
+              <Dropdown 
+                label="Select type" 
+                options={["Annual Leave", "Sick Leave", "Maternity Leave", "Unpaid Leave", "Other"]}
+                className="w-full"
+              />
             </div>
 
             {/* Day Type Toggle */}
@@ -89,16 +94,32 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
             {/* Date Selection */}
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
-                <button className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left">
-                  Select Date
+                <button 
+                  onClick={() => setIsStartDateOpen(true)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+                >
+                  {startDate}
                   <HiOutlineCalendarDays className="text-lg text-gray-400" />
                 </button>
+                <DatePicker 
+                  isOpen={isStartDateOpen} 
+                  onClose={() => setIsStartDateOpen(false)} 
+                  onSave={(date) => { setStartDate(date); setIsStartDateOpen(false); }}
+                />
               </div>
               <div className="relative">
-                <button className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left">
-                  Select Date
+                <button 
+                  onClick={() => setIsEndDateOpen(true)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+                >
+                  {endDate}
                   <HiOutlineCalendarDays className="text-lg text-gray-400" />
                 </button>
+                <DatePicker 
+                  isOpen={isEndDateOpen} 
+                  onClose={() => setIsEndDateOpen(false)} 
+                  onSave={(date) => { setEndDate(date); setIsEndDateOpen(false); }}
+                />
               </div>
             </div>
 

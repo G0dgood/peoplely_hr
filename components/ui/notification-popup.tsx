@@ -90,7 +90,7 @@ export function NotificationPopup() {
           <div className="flex items-center justify-between px-5 pt-5 pb-3">
             <span className="text-sm font-bold text-gray-900 dark:text-white">Notification</span>
           <Link
-              href="/dashboard/settings/notification"
+              href="/settings/notification"
               onClick={() => setOpen(false)}
               className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400 dark:text-gray-500"
             >
@@ -136,7 +136,7 @@ export function NotificationPopup() {
           {/* Footer CTA */}
           <div className="p-4">
             <Link
-              href="#"
+              href="/notification"
               onClick={() => setOpen(false)}
               className="flex items-center justify-center w-full h-11 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-xl hover:opacity-90 transition-opacity"
             >

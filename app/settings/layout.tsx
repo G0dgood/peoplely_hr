@@ -16,6 +16,7 @@ import {
  HiOutlineLockClosed,
  HiOutlineBell,
 } from "react-icons/hi2";
+import { PageHeader } from "@/components/ui/page-header";
 
 const SETTINGS_NAV = [
  { name: "Company Info", href: "/settings/company-info", icon: HiOutlineInformationCircle },
@@ -36,12 +37,10 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
  return (
   <div className="flex flex-col gap-8 p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
    {/* Header */}
-   <div>
-    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
-    <p className="text-sm font-semibold text-gray-400 dark:text-gray-500 mt-1">
-     Manage your dashboard here
-    </p>
-   </div>
+   <PageHeader
+    title="Settings"
+    description="Manage your dashboard here"
+   />
 
    <div className="flex flex-col md:flex-row items-start gap-8 flex-1">
     {/* Settings Sidebar */}

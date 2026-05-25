@@ -20,6 +20,7 @@ import {
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { TableActions } from "@/components/ui/table-actions";
+import { DeleteModal } from "@/components/ui/modal";
 
 interface NewsItem {
   id: string;
@@ -71,9 +72,13 @@ export default function NewsListPage() {
   const [statusFilter, setStatusFilter] = React.useState("Published");
   const [searchQuery, setSearchQuery] = React.useState("");
   const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 10 Mar 2023");
+  const [itemToDelete, setItemToDelete] = React.useState<NewsItem | null>(null);
 
-  const handleDelete = (id: string) => {
-    setNews((prev) => prev.filter((item) => item.id !== id));
+  const handleDeleteConfirm = () => {
+    if (itemToDelete) {
+      setNews((prev) => prev.filter((item) => item.id !== itemToDelete.id));
+      setItemToDelete(null);
+    }
   };
 
   const handleAddNew = () => {
@@ -116,7 +121,6 @@ export default function NewsListPage() {
             label={statusFilter}
             options={["All", "Published", "Draft"]}
             onSelect={(val) => setStatusFilter(val)}
-            className="min-w-[120px]"
           />
 
           {/* Date Picker Range Input */}
@@ -131,7 +135,7 @@ export default function NewsListPage() {
 
           {/* Add New Button */}
           <Link
-            href="/dashboard/news/create"
+            href="/news/create"
             className="h-11 px-5 text-xs font-bold text-white bg-[#11131A] dark:bg-white dark:text-gray-900 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer"
           >
             <HiOutlinePlus className="text-sm font-bold" />
@@ -159,7 +163,7 @@ export default function NewsListPage() {
             className="p-6 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 rounded-2xl shadow-xs flex items-center justify-between gap-6 hover:shadow-sm transition-all"
           >
             <div className="flex flex-col gap-2">
-              <Link href="/dashboard/news/detail" className="hover:text-primary transition-colors cursor-pointer">
+              <Link href="/news/detail" className="hover:text-primary transition-colors cursor-pointer">
                 <h2 className="text-base font-bold text-gray-900 dark:text-white">
                   {item.title}
                 </h2>
@@ -186,19 +190,18 @@ export default function NewsListPage() {
             <div className="flex items-center gap-6">
               {/* Status tag badge */}
               <span
-                className={`px-2.5 py-0.5 rounded text-[8px] font-bold tracking-wider ${
-                  item.status === "PUBLISHED"
+                className={`px-2.5 py-0.5 rounded text-[8px] font-bold tracking-wider ${item.status === "PUBLISHED"
                     ? "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/15 dark:text-[#0FAF7A]"
                     : "bg-gray-100 text-gray-450 dark:bg-gray-800 dark:text-gray-500"
-                }`}
+                  }`}
               >
                 {item.status}
               </span>
 
               {/* Action buttons */}
-              <TableActions 
-                onEdit={() => router.push("/dashboard/news/detail")}
-                onDelete={() => handleDelete(item.id)}
+              <TableActions
+                onEdit={() => router.push("/news/detail")}
+                onDelete={() => setItemToDelete(item)}
               />
             </div>
           </Card>
@@ -210,10 +213,18 @@ export default function NewsListPage() {
             title="No news articles found"
             description="Create news, announcements, or updates to share with your organization and team members."
             actionLabel="Add News"
-            onAction={() => router.push("/dashboard/news/create")}
+            onAction={() => router.push("/news/create")}
           />
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        isOpen={!!itemToDelete}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+        itemName={itemToDelete?.title}
+      />
     </div>
   );
 }

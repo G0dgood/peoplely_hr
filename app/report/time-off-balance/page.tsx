@@ -5,7 +5,9 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
-import { HiOutlineChevronRight, HiOutlineArrowDownTray, HiOutlineChevronLeft, HiOutlineChevronRight as HiChevRight } from "react-icons/hi2";
+import { HiOutlineArrowDownTray, HiOutlineChevronRight } from "react-icons/hi2";
+import { Pagination } from "@/components/ui/pagination";
+import { RowPerPage } from "@/components/ui/row-per-page";
 
 interface BalanceRecord {
   name: string;
@@ -22,42 +24,42 @@ interface BalanceRecord {
 }
 
 const ALL_RECORDS: BalanceRecord[] = [
-  { name: "Pristia Candra",  email: "lincoln@unixpixel.com",  avatar: "https://i.pravatar.cc/150?u=pristia",  id: "UN001", department: "Team Product", jobTitle: "UI UX Designer",    office: "Unpixel Office", status: "ACTIVE",      entitlement: 12,  carryOver: 0, request: 0 },
-  { name: "Hanna Baptista",  email: "hanna@unixpixel.com",    avatar: "https://i.pravatar.cc/150?u=hanna",    id: "UN002", department: "Team Product", jobTitle: "Graphic Designer",  office: "Unpixel Office", status: "ON BOARDING", entitlement: 30,  carryOver: 0, request: 0 },
-  { name: "Miracle Geidt",   email: "miracle@unixpixel.com",  avatar: "https://i.pravatar.cc/150?u=miracle",  id: "UN003", department: "Team Product", jobTitle: "Finance",           office: "Unpixel Office", status: "PROBATION",   entitlement: 0,   carryOver: 0, request: 0 },
-  { name: "Rayna Torff",     email: "rayna@unixpixel.com",    avatar: "https://i.pravatar.cc/150?u=rayna",    id: "UN004", department: "Team Product", jobTitle: "Project Manager",   office: "Unpixel Office", status: "ACTIVE",      entitlement: 180, carryOver: 0, request: 0 },
-  { name: "Giana Lipshutz",  email: "giana@unixpixel.com",    avatar: "https://i.pravatar.cc/150?u=giana",    id: "UN005", department: "Team Product", jobTitle: "Creative Director", office: "Unpixel Office", status: "ON LEAVE",    entitlement: 5,   carryOver: 0, request: 0 },
-  { name: "James George",    email: "james@unixpixel.com",    avatar: "https://i.pravatar.cc/150?u=james",    id: "UN006", department: "Team Product", jobTitle: "Lead Designer",     office: "Unpixel Office", status: "ACTIVE",      entitlement: 10,  carryOver: 0, request: 0 },
-  { name: "Jordyn George",   email: "jordyn@unixpixel.com",   avatar: "https://i.pravatar.cc/150?u=jordyn",   id: "UN007", department: "Team Product", jobTitle: "IT Support",        office: "Unpixel Office", status: "ACTIVE",      entitlement: 10,  carryOver: 0, request: 0 },
-  { name: "Skylar Herwitz",  email: "skylar@unixpixel.com",   avatar: "https://i.pravatar.cc/150?u=skylar",   id: "UN008", department: "Team Product", jobTitle: "3D Designer",       office: "Unpixel Office", status: "PROBATION",   entitlement: 0,   carryOver: 0, request: 0 },
-  { name: "Kierra Bator",    email: "kierra@unixpixel.com",   avatar: "https://i.pravatar.cc/150?u=kierra",   id: "UN009", department: "Team Product", jobTitle: "Backend Dev",       office: "Pixel HQ",       status: "ACTIVE",      entitlement: 14,  carryOver: 2, request: 1 },
-  { name: "Lincoln Geidt",   email: "lgeidt@unixpixel.com",   avatar: "https://i.pravatar.cc/150?u=lgeidt",   id: "UN010", department: "Team Product", jobTitle: "Frontend Dev",      office: "Pixel HQ",       status: "ACTIVE",      entitlement: 18,  carryOver: 0, request: 3 },
+  { name: "Pristia Candra", email: "lincoln@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=pristia", id: "UN001", department: "Team Product", jobTitle: "UI UX Designer", office: "Unpixel Office", status: "ACTIVE", entitlement: 12, carryOver: 0, request: 0 },
+  { name: "Hanna Baptista", email: "hanna@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=hanna", id: "UN002", department: "Team Product", jobTitle: "Graphic Designer", office: "Unpixel Office", status: "ON BOARDING", entitlement: 30, carryOver: 0, request: 0 },
+  { name: "Miracle Geidt", email: "miracle@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=miracle", id: "UN003", department: "Team Product", jobTitle: "Finance", office: "Unpixel Office", status: "PROBATION", entitlement: 0, carryOver: 0, request: 0 },
+  { name: "Rayna Torff", email: "rayna@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=rayna", id: "UN004", department: "Team Product", jobTitle: "Project Manager", office: "Unpixel Office", status: "ACTIVE", entitlement: 180, carryOver: 0, request: 0 },
+  { name: "Giana Lipshutz", email: "giana@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=giana", id: "UN005", department: "Team Product", jobTitle: "Creative Director", office: "Unpixel Office", status: "ON LEAVE", entitlement: 5, carryOver: 0, request: 0 },
+  { name: "James George", email: "james@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=james", id: "UN006", department: "Team Product", jobTitle: "Lead Designer", office: "Unpixel Office", status: "ACTIVE", entitlement: 10, carryOver: 0, request: 0 },
+  { name: "Jordyn George", email: "jordyn@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=jordyn", id: "UN007", department: "Team Product", jobTitle: "IT Support", office: "Unpixel Office", status: "ACTIVE", entitlement: 10, carryOver: 0, request: 0 },
+  { name: "Skylar Herwitz", email: "skylar@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=skylar", id: "UN008", department: "Team Product", jobTitle: "3D Designer", office: "Unpixel Office", status: "PROBATION", entitlement: 0, carryOver: 0, request: 0 },
+  { name: "Kierra Bator", email: "kierra@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=kierra", id: "UN009", department: "Team Product", jobTitle: "Backend Dev", office: "Pixel HQ", status: "ACTIVE", entitlement: 14, carryOver: 2, request: 1 },
+  { name: "Lincoln Geidt", email: "lgeidt@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=lgeidt", id: "UN010", department: "Team Product", jobTitle: "Frontend Dev", office: "Pixel HQ", status: "ACTIVE", entitlement: 18, carryOver: 0, request: 3 },
 ];
 
 const PAGE_SIZE_OPTIONS = [8, 16, 24];
 
 export default function TimeOffBalancePage() {
-  const [officeFilter, setOfficeFilter]   = React.useState("All Offices");
-  const [jobFilter,    setJobFilter]      = React.useState("All Jobs");
-  const [statusFilter, setStatusFilter]   = React.useState("All Status");
-  const [deptFilter,   setDeptFilter]     = React.useState("All Departement");
-  const [page,         setPage]           = React.useState(1);
-  const [pageSize,     setPageSize]       = React.useState(8);
+  const [officeFilter, setOfficeFilter] = React.useState("All Offices");
+  const [jobFilter, setJobFilter] = React.useState("All Jobs");
+  const [statusFilter, setStatusFilter] = React.useState("All Status");
+  const [deptFilter, setDeptFilter] = React.useState("All Departement");
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(8);
 
   const filtered = ALL_RECORDS.filter((r) => {
-    if (officeFilter !== "All Offices"     && r.office      !== officeFilter) return false;
-    if (jobFilter    !== "All Jobs"        && r.jobTitle    !== jobFilter)    return false;
-    if (statusFilter !== "All Status"      && r.status      !== statusFilter.toUpperCase().replace(/ /g, " ")) {
+    if (officeFilter !== "All Offices" && r.office !== officeFilter) return false;
+    if (jobFilter !== "All Jobs" && r.jobTitle !== jobFilter) return false;
+    if (statusFilter !== "All Status" && r.status !== statusFilter.toUpperCase().replace(/ /g, " ")) {
       if (statusFilter === "On Boarding" && r.status === "ON BOARDING") { /* pass */ }
       else if (statusFilter === "On Leave" && r.status === "ON LEAVE") { /* pass */ }
       else if (r.status !== statusFilter.toUpperCase()) return false;
     }
-    if (deptFilter   !== "All Departement" && r.department  !== deptFilter)   return false;
+    if (deptFilter !== "All Departement" && r.department !== deptFilter) return false;
     return true;
   });
 
-  const totalPages  = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const paginated   = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const pageNumbers: (number | "...")[] = [];
   if (totalPages <= 5) {
@@ -68,10 +70,10 @@ export default function TimeOffBalancePage() {
 
   const statusStyle = (s: BalanceRecord["status"]) => {
     const map: Record<string, string> = {
-      "ACTIVE":      "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/10",
+      "ACTIVE": "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/10",
       "ON BOARDING": "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500",
-      "PROBATION":   "bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400",
-      "ON LEAVE":    "bg-rose-50 text-rose-500 dark:bg-rose-500/10",
+      "PROBATION": "bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400",
+      "ON LEAVE": "bg-rose-50 text-rose-500 dark:bg-rose-500/10",
     };
     return map[s] ?? "";
   };
@@ -83,7 +85,7 @@ export default function TimeOffBalancePage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Time Off Balance</h1>
           <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 mt-2.5">
-            <Link href="/dashboard/report" className="hover:text-primary transition-colors">List Report</Link>
+            <Link href="/report" className="hover:text-primary transition-colors">List Report</Link>
             <HiOutlineChevronRight className="text-[10px]" />
             <span className="text-gray-900 dark:text-white">Time Off Balance</span>
           </div>
@@ -96,11 +98,16 @@ export default function TimeOffBalancePage() {
 
       <Card className="p-8 border border-gray-300 dark:border-gray-800/80 bg-white dark:bg-gray-900 rounded-2xl shadow-xs flex flex-col gap-8">
         {/* Filters */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50/50 dark:bg-gray-950/20 p-2.5 rounded-2xl border border-gray-50/50 dark:border-gray-800/40">
-          <Dropdown label={officeFilter} options={["All Offices", "Unpixel Office", "Pixel HQ"]}                                                       onSelect={v => { setOfficeFilter(v); setPage(1); }} className="w-full" />
-          <Dropdown label={jobFilter}    options={["All Jobs", "UI UX Designer", "Graphic Designer", "Finance", "Project Manager", "Creative Director", "Lead Designer", "IT Support", "3D Designer", "Backend Dev", "Frontend Dev"]} onSelect={v => { setJobFilter(v); setPage(1); }} className="w-full" />
-          <Dropdown label={statusFilter} options={["All Status", "Active", "On Boarding", "Probation", "On Leave"]}                                    onSelect={v => { setStatusFilter(v); setPage(1); }} className="w-full" />
-          <Dropdown label={deptFilter}   options={["All Departement", "Team Product"]}                                                                 onSelect={v => { setDeptFilter(v); setPage(1); }} className="w-full" />
+        <div className="flex flex-col xl:flex-row gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50/50 dark:bg-gray-950/20 p-2.5 rounded-2xl border border-gray-50/50 dark:border-gray-800/40 flex-1">
+            <Dropdown label={officeFilter} options={["All Offices", "Unpixel Office", "Pixel HQ"]} onSelect={v => { setOfficeFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={jobFilter} options={["All Jobs", "UI UX Designer", "Graphic Designer", "Finance", "Project Manager", "Creative Director", "Lead Designer", "IT Support", "3D Designer", "Backend Dev", "Frontend Dev"]} onSelect={v => { setJobFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={statusFilter} options={["All Status", "Active", "On Boarding", "Probation", "On Leave"]} onSelect={v => { setStatusFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={deptFilter} options={["All Departement", "Team Product"]} onSelect={v => { setDeptFilter(v); setPage(1); }} className="w-full" />
+          </div>
+          <div className="flex items-center justify-end xl:justify-start">
+            <RowPerPage itemsPerPage={pageSize} onItemsPerPageChange={(v) => { setPageSize(v); setPage(1); }} />
+          </div>
         </div>
 
         {/* Table */}
@@ -145,55 +152,10 @@ export default function TimeOffBalancePage() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between gap-4 pt-2 border-t border-gray-50 dark:border-gray-800">
-          {/* Page buttons */}
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <HiOutlineChevronLeft className="text-sm" />
-            </button>
-
-            {pageNumbers.map((p, i) =>
-              p === "..." ? (
-                <span key={i} className="w-8 h-8 flex items-center justify-center text-xs text-gray-400">…</span>
-              ) : (
-                <button
-                  key={i}
-                  onClick={() => setPage(p as number)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-colors ${
-                    page === p
-                      ? "bg-[#11131A] dark:bg-white text-white dark:text-gray-900"
-                      : "border border-gray-300 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  }`}
-                >
-                  {p}
-                </button>
-              )
-            )}
-
-            <button
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <HiChevRight className="text-sm" />
-            </button>
-          </div>
-
-          {/* Right: showing + page size */}
-          <div className="flex items-center gap-3 text-xs font-semibold text-gray-400 dark:text-gray-500">
-            <span>Showing {Math.min((page - 1) * pageSize + 1, filtered.length)} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} entries</span>
-            <Dropdown
-              label={`Show ${pageSize}`}
-              options={PAGE_SIZE_OPTIONS.map(n => `Show ${n}`)}
-              onSelect={v => { setPageSize(Number(v.replace("Show ", ""))); setPage(1); }}
-            />
-          </div>
+        <div className="pt-2 border-t border-gray-50 dark:border-gray-800 mt-4">
+          <Pagination className="mt-0 w-full" />
         </div>
-      </Card>
-    </div>
+      </Card >
+    </div >
   );
 }

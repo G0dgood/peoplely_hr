@@ -24,6 +24,8 @@ import {
 import { ChecklistDetailDrawer, NewTaskDrawer } from "@/components/ui/drawer";
 import { HiPlus } from "react-icons/hi2";
 import { PageHeader } from "@/components/ui/page-header";
+import { Pagination } from "@/components/ui/pagination";
+import { RowPerPage } from "@/components/ui/row-per-page";
 
 
 interface ChecklistTask {
@@ -215,7 +217,10 @@ export default function ChecklistToDosPage() {
       </div>
 
       {/* Main Checklist Card wrapper */}
-      <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900">
+      <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 flex flex-col gap-4">
+        <div className="flex justify-end">
+          <RowPerPage itemsPerPage={10} />
+        </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -330,29 +335,9 @@ export default function ChecklistToDosPage() {
           </Table>
         </div>
 
-        {/* Footer with Pagination and selector controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8">
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <HiOutlineChevronLeft className="text-xs" />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">
-              1
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <HiOutlineChevronRight className="text-xs" />
-            </button>
+          <div className="mt-4">
+            <Pagination className="mt-0 w-full" />
           </div>
-
-          <div className="flex items-center gap-4 text-[11px] font-bold text-gray-400 dark:text-gray-500">
-            <span>Showing 1 to 10 of {filteredTasks.length} entries</span>
-
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-800 cursor-pointer select-none">
-              <span>Show 10</span>
-              <HiOutlineChevronDown className="text-xs text-gray-500" />
-            </div>
-          </div>
-        </div>
       </Card>
 
       {/* Checklist Detail Drawer */}

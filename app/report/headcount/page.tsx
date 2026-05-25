@@ -138,7 +138,7 @@ export default function HeadcountReportPage() {
             Headcount (Point-in-time)
           </h1>
           <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500 mt-2.5">
-            <Link href="/dashboard/report" className="hover:text-primary transition-colors">
+            <Link href="/report" className="hover:text-primary transition-colors">
               List Report
             </Link>
             <HiOutlineChevronRight className="text-[10px]" />

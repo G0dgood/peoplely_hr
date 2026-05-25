@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { DashboardWrapper } from "@/components/ui/dashboard-wrapper";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -27,6 +28,7 @@ export default function RootLayout({
         <DashboardWrapper>
           {children}
         </DashboardWrapper>
+        <ProgressBar />
       </body>
     </html>
   );

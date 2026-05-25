@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/pagination";
 import { PageHeader } from "@/components/ui/page-header";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { RowPerPage } from "@/components/ui/row-per-page";
 
 
 
@@ -294,18 +295,18 @@ export default function MyAttendancePage() {
             <Dropdown
               label="All Record"
               options={["All Record", "Regular Shifts", "Overtime Shifts"]}
-              className="min-w-[180px]"
             />
             <Dropdown
               label="All Location"
               options={["All Location", "Office (Semarang)", "Remote"]}
-              className="min-w-[180px]"
             />
             <Dropdown
               label="All Status"
               options={["All Status", "On Time", "Late", "Deficit"]}
-              className="min-w-[180px]"
             />
+            <div className="ml-auto">
+              <RowPerPage itemsPerPage={5} />
+            </div>
           </div>
 
           {/* Collapsible Attendance Table */}
@@ -413,44 +414,8 @@ export default function MyAttendancePage() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
-            <Pagination className="mt-0 justify-start w-auto">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>10</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-
-            <div className="flex items-center gap-6">
-              <p className="text-xs font-bold text-gray-400">Showing 1 to 5 of 50 entries</p>
-              <div className="flex items-center gap-3">
-                <p className="text-xs font-bold text-gray-900 dark:text-white">Show 5</p>
-                <Dropdown
-                  label="5"
-                  options={["5", "10", "20", "50"]}
-                  className="min-w-[80px]"
-                />
-              </div>
-            </div>
+          <div className="mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
+            <Pagination className="mt-0 w-full" />
           </div>
         </div>
 

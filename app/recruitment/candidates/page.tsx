@@ -25,16 +25,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-
 import { PageHeader } from "@/components/ui/page-header";
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { RowPerPage } from "@/components/ui/row-per-page";
+import { TableActions } from "@/components/ui/table-actions";
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationNext } from "@/components/ui/pagination";
+
+
 
 interface Candidate {
   id: number;
@@ -184,11 +180,10 @@ function TableStageDropdown({
                 onChange(s);
                 setOpen(false);
               }}
-              className={`w-full text-left px-4 py-2 text-xs font-semibold transition-colors ${
-                s === stage
-                  ? "text-primary bg-primary/5 dark:bg-primary/10"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900"
-              }`}
+              className={`w-full text-left px-4 py-2 text-xs font-semibold transition-colors ${s === stage
+                ? "text-primary bg-primary/5 dark:bg-primary/10"
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900"
+                }`}
             >
               {s}
             </button>
@@ -331,20 +326,20 @@ export default function CandidatesPage() {
               label={selectedRecordFilter}
               options={["All Record", "This Week", "This Month"]}
               onSelect={(opt) => setSelectedRecordFilter(opt)}
-              className="w-40"
             />
             <Dropdown
               label={selectedLocationFilter}
               options={["All Location", "Remote", "London", "San Francisco"]}
               onSelect={(opt) => setSelectedLocationFilter(opt)}
-              className="w-40"
             />
             <Dropdown
               label={selectedStatusFilter}
               options={["All Status", "Applied", "Screening", "Hiring", "Rejected"]}
               onSelect={(opt) => setSelectedStatusFilter(opt)}
-              className="w-40"
             />
+            <div className="ml-auto flex items-center">
+              <RowPerPage itemsPerPage={pageSize} onItemsPerPageChange={(v) => { setPageSize(v); setCurrentPage(1); }} />
+            </div>
           </div>
 
           {/* Candidates Table */}
@@ -426,23 +421,14 @@ export default function CandidatesPage() {
                       />
                     </TableCell>
                     <TableCell className="py-4 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setEditingCandidate(cand);
-                            setIsModalOpen(true);
-                          }}
-                          className="p-2 border border-gray-300 dark:border-gray-800 text-gray-450 dark:text-gray-550 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                        >
-                          <HiOutlinePencilSquare className="text-base text-blue-500" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteCandidate(cand.id)}
-                          className="p-2 border border-gray-300 dark:border-gray-800 text-gray-455 dark:text-gray-550 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                        >
-                          <HiOutlineTrash className="text-base text-red-500" />
-                        </button>
-                      </div>
+                      <TableActions
+                        onEdit={() => {
+                          setEditingCandidate(cand);
+                          setIsModalOpen(true);
+                        }}
+                        onDelete={() => handleDeleteCandidate(cand.id)}
+                        className="justify-end"
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -451,12 +437,7 @@ export default function CandidatesPage() {
           </div>
 
           {/* Footer controls: pagination + entries count */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-300 dark:border-gray-800 pt-4 mt-2">
-            <span className="text-[11px] font-bold text-gray-400 dark:text-gray-500">
-              Showing {Math.min((currentPage - 1) * pageSize + 1, totalEntries)} to{" "}
-              {Math.min(currentPage * pageSize, totalEntries)} of {totalEntries} entries
-            </span>
-
+          <div className="flex justify-end border-t border-gray-300 dark:border-gray-800 pt-4 mt-2">
             {/* Pagination Controls */}
             <div className="flex items-center gap-1.5">
               <Pagination className="mt-0 w-auto">
@@ -488,22 +469,6 @@ export default function CandidatesPage() {
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
-            </div>
-
-            {/* Page Size Selection */}
-            <div className="flex items-center gap-2">
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className="h-9 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl px-3 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none cursor-pointer"
-              >
-                <option value={4}>Show 4</option>
-                <option value={8}>Show 8</option>
-                <option value={12}>Show 12</option>
-              </select>
             </div>
           </div>
         </div>

@@ -93,8 +93,8 @@ const Pagination = ({ className = '', children, ...props }: React.HTMLAttributes
     {...props}
   >
     {children || (
-      <PaginationContent>
-        <PaginationItem>
+      <PaginationContent className="w-full">
+        <PaginationItem className="mr-auto">
           <PaginationPrevious />
         </PaginationItem>
         <PaginationItem>
@@ -112,7 +112,7 @@ const Pagination = ({ className = '', children, ...props }: React.HTMLAttributes
         <PaginationItem>
           <PaginationLink>10</PaginationLink>
         </PaginationItem>
-        <PaginationItem>
+        <PaginationItem className="ml-auto">
           <PaginationNext />
         </PaginationItem>
       </PaginationContent>

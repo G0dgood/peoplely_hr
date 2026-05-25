@@ -23,17 +23,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-
 import { PageHeader } from "@/components/ui/page-header";
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from "@/components/ui/pagination";
+
 
 const INITIAL_TEAM_DATA = [
   {
@@ -197,17 +189,14 @@ export default function TeamAttendancePage() {
             <Dropdown
               label="All Record"
               options={["All Record", "Regular Shifts", "Overtime Shifts"]}
-              className="min-w-[180px]"
             />
             <Dropdown
               label="All Location"
               options={["All Location", "Office (Semarang)", "Remote"]}
-              className="min-w-[180px]"
             />
             <Dropdown
               label="All Status"
               options={["All Status", "On Time", "Late", "Deficit"]}
-              className="min-w-[180px]"
             />
           </div>
 
@@ -332,36 +321,10 @@ export default function TeamAttendancePage() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
-            <Pagination className="mt-0 justify-start w-auto">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>10</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+          <div className="mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
+            <Pagination className="mt-0 w-full" />
 
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-gray-400">{records.length} Result</p>
-            </div>
+
           </div>
         </div>
       </Card>

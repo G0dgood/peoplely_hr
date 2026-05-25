@@ -12,19 +12,19 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-white dark:bg-gray-950">
-      
+
       {/* Left Panel - Summary (Green Background) */}
       <div className="w-full md:w-1/2 bg-[#0FAF7A] p-8 md:p-16 lg:p-24 flex flex-col justify-between text-white relative">
         <div className="flex flex-col gap-12">
           {/* Header */}
           <div className="flex flex-col gap-6">
-            <button 
+            <button
               onClick={() => router.back()}
               className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
             >
               <HiChevronLeft className="text-white text-xl" />
             </button>
-            
+
             <div className="flex flex-col gap-2">
               <span className="text-sm font-semibold opacity-90">Subscribe to Engage Plans</span>
               <div className="flex items-end gap-2">
@@ -90,30 +90,26 @@ export default function CheckoutPage() {
         </div>
 
         <form className="flex flex-col gap-8">
-          
+
           {/* Card Information */}
           <div className="flex flex-col gap-3">
             <span className="text-sm font-bold text-gray-900 dark:text-white">
               Card Information <span className="text-red-500">*</span>
             </span>
-            <div className="flex flex-col border border-gray-300 dark:border-gray-800 rounded-xl overflow-hidden">
-              <Input
+            <div className="flex flex-col border border-gray-300 dark:border-gray-800 rounded-xl overflow-hidden bg-white dark:bg-gray-800">
+              <input
                 placeholder="1234 1234 1234 1234"
-                className="border-0 border-b border-gray-300 dark:border-gray-800 rounded-none focus:ring-0"
+                className="w-full h-12 px-4 text-sm bg-transparent border-0 border-b border-gray-300 dark:border-gray-800 focus:ring-0 focus:outline-none text-gray-900 dark:text-white placeholder:text-gray-400"
               />
               <div className="flex">
-                <div className="w-1/2 border-r border-gray-300 dark:border-gray-800">
-                  <Input
-                    placeholder="BB/TT"
-                    className="border-0 rounded-none focus:ring-0"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <Input
-                    placeholder="CVC"
-                    className="border-0 rounded-none focus:ring-0"
-                  />
-                </div>
+                <input
+                  placeholder="MM/YY"
+                  className="w-1/2 h-12 px-4 text-sm bg-transparent border-0 border-r border-gray-300 dark:border-gray-800 focus:ring-0 focus:outline-none text-gray-900 dark:text-white placeholder:text-gray-400"
+                />
+                <input
+                  placeholder="CVC"
+                  className="w-1/2 h-12 px-4 text-sm bg-transparent border-0 focus:ring-0 focus:outline-none text-gray-900 dark:text-white placeholder:text-gray-400"
+                />
               </div>
             </div>
           </div>
@@ -138,7 +134,7 @@ export default function CheckoutPage() {
               <Dropdown
                 label="Indonesia"
                 options={["Indonesia", "Singapore", "United States"]}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
               />
               <Input
@@ -148,7 +144,7 @@ export default function CheckoutPage() {
               <Dropdown
                 label="City"
                 options={["Jakarta", "Bandung", "Surabaya"]}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
               />
               <div className="flex gap-3">
@@ -156,7 +152,7 @@ export default function CheckoutPage() {
                   <Dropdown
                     label="Province"
                     options={["DKI Jakarta", "West Java"]}
-                    onSelect={() => {}}
+                    onSelect={() => { }}
                     className="w-full h-12 rounded-xl border-gray-300 dark:border-gray-800"
                   />
                 </div>
@@ -172,7 +168,7 @@ export default function CheckoutPage() {
 
           {/* Submit Action */}
           <div className="flex flex-col gap-4 mt-4">
-            <Button className="w-full h-14 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 font-bold text-base hover:opacity-90 transition-opacity">
+            <Button className="w-full h-12 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 font-bold text-base hover:opacity-90 transition-opacity">
               Subscribe
             </Button>
             <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 leading-relaxed text-center">

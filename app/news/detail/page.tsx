@@ -33,7 +33,7 @@ export default function NewsDetailPage() {
           </h1>
           <div className="flex items-center gap-2 text-xs font-semibold text-gray-400">
             <Link
-              href="/dashboard/news"
+              href="/news"
               className="hover:text-primary transition-colors cursor-pointer"
             >
               List News
@@ -46,7 +46,7 @@ export default function NewsDetailPage() {
         {/* Action icons on right */}
         <div className="flex items-center gap-2">
           <Link
-            href="/dashboard/news/edit"
+            href="/news/edit"
             title="Edit news"
             className="w-10 h-10 rounded-xl border border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 flex items-center justify-center transition-all bg-white dark:bg-gray-900 shadow-xs cursor-pointer"
           >

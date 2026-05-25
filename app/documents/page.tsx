@@ -12,11 +12,14 @@ import {
   HiOutlineChevronDown,
   HiOutlineXMark,
 } from "react-icons/hi2";
+import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { AddFolderDrawer } from "@/components/ui/drawer";
 import { ShareModal, ShareOption } from "@/components/ui/modal/share-modal";
+import { DeleteModal } from "@/components/ui/modal";
 import { PageHeader } from "@/components/ui/page-header";
 import {
   Table,
@@ -26,6 +29,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TableActions } from "@/components/ui/table-actions";
+import { RowPerPage } from "@/components/ui/row-per-page";
 
 interface DocumentFolder {
   id: number;
@@ -105,6 +110,10 @@ export default function DocumentsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [sortKey, setSortKey] = React.useState<SortKey>("name");
   const [sortOrder, setSortOrder] = React.useState<SortOrder>("asc");
+
+  // Delete modal states
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [folderToDelete, setFolderToDelete] = React.useState<DocumentFolder | null>(null);
 
   // Share With modal states
   const [activeShareFolderId, setActiveShareFolderId] = React.useState<number | null>(null);
@@ -214,7 +223,10 @@ export default function DocumentsPage() {
       </div>
 
       {/* Main Documents Table Card */}
-      <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900">
+      <Card className="p-8 border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 flex flex-col gap-4">
+        <div className="flex justify-end">
+          <RowPerPage itemsPerPage={10} />
+        </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -270,6 +282,10 @@ export default function DocumentsPage() {
                 <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                   <span>Share With</span>
                 </TableHead>
+
+                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right pr-6">
+                  <span>Action</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -281,7 +297,7 @@ export default function DocumentsPage() {
                   {/* Folder Name */}
                   <TableCell className="py-4 px-4">
                     <Link
-                      href={`/dashboard/documents/${folder.id}`}
+                      href={`/documents/${folder.id}`}
                       className="flex items-center gap-3 group hover:opacity-80"
                     >
                       <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg group-hover:text-primary transition-colors">
@@ -345,34 +361,27 @@ export default function DocumentsPage() {
                       {folder.shareWith}
                     </button>
                   </TableCell>
+
+                  {/* Action */}
+                  <TableCell className="py-4 px-4 text-right pr-6">
+                    <div className="flex justify-end">
+                      <TableActions
+                        onView={() => window.location.href = `/documents/${folder.id}`}
+                        onDelete={() => {
+                          setFolderToDelete(folder);
+                          setIsDeleteModalOpen(true);
+                        }}
+                      />
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
 
-        {/* Footer with Pagination and selector controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8">
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <HiOutlineChevronLeft className="text-xs" />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">
-              1
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <HiOutlineChevronRight className="text-xs" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-4 text-[11px] font-bold text-gray-400 dark:text-gray-500">
-            <span>Showing 1 to 10 of {folders.length} entries</span>
-
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-800 cursor-pointer select-none">
-              <span>Show 10</span>
-              <HiOutlineChevronDown className="text-xs text-gray-500" />
-            </div>
-          </div>
+        <div className="mt-4">
+          <Pagination className="mt-0 w-full" />
         </div>
       </Card>
 
@@ -393,6 +402,21 @@ export default function DocumentsPage() {
         }}
         initialOption={selectedShareOption}
         initialTags={tags}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setFolderToDelete(null);
+        }}
+        onConfirm={() => {
+          if (folderToDelete) {
+            setFolders(prev => prev.filter(f => f.id !== folderToDelete.id));
+          }
+        }}
+        itemName={folderToDelete?.name}
       />
     </div>
   );

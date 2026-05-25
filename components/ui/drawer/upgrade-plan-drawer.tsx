@@ -4,6 +4,7 @@ import * as React from "react";
 import { HiOutlineChevronRight, HiCheck } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
+import { AmountSubscriptionDrawer } from "./amount-subscription-drawer";
 
 interface UpgradePlanDrawerProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface UpgradePlanDrawerProps {
 
 export function UpgradePlanDrawer({ isOpen, onClose }: UpgradePlanDrawerProps) {
   const [isAnnual, setIsAnnual] = React.useState(true);
+  const [isAmountDrawerOpen, setIsAmountDrawerOpen] = React.useState(false);
 
   if (!isOpen) return null;
 
@@ -57,7 +59,10 @@ export function UpgradePlanDrawer({ isOpen, onClose }: UpgradePlanDrawerProps) {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">Essentials Plan</h3>
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500">Start centralizing and automating your Core HR operations.</p>
               </div>
-              <Button className="h-10 px-6 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-xs font-bold hover:opacity-90 transition-opacity">
+              <Button 
+                onClick={() => setIsAmountDrawerOpen(true)}
+                className="h-10 px-6 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-xs font-bold hover:opacity-90 transition-opacity"
+              >
                 Pick Plan
               </Button>
             </div>
@@ -85,7 +90,10 @@ export function UpgradePlanDrawer({ isOpen, onClose }: UpgradePlanDrawerProps) {
                 </div>
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500">Start enabling your employees' performance across agile teams.</p>
               </div>
-              <Button className="h-10 px-6 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-xs font-bold hover:opacity-90 transition-opacity">
+              <Button 
+                onClick={() => setIsAmountDrawerOpen(true)}
+                className="h-10 px-6 rounded-xl !bg-black dark:bg-white text-white dark:text-gray-900 text-xs font-bold hover:opacity-90 transition-opacity"
+              >
                 Pick Plan
               </Button>
             </div>
@@ -111,6 +119,7 @@ export function UpgradePlanDrawer({ isOpen, onClose }: UpgradePlanDrawerProps) {
 
         </div>
       </div>
+      <AmountSubscriptionDrawer isOpen={isAmountDrawerOpen} onClose={() => setIsAmountDrawerOpen(false)} />
     </div>
   );
 }

@@ -27,7 +27,7 @@ export default function CreateNewsPage() {
   const handleSubmit = (e: React.FormEvent, status: "PUBLISHED" | "DRAFT") => {
     e.preventDefault();
     // Simulate save or publish action
-    router.push("/dashboard/news");
+    router.push("/news");
   };
 
   return (
@@ -35,7 +35,7 @@ export default function CreateNewsPage() {
       {/* Header section with back button */}
       <div>
         <Link
-          href="/dashboard/news"
+          href="/news"
           className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors select-none"
         >
           <HiOutlineChevronLeft className="text-2xl font-bold" />

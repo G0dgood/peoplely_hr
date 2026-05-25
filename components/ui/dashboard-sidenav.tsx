@@ -401,7 +401,7 @@ export function DashboardSidenav({
           icon={<HiOutlineCog6Tooth />}
           title={collapsed ? "Settings" : undefined}
           className={itemClass}
-          href="/settings/notification"
+          href="/settings/company-info"
           active={pathname.startsWith("/settings")}
         >
           {!collapsed && "Setting"}

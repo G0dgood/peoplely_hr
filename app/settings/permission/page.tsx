@@ -14,6 +14,7 @@ import {
 import { Dropdown } from "@/components/ui/dropdown";
 import { AddRoleDrawer } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 
 const PERMISSION_SECTIONS = [
   "Profile Picture",
@@ -274,17 +275,8 @@ export default function PermissionPage() {
                   ))}
                 </div>
 
-                {/* Pagination */}
-                <div className="flex items-center gap-2 mt-6">
-                  <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <HiChevronLeft className="text-sm" />
-                  </button>
-                  <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-900 dark:text-white font-bold text-xs bg-white dark:bg-gray-900 transition-colors">
-                    1
-                  </button>
-                  <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <HiChevronRight className="text-sm" />
-                  </button>
+                <div className="mt-6">
+                  <Pagination className="mt-0 w-full" />
                 </div>
               </div>
             </>

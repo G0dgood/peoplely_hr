@@ -225,7 +225,7 @@ export default function OffboardingChecklistPage() {
           return (
             <Card
               key={emp.id}
-              className="border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 shadow-sm overflow-hidden flex flex-col transition-all duration-300 rounded-2xl"
+              className="border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 overflow-hidden flex flex-col transition-all duration-300 rounded-2xl"
             >
               {/* Accordion Header Row */}
               <div

@@ -5,6 +5,7 @@ import { HiOutlineChevronRight, HiCheck, HiChevronDown } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
+import { useRouter } from "next/navigation";
 
 interface AmountSubscriptionDrawerProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface AmountSubscriptionDrawerProps {
 export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscriptionDrawerProps) {
   const [employees, setEmployees] = React.useState("1");
   const [billingCycle, setBillingCycle] = React.useState("Annual");
+  const router = useRouter();
 
   if (!isOpen) return null;
 
@@ -118,6 +120,10 @@ export function AmountSubscriptionDrawer({ isOpen, onClose }: AmountSubscription
           </Button>
           <Button
             type="button"
+            onClick={() => {
+              onClose();
+              router.push("/checkout");
+            }}
             className="w-32 font-bold h-12 !bg-black dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
           >
             Continue

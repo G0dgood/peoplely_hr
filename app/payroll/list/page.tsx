@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/ui/date-picker";
+import { RowPerPage } from "@/components/ui/row-per-page";
 import {
   Table,
   TableBody,
@@ -27,17 +28,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
+
 
 import { PageHeader } from "@/components/ui/page-header";
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 type PayrollStatus = "PAID" | "PENDING" | "PROCESSING" | "FAILED";
 
@@ -279,13 +273,14 @@ export default function PayrollListPage() {
             <Dropdown
               label="All Departments"
               options={["Design", "Engineering", "Marketing", "Product", "HR"]}
-              className="min-w-[180px]"
             />
             <Dropdown
               label="All Status"
               options={["Paid", "Pending", "Processing", "Failed"]}
-              className="min-w-[180px]"
             />
+            <div className="ml-auto">
+              <RowPerPage itemsPerPage={8} />
+            </div>
           </div>
 
           {/* Table */}
@@ -412,7 +407,7 @@ export default function PayrollListPage() {
                         {isMenuOpen && (
                           <div className="absolute right-4 mt-1 w-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
                             <button
-                              onClick={() => router.push(`/dashboard/payroll/list/${row.id}`)}
+                              onClick={() => router.push(`/payroll/list/${row.id}`)}
                               className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                             >
                               <HiOutlineEye className="text-gray-400 text-sm" />
@@ -452,46 +447,8 @@ export default function PayrollListPage() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-gray-300 dark:border-gray-800">
-            <Pagination className="mt-0 justify-start w-auto">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink>10</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-
-            <div className="flex items-center gap-6">
-              <p className="text-xs font-bold text-gray-400">
-                Showing 1 to {records.length} of 50 entries
-              </p>
-              <div className="flex items-center gap-3">
-                <p className="text-xs font-bold text-gray-900 dark:text-white">Show</p>
-                <Dropdown
-                  label="8"
-                  options={["5", "8", "10", "20", "50"]}
-                  className="min-w-[80px]"
-                />
-              </div>
-            </div>
+          <div className="pt-6 border-t border-gray-300 dark:border-gray-800">
+            <Pagination className="mt-0 w-full" />
           </div>
 
         </div>

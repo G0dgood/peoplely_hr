@@ -16,6 +16,7 @@ import {
  TableHeader,
  TableRow,
 } from "@/components/ui/table";
+import { PageHeader } from "@/components/ui/page-header";
 
 const STATS = [
  {
@@ -77,10 +78,7 @@ export default function DashboardPage() {
  return (
   <div className="flex flex-col gap-8 p-8">
    {/* Welcome Section */}
-   <div>
-    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hi, Pristia</h1>
-    <p className="text-gray-500 dark:text-gray-400 mt-1">This is your HR report so far</p>
-   </div>
+   <PageHeader title="Hi, Pristia" description="This is your HR report so far" />
 
    {/* Stats and Performance Chart Row */}
    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -124,8 +122,6 @@ export default function DashboardPage() {
        <Dropdown
         label="Last 7 month"
         options={["Last 3 month", "Last 6 month", "Last 12 month"]}
-        icon={<HiOutlineAdjustmentsHorizontal className="text-gray-400 dark:text-gray-500" />}
-        className="min-w-[160px]"
        />
       </div>
      </div>
@@ -173,17 +169,14 @@ export default function DashboardPage() {
       <Dropdown
        label="All Offices"
        options={["London Office", "New York Office", "Unpixel Office"]}
-       icon={<HiOutlineAdjustmentsHorizontal />}
       />
       <Dropdown
        label="All Job Titles"
        options={["UI UX Designer", "Graphic Designer", "Product Manager"]}
-       icon={<HiOutlineAdjustmentsHorizontal />}
       />
       <Dropdown
        label="All Status"
-       options={["Active", "Onboarding", "Resigned"]}
-       icon={<HiOutlineAdjustmentsHorizontal />}
+       options={["All Status", "Active", "Onboarding", "Probation", "On Leave", "Resigned"]}
       />
      </div>
 
@@ -234,8 +227,6 @@ export default function DashboardPage() {
       <Dropdown
        label="All Time"
        options={["Today", "This Week", "This Month", "This Year"]}
-       icon={<HiOutlineAdjustmentsHorizontal />}
-       className="min-w-[120px]"
       />
      </div>
 

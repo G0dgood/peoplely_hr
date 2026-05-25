@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
 import { PageHeader } from "@/components/ui/page-header";
+import { QrCodeModal } from "@/components/ui/modal";
 
 
 type TabType = "general" | "location" | "qrcode";
@@ -21,6 +22,7 @@ export default function AttendanceSettingsPage() {
   const [activeTab, setActiveTab] = React.useState<TabType>("general");
   const [startDate, setStartDate] = React.useState("11 Feb 2023");
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = React.useState(false);
 
   const tabs: SettingsTabItem[] = [
     { id: "general", label: "General", icon: <HiOutlineCog6Tooth className="text-lg" /> },
@@ -249,7 +251,10 @@ export default function AttendanceSettingsPage() {
 
                 {/* Generate Button at bottom right */}
                 <div className="flex justify-end mt-4">
-                  <button className="bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition-colors">
+                  <button 
+                    onClick={() => setIsQrModalOpen(true)}
+                    className="bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition-colors"
+                  >
                     Generate QR Code
                   </button>
                 </div>
@@ -258,6 +263,11 @@ export default function AttendanceSettingsPage() {
           )}
         </Card>
       </div>
+
+      <QrCodeModal 
+        isOpen={isQrModalOpen} 
+        onClose={() => setIsQrModalOpen(false)} 
+      />
     </div>
   );
 }

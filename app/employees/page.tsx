@@ -13,7 +13,8 @@ import {
   HiOutlinePencilSquare,
   HiOutlineChevronDown,
   HiOutlineXMark,
-  HiOutlineCalendarDays
+  HiOutlineCalendarDays,
+  HiOutlineEllipsisVertical
 } from "react-icons/hi2";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -153,6 +154,18 @@ export default function EmployeesPage() {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
+
+  // Close menus when clicking outside
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (!(event.target as Element).closest('.action-menu-container')) {
+        setActiveMenuIndex(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleAddClick = () => {
     setEditingEmployee(null);
@@ -236,7 +249,9 @@ export default function EmployeesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {EMPLOYEES.map((emp) => (
+                {EMPLOYEES.map((emp, index) => {
+                  const isMenuOpen = activeMenuIndex === index;
+                  return (
                   <TableRow key={emp.email} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
                     <TableCell className="py-4 px-2">
                       <Checkbox />
@@ -268,14 +283,46 @@ export default function EmployeesPage() {
                     </TableCell>
                     <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400 text-center">{emp.account}</TableCell>
                     <TableCell className="py-4 px-4 text-right">
-                      <TableActions
-                        className="justify-end"
-                        onView={() => router.push("/employees/1")}
-                        onEdit={() => handleEditClick(emp)}
-                      />
+                      <div className="relative inline-block text-left action-menu-container">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveMenuIndex(isMenuOpen ? null : index);
+                          }}
+                          className="inline-flex w-8 h-8 items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                        >
+                          <HiOutlineEllipsisVertical className="text-sm" />
+                        </button>
+
+                        {isMenuOpen && (
+                          <div className="absolute right-4 mt-1 w-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
+                            <button
+                              onClick={() => {
+                                router.push("/employees/1");
+                                setActiveMenuIndex(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                            >
+                              <HiOutlineEye className="text-gray-400 text-sm" />
+                              View
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleEditClick(emp);
+                                setActiveMenuIndex(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-t border-gray-100 dark:border-gray-800/60 transition-colors"
+                            >
+                              <HiOutlinePencilSquare className="text-gray-400 text-sm" />
+                              Edit
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

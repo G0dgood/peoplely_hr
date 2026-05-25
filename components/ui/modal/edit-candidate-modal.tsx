@@ -110,7 +110,7 @@ export function EditCandidateModal({ isOpen, onClose, onSave, candidate }: EditC
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} position="right" className="sm:max-w-2xl h-full rounded-none sm:rounded-l-3xl">
+    <Modal isOpen={isOpen} onClose={onClose} position="right" className="sm:max-w-2xl h-full !rounded-none">
       <form onSubmit={handleSubmit} className="flex flex-col h-full bg-white dark:bg-gray-950">
         <ModalHeader className="border-b-0 pb-0">
           <ModalTitle className="text-xl font-bold text-gray-900 dark:text-white">

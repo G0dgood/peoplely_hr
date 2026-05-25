@@ -10,6 +10,7 @@ import {
   HiOutlineChevronLeft,
   HiOutlineChevronRight
 } from "react-icons/hi2";
+import { Pagination } from "@/components/ui/pagination";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,8 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/ui/date-picker";
+import { RowPerPage } from "@/components/ui/row-per-page";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Table,
   TableBody,
@@ -126,7 +129,7 @@ export default function EmployeeTimeOffPage() {
     <div className="flex flex-col gap-8 p-8 min-h-full">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Employee Time Off</h1>
+        <PageHeader title="Employee Time Off" />
         <div className="flex items-center gap-3">
           <Input
             placeholder="Search employee"
@@ -164,13 +167,14 @@ export default function EmployeeTimeOffPage() {
           <Dropdown
             label="All Type"
             options={["Annual", "Sick Leave", "Engagement"]}
-            className="min-w-[200px]"
           />
           <Dropdown
             label="All Status"
             options={["Approve", "Pending", "Reject"]}
-            className="min-w-[200px]"
           />
+          <div className="ml-auto">
+            <RowPerPage itemsPerPage={8} />
+          </div>
         </div>
 
         {/* Table */}
@@ -230,31 +234,8 @@ export default function EmployeeTimeOffPage() {
           </Table>
         </div>
 
-        {/* Footer / Pagination */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-              <HiOutlineChevronLeft className="text-xs" />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">3</button>
-            <span className="text-gray-300 dark:text-gray-600 px-1">...</span>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">10</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-              <HiOutlineChevronRight className="text-xs" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <p className="text-xs font-bold text-gray-400">Showing 1 to 8 of 50 entries</p>
-            <div className="flex items-center gap-3">
-              <p className="text-xs font-bold text-gray-900 dark:text-white">Show 8</p>
-              <button className="p-1.5 border border-gray-300 dark:border-gray-800 rounded-lg text-gray-400">
-                <HiOutlineChevronDown className="text-xs" />
-              </button>
-            </div>
-          </div>
+        <div className="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">
+          <Pagination className="mt-0 w-full" />
         </div>
       </Card>
     </div>

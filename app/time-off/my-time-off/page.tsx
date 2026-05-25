@@ -21,7 +21,9 @@ import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
 import { TableActions } from "@/components/ui/table-actions";
 import { ViewToggle } from "@/components/ui/view-toggle";
+import { Pagination } from "@/components/ui/pagination";
 import { TimeOffDrawer, AddTimeOffDrawer } from "@/components/ui/drawer";
+import { DeleteModal } from "@/components/ui/modal/delete-modal";
 import {
   Table,
   TableBody,
@@ -39,6 +41,7 @@ const LEAVE_SUMMARY = [
 ];
 
 interface TimeOffRequest {
+  id: number;
   from: string;
   to: string;
   total: string;
@@ -47,20 +50,36 @@ interface TimeOffRequest {
   status: string;
 }
 
-const REQUEST_LIST: TimeOffRequest[] = [
-  { from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
-  { from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
-  { from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
+const INITIAL_REQUEST_LIST: TimeOffRequest[] = [
+  { id: 1, from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
+  { id: 2, from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
+  { id: 3, from: "01 Mar 2023", to: "03 Mar 2023", total: "3 Days", type: "Engagement", attachment: "File.pdf", status: "APPROVE" },
 ];
 
 export default function MyTimeOffPage() {
+  const [requests, setRequests] = React.useState<TimeOffRequest[]>(INITIAL_REQUEST_LIST);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [requestToDelete, setRequestToDelete] = React.useState<number | null>(null);
   const [selectedRequest, setSelectedRequest] = React.useState<TimeOffRequest | null>(null);
 
-  const handleEditClick = (req: TimeOffRequest) => {
+  const handleViewClick = (req: TimeOffRequest) => {
     setSelectedRequest(req);
     setIsDrawerOpen(true);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setRequestToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (requestToDelete !== null) {
+      setRequests(prev => prev.filter(req => req.id !== requestToDelete));
+      setIsDeleteModalOpen(false);
+      setRequestToDelete(null);
+    }
   };
 
   const handleAddNewClick = () => {
@@ -114,8 +133,8 @@ export default function MyTimeOffPage() {
             <span>01 Jan 2023 - 10 Mar 2023</span>
             <HiOutlineCalendarDays className="text-gray-400 text-lg" />
           </div>
-          <Dropdown label="All Type" options={["Annual", "Sick Leave", "Engagement"]} className="min-w-[180px]" />
-          <Dropdown label="All Status" options={["Approve", "Pending", "Reject"]} className="min-w-[180px]" />
+          <Dropdown label="All Type" options={["Annual", "Sick Leave", "Engagement"]} />
+          <Dropdown label="All Status" options={["Approve", "Pending", "Reject"]} />
         </div>
 
         <div className="overflow-x-auto">
@@ -132,8 +151,8 @@ export default function MyTimeOffPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {REQUEST_LIST.map((req, index) => (
-                <TableRow key={index} className="border-b border-gray-50 dark:border-gray-800">
+              {requests.map((req) => (
+                <TableRow key={req.id} className="border-b border-gray-50 dark:border-gray-800">
                   <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</TableCell>
                   <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</TableCell>
                   <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</TableCell>
@@ -150,11 +169,11 @@ export default function MyTimeOffPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="py-4 px-4 text-right">
-                    <TableActions 
+                    <TableActions
                       className="justify-end"
-                      onView={() => {}}
-                      onEdit={() => handleEditClick(req)}
-                      onDelete={() => {}}
+                      onView={() => handleViewClick(req)}
+                      onEdit={() => handleViewClick(req)}
+                      onDelete={() => handleDeleteClick(req.id)}
                     />
                   </TableCell>
                 </TableRow>
@@ -163,11 +182,8 @@ export default function MyTimeOffPage() {
           </Table>
         </div>
 
-        {/* Simple Pagination Footer */}
-        <div className="flex items-center gap-2 mt-8">
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400"><HiOutlineChevronLeft className="text-xs" /></button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-800 text-gray-400"><HiOutlineChevronRight className="text-xs" /></button>
+        <div className="mt-8">
+          <Pagination className="mt-0 w-full" />
         </div>
       </Card>
 
@@ -180,7 +196,7 @@ export default function MyTimeOffPage() {
               <span>01 Jan 2023 - 10 Mar 2023</span>
               <HiOutlineCalendarDays className="text-gray-400 text-lg ml-auto" />
             </div>
-            <Dropdown label="All Type" options={["Annual", "Sick Leave"]} className="min-w-[180px]" />
+            <Dropdown label="All Type" options={["Annual", "Sick Leave"]} />
           </div>
         </div>
 
@@ -222,6 +238,13 @@ export default function MyTimeOffPage() {
       <AddTimeOffDrawer
         isOpen={isAddDrawerOpen}
         onClose={() => setIsAddDrawerOpen(false)}
+      />
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => { setIsDeleteModalOpen(false); setRequestToDelete(null); }}
+        onConfirm={confirmDelete}
+        itemName="Time Off Request"
       />
     </div>
   );

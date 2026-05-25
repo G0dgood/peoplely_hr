@@ -13,9 +13,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NewHolidayDrawer, NewTypeDrawer, NewPolicyDrawer } from "@/components/ui/drawer";
 import { TypePoliciesSection, INITIAL_POLICIES } from "@/components/ui/type-policies-section";
-import {
-
 import { PageHeader } from "@/components/ui/page-header";
+import {
   Table,
   TableBody,
   TableCell,

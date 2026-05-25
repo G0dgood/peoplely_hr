@@ -8,11 +8,13 @@ import {
  HiOutlineChevronUp,
  HiOutlinePencilSquare,
  HiOutlineTrash,
+ HiOutlineDocumentText,
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EditPayrollDrawer } from "@/components/ui/drawer";
 
 // ─── Mock data ───────────────────────────────────────────────────────
 const EMPLOYEE_PAYROLL = {
@@ -97,6 +99,7 @@ function SectionRow({ label, value, defaultOpen = false, children }: SectionRowP
 
 export default function PayrollDetailPage() {
  const router = useRouter();
+ const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
  const e = EMPLOYEE_PAYROLL;
 
  return (
@@ -114,7 +117,16 @@ export default function PayrollDetailPage() {
      <Button
       variant="outline"
       className="h-10 px-4 bg-white dark:bg-gray-900"
+      leftIcon={<HiOutlineDocumentText className="text-lg" />}
+      onClick={() => router.push(`/payroll/payslip/${e.id}`)}
+     >
+      View Payslip
+     </Button>
+     <Button
+      variant="outline"
+      className="h-10 px-4 bg-white dark:bg-gray-900"
       leftIcon={<HiOutlinePencilSquare className="text-lg" />}
+      onClick={() => setIsEditDrawerOpen(true)}
      >
       Edit
      </Button>
@@ -261,6 +273,11 @@ export default function PayrollDetailPage() {
 
     </div>
    </Card>
+   
+   <EditPayrollDrawer 
+     isOpen={isEditDrawerOpen}
+     onClose={() => setIsEditDrawerOpen(false)}
+   />
   </div>
  );
 }

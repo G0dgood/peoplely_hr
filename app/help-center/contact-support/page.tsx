@@ -18,7 +18,7 @@ export default function ContactSupportPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Help Center</h1>
           <div className="flex items-center gap-1.5 mt-1 text-xs font-bold text-gray-500">
-            <Link href="/dashboard/help-center" className="hover:text-primary transition-colors">
+            <Link href="/help-center" className="hover:text-primary transition-colors">
               Help Center
             </Link>
             <span className="text-gray-300">&gt;</span>

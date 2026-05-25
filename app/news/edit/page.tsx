@@ -29,7 +29,7 @@ export default function EditNewsPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate save
-    router.push("/dashboard/news/detail");
+    router.push("/news/detail");
   };
 
   return (
@@ -37,7 +37,7 @@ export default function EditNewsPage() {
       {/* Header section with back button */}
       <div>
         <Link
-          href="/dashboard/news/detail"
+          href="/news/detail"
           className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors select-none"
         >
           <HiOutlineChevronLeft className="text-2xl font-bold" />
@@ -144,7 +144,7 @@ export default function EditNewsPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.push("/dashboard/news/detail")}
+              onClick={() => router.push("/news/detail")}
               className="flex-1 font-bold h-11 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               Cancel

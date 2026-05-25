@@ -802,7 +802,7 @@ export default function RecruitmentJobsPage() {
                   <div className="flex items-center gap-3">
                     <h3
                       className="text-base font-black text-gray-900 dark:text-white cursor-pointer hover:text-primary transition-colors"
-                      onClick={() => router.push(`/dashboard/recruitment/jobs/${job.id}`)}
+                      onClick={() => router.push(`/recruitment/jobs/${job.id}`)}
                     >
                       {job.title}
                     </h3>

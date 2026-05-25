@@ -10,6 +10,7 @@ export * from "./link-task-drawer";
 export * from "./new-task-drawer";
 export * from "./new-template-drawer";
 export * from "./edit-task-drawer";
+export * from "./edit-payroll-drawer";
 export * from "./add-department-drawer";
 export * from "./add-work-schedule-drawer";
 export * from "./add-role-drawer";

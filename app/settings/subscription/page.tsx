@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { UpgradePlanDrawer } from "@/components/ui/drawer";
 import { HiChevronUpDown, HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { Pagination } from "@/components/ui/pagination";
 
 const BILLING_HISTORY = [
   { id: 1, plan: "Perform Plan", status: "UNPAID", cycle: "3", createdDate: "20 Jan 2023", endDate: "20 Apr 2023" },
@@ -139,17 +140,8 @@ export default function SubscriptionPage() {
                 ))}
               </div>
 
-              {/* Pagination */}
-              <div className="flex items-center gap-2 mt-6">
-                <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  <HiChevronLeft className="text-sm" />
-                </button>
-                <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-900 dark:text-white font-bold text-xs bg-white dark:bg-gray-900 transition-colors">
-                  1
-                </button>
-                <button className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  <HiChevronRight className="text-sm" />
-                </button>
+              <div className="mt-6">
+                <Pagination className="mt-0 w-full" />
               </div>
             </div>
           )}

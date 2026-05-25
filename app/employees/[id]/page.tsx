@@ -31,7 +31,7 @@ export default function EmployeeDetailPage() {
   <div className="flex flex-col gap-8 p-8 min-h-full">
    {/* Back Button */}
    <Link
-    href="/dashboard/employees"
+    href="/employees"
     className="flex items-center gap-2 text-gray-900 dark:text-white font-bold hover:text-primary transition-colors"
    >
     <HiOutlineChevronLeft className="text-xl" />

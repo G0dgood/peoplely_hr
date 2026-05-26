@@ -49,7 +49,7 @@ export default function LoginPage() {
           <img src="/logo/peoplely.svg" alt="Peoplely HR" className="h-7 w-auto self-start brightness-0 invert" />
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-white text-h4 font-bold leading-tight lg:text-h3">
+            <h1 className="text-white text-h5 font-bold leading-tight lg:text-h4">
               Let&apos;s empower your employees today.
             </h1>
             <p className="text-gray-400 text-body-sm">
@@ -68,7 +68,7 @@ export default function LoginPage() {
         {/* Form Main Area */}
         <div className="w-full max-w-md mx-auto flex flex-col gap-8 py-8 lg:py-0">
           <div className="text-center lg:text-left">
-            <h2 className="text-gray-900 font-bold text-h4 tracking-tight">
+            <h2 className="text-gray-900 font-bold text-h5 tracking-tight">
               Login first to your account
             </h2>
           </div>
@@ -87,10 +87,10 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Input your registered email"
                   className={`w-full py-3 pl-4 pr-10 text-body-sm rounded-xl border bg-white text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 ${emailHasError
-                      ? "border-error focus:ring-error/20 focus:border-error"
-                      : emailIsValidated
-                        ? "border-[#10B981] focus:ring-primary/20 focus:border-primary"
-                        : "border-gray-300 focus:ring-primary/20 focus:border-primary"
+                    ? "border-error focus:ring-error/20 focus:border-error"
+                    : emailIsValidated
+                      ? "border-[#10B981] focus:ring-primary/20 focus:border-primary"
+                      : "border-gray-300 focus:ring-primary/20 focus:border-primary"
                     }`}
                 />
                 {emailIsValidated && (
@@ -137,8 +137,8 @@ export default function LoginPage() {
                 onClick={() => setRememberMe(!rememberMe)}
               >
                 <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${rememberMe
-                    ? "bg-[#10B981] border-[#10B981] text-white"
-                    : "border-gray-300 hover:border-gray-300 bg-white"
+                  ? "bg-[#10B981] border-[#10B981] text-white"
+                  : "border-gray-300 hover:border-gray-300 bg-white"
                   }`}>
                   {rememberMe && <FaCheck className="text-[10px]" />}
                 </div>
@@ -154,8 +154,8 @@ export default function LoginPage() {
               type="submit"
               disabled={!isFormFilled}
               className={`w-full py-3.5 rounded-xl font-bold text-body-sm transition-all shadow-sm ${isFormFilled
-                  ? "bg-[#11131A] text-white hover:bg-black active:scale-[0.98] cursor-pointer"
-                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                ? "bg-[#11131A] text-white hover:bg-black active:scale-[0.98] cursor-pointer"
+                : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
             >
               Login

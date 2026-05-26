@@ -36,7 +36,7 @@ export function AddDepartmentDrawer({ isOpen, onClose }: AddDepartmentDrawerProp
         </div>
 
         <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 relative z-10 bg-white dark:bg-gray-950">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Department</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add New Department</h2>
 
           <div className="flex flex-col gap-6">
             <Input

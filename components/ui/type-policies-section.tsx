@@ -7,14 +7,6 @@ import {
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 export interface Policy {
   type: string;
@@ -97,30 +89,30 @@ export function TypePoliciesSection({
             </div>
 
             <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
-                    <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider rounded-l-xl">Policy Name</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Description</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Eligibility</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <table>
+                <thead>
+                  <tr className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
+                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider rounded-l-xl">Policy Name</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Description</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Eligibility</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {items.map(({ policy }, idx) => (
-                    <TableRow key={idx} className="border-none">
-                      <TableCell className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.policyName}</TableCell>
-                      <TableCell className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.description}</TableCell>
-                      <TableCell className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.eligibility}</TableCell>
-                      <TableCell className="py-6 px-6 text-right">
+                    <tr key={idx} className="border-none">
+                      <td className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.policyName}</td>
+                      <td className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.description}</td>
+                      <td className="py-6 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">{policy.eligibility}</td>
+                      <td className="py-6 px-6 text-right">
                         <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                           <HiOutlinePencilSquare className="text-lg" />
                         </button>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
           </Card>
         );

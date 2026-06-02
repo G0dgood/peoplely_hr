@@ -230,7 +230,7 @@ export default function TurnoverRateReportPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-gray-50 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
+              <tr className="bg-gray-50/50 dark:bg-gray-800/20">
                 <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Employee</th>
                 <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">ID</th>
                 <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Department</th>
@@ -240,7 +240,7 @@ export default function TurnoverRateReportPage() {
             </thead>
             <tbody>
               {RESIGNED_EMPLOYEES.map((emp, index) => (
-                <tr key={index} className="border-b border-gray-50 dark:border-gray-800 last:border-none hover:bg-gray-50/30 dark:hover:bg-gray-800/30 transition-colors">
+                <tr key={index} className="last:border-none hover:bg-gray-50/30 dark:hover:bg-gray-800/30 transition-colors">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <Avatar src={emp.avatar} size="sm" className="w-8 h-8 rounded-full" />

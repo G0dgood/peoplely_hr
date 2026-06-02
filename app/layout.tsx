@@ -3,6 +3,8 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { DashboardWrapper } from "@/components/ui/dashboard-wrapper";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { ReduxProvider } from "@/store/provider";
+import { Toaster } from "sonner";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -25,10 +27,13 @@ export default function RootLayout({
       className={`${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <DashboardWrapper>
-          {children}
-        </DashboardWrapper>
-        <ProgressBar />
+        <ReduxProvider>
+          <DashboardWrapper>
+            {children}
+          </DashboardWrapper>
+          <ProgressBar />
+          <Toaster position="top-right" richColors />
+        </ReduxProvider>
       </body>
     </html>
   );

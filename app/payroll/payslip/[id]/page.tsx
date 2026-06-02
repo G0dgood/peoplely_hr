@@ -6,14 +6,6 @@ import { useParams, useRouter } from "next/navigation";
 import { HiOutlineChevronLeft, HiOutlineArrowDownTray, HiOutlineEye } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { PageHeader } from "@/components/ui/page-header";
 
 interface PayslipSummary {
@@ -103,59 +95,59 @@ export default function PayslipListPage() {
       <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800">
         <div className="flex flex-col gap-6">
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider rounded-l-xl">
+            <table>
+              <thead>
+                <tr className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider rounded-l-xl">
                     Pay Period
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Paid Date
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Total Earnings
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Total Deductions
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Net Pay
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Status
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">
                     Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {PAST_PAYSLIPS.map((payslip) => (
-                  <TableRow
+                  <tr
                     key={payslip.id}
                     className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-300 dark:border-gray-800"
                   >
-                    <TableCell className="py-5 px-6">
+                    <td className="py-5 px-6">
                       <span className="text-xs font-bold text-gray-900 dark:text-white">{payslip.period}</span>
-                    </TableCell>
-                    <TableCell className="py-5 px-6">
+                    </td>
+                    <td className="py-5 px-6">
                       <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{payslip.date}</span>
-                    </TableCell>
-                    <TableCell className="py-5 px-6">
+                    </td>
+                    <td className="py-5 px-6">
                       <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{payslip.earnings}</span>
-                    </TableCell>
-                    <TableCell className="py-5 px-6">
+                    </td>
+                    <td className="py-5 px-6">
                       <span className="text-xs font-bold text-red-500 dark:text-red-400">-{payslip.deductions}</span>
-                    </TableCell>
-                    <TableCell className="py-5 px-6">
+                    </td>
+                    <td className="py-5 px-6">
                       <span className="text-xs font-black text-gray-900 dark:text-white">{payslip.netPay}</span>
-                    </TableCell>
-                    <TableCell className="py-5 px-6">
+                    </td>
+                    <td className="py-5 px-6">
                       <Badge variant={payslip.status === "PAID" ? "success" : "warning"} tinted className="text-[10px] uppercase tracking-wider px-2.5 py-1">
                         {payslip.status}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="py-5 px-6 text-right">
+                    </td>
+                    <td className="py-5 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {/* We could push to a specific payslip detail page like /payroll/payslip/${id}/${payslip.id} */}
                         <button
@@ -170,11 +162,11 @@ export default function PayslipListPage() {
                           <HiOutlineArrowDownTray className="text-sm" /> PDF
                         </button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         </div>
       </Card>

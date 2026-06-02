@@ -304,7 +304,7 @@ export default function OffboardingChecklistPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left">
                       <thead>
-                        <tr className="border-b border-gray-50 dark:border-gray-800/80">
+                        <tr >
                           <th className="py-3 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider w-[60%]">
                             Task
                           </th>
@@ -320,7 +320,7 @@ export default function OffboardingChecklistPage() {
                         {emp.tasks.map((task) => (
                           <tr
                             key={task.id}
-                            className="border-b border-gray-50 dark:border-gray-800/40 last:border-none hover:bg-gray-50/[0.02]"
+                            className="last:border-none hover:bg-gray-50/[0.02]"
                           >
                             <td className="py-3.5 px-4">
                               <div className="flex items-center gap-3">

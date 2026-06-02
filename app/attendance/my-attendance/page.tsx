@@ -18,17 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
 import { ClockOutModal, EditPaidTimeModal } from "@/components/ui/modal";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/pagination";
 import { PageHeader } from "@/components/ui/page-header";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { RowPerPage } from "@/components/ui/row-per-page";
 
 
@@ -311,31 +302,31 @@ export default function MyAttendancePage() {
 
           {/* Collapsible Attendance Table */}
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider rounded-l-xl">Date</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Clock In</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Clock Out</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Work Schedule</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Logged Time</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Paid Time</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Overtime</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Status</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Note</TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <table>
+              <thead>
+                <tr className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
+                  <th className="rounded-l-xl">Date</th>
+                  <th >Clock In</th>
+                  <th >Clock Out</th>
+                  <th >Work Schedule</th>
+                  <th >Logged Time</th>
+                  <th >Paid Time</th>
+                  <th >Overtime</th>
+                  <th >Status</th>
+                  <th >Note</th>
+                  <th className="text-right rounded-r-xl">Action</th>
+                </tr>
+              </thead>
+              <tbody>
                 {records.map((row, index) => {
                   const isExpanded = expandedRows.includes(index);
                   return (
                     <React.Fragment key={index}>
-                      <TableRow
+                      <tr
                         onClick={() => toggleRow(index)}
                         className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-200 dark:border-gray-800 cursor-pointer"
                       >
-                        <TableCell className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                        <td className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
                           <div className="flex items-center gap-2">
                             {isExpanded ? (
                               <HiOutlineChevronUp className="text-gray-400 text-xs shrink-0" />
@@ -344,20 +335,20 @@ export default function MyAttendancePage() {
                             )}
                             <span>{row.date}</span>
                           </div>
-                        </TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.clockIn}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.clockOut}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.schedule}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.logged}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.paid}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.overtime}</TableCell>
-                        <TableCell className="py-5 px-4 text-xs">
+                        </td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.clockIn}</td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.clockOut}</td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.schedule}</td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.logged}</td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.paid}</td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">{row.overtime}</td>
+                        <td className="py-5 px-4 text-xs">
                           <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${row.status === "PENDING" ? "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400" : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"}`}>
                             {row.status}
                           </span>
-                        </TableCell>
-                        <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 max-w-[120px] truncate">{row.details?.notes || "-"}</TableCell>
-                        <TableCell className="py-5 px-4 text-right">
+                        </td>
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 max-w-[120px] truncate">{row.details?.notes || "-"}</td>
+                        <td className="py-5 px-4 text-right">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -368,13 +359,13 @@ export default function MyAttendancePage() {
                           >
                             <HiOutlinePencilSquare className="text-sm" />
                           </button>
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                      </tr>
 
                       {/* Expanded Details Row */}
                       {isExpanded && (
-                        <TableRow className="bg-gray-50/20 dark:bg-gray-800/10 border-b border-gray-200 dark:border-gray-800">
-                          <TableCell colSpan={10} className="p-6">
+                        <tr className="bg-gray-50/20 dark:bg-gray-800/10 border-b border-gray-200 dark:border-gray-800">
+                          <td colSpan={10} className="p-6">
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
                               <div className="flex flex-col gap-1">
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Clock In Location</span>
@@ -403,14 +394,14 @@ export default function MyAttendancePage() {
                                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 leading-normal">{row.details?.notes || "-"}</span>
                               </div>
                             </div>
-                          </TableCell>
-                        </TableRow>
+                          </td>
+                        </tr>
                       )}
                     </React.Fragment>
                   );
                 })}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination Footer */}

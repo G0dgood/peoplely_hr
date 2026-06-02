@@ -24,14 +24,6 @@ import { ViewToggle } from "@/components/ui/view-toggle";
 import { Pagination } from "@/components/ui/pagination";
 import { TimeOffDrawer, AddTimeOffDrawer } from "@/components/ui/drawer";
 import { DeleteModal } from "@/components/ui/modal/delete-modal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 const LEAVE_SUMMARY = [
   { label: "Annual", days: "3 Days" },
@@ -138,48 +130,48 @@ export default function MyTimeOffPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">From</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">To</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Attachment</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Status</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table>
+            <thead>
+              <tr >
+                <th >From</th>
+                <th >To</th>
+                <th >Total</th>
+                <th >Type</th>
+                <th >Attachment</th>
+                <th className="text-center">Status</th>
+                <th className="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
               {requests.map((req) => (
-                <TableRow key={req.id} className="border-b border-gray-50 dark:border-gray-800">
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.type}</TableCell>
-                  <TableCell className="py-4 px-4">
+                <tr key={req.id} >
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.type}</td>
+                  <td className="py-4 px-4">
                     <div className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400">
                       {req.attachment}
                       <HiOutlineDocumentText className="text-gray-300 text-lg" />
                     </div>
-                  </TableCell>
-                  <TableCell className="py-4 px-4 text-center">
+                  </td>
+                  <td className="py-4 px-4 text-center">
                     <Badge variant="success" tinted className="text-[9px] uppercase tracking-wider px-2 py-0.5">
                       {req.status}
                     </Badge>
-                  </TableCell>
-                  <TableCell className="py-4 px-4 text-right">
+                  </td>
+                  <td className="py-4 px-4 text-right">
                     <TableActions
                       className="justify-end"
                       onView={() => handleViewClick(req)}
                       onEdit={() => handleViewClick(req)}
                       onDelete={() => handleDeleteClick(req.id)}
                     />
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
 
         <div className="mt-8">
@@ -201,31 +193,31 @@ export default function MyTimeOffPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Date</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Event</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Changed By</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">Change (Days)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">01 Mar 2023</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">Take Time Off</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">Engagement</TableCell>
-                <TableCell className="py-4 px-4">
+          <table>
+            <thead>
+              <tr >
+                <th >Date</th>
+                <th >Event</th>
+                <th >Type</th>
+                <th >Changed By</th>
+                <th className="text-right">Change (Days)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr >
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">01 Mar 2023</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">Take Time Off</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">Engagement</td>
+                <td className="py-4 px-4">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center text-[10px] font-bold">PO</div>
                     <span className="text-xs font-bold text-gray-900 dark:text-white">Pixel Office</span>
                   </div>
-                </TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">-10 Days</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+                </td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">-10 Days</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Card>
 

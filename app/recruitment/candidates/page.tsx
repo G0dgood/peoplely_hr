@@ -17,18 +17,11 @@ import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
 import { EditCandidateDrawer } from "@/components/ui/drawer";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { PageHeader } from "@/components/ui/page-header";
 import { RowPerPage } from "@/components/ui/row-per-page";
 import { TableActions } from "@/components/ui/table-actions";
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationNext } from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/pagination";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 
 
@@ -195,6 +188,7 @@ function TableStageDropdown({
 }
 
 export default function CandidatesPage() {
+  const isLoading = false;
   const [candidates, setCandidates] = React.useState<Candidate[]>(INITIAL_CANDIDATES);
   const [search, setSearch] = React.useState("");
   const [selectedRecordFilter, setSelectedRecordFilter] = React.useState("All Record");
@@ -344,131 +338,114 @@ export default function CandidatesPage() {
 
           {/* Candidates Table */}
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b border-gray-300 dark:border-gray-800">
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+            <table>
+              <thead>
+                <tr className="border-b border-gray-300 dark:border-gray-800">
+                  <th >
                     Name
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Phone Number
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Job
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     CV
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Created Date
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Stages
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">
+                  </th>
+                  <th className="text-right">
                     Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedCandidates.map((cand) => (
-                  <TableRow
-                    key={cand.id}
-                    className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-300 dark:border-gray-800"
-                  >
-                    <TableCell className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar src={cand.avatar} size="sm" />
-                        <div>
-                          <p className="text-xs font-bold text-gray-900 dark:text-white">
-                            {cand.name}
-                          </p>
-                          <p className="text-[10px] text-gray-400 dark:text-gray-500">
-                            {cand.email}
-                          </p>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <SVGLoaderFetch colSpan={7} text="Loading candidates..." />
+                ) : paginatedCandidates.length === 0 ? (
+                  <NoRecordFound colSpan={7} text="No candidates found." />
+                ) : (
+                  paginatedCandidates.map((cand) => (
+                    <tr
+                      key={cand.id}
+                      className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-300 dark:border-gray-800"
+                    >
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar src={cand.avatar} size="sm" />
+                          <div>
+                            <p className="text-xs font-bold text-gray-900 dark:text-white">
+                              {cand.name}
+                            </p>
+                            <p className="text-[10px] text-gray-400 dark:text-gray-500">
+                              {cand.email}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                      {cand.phone}
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                      {cand.job}
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-                      {cand.cv !== "-" ? (
-                        <a
-                          href="#"
-                          onClick={(e) => e.preventDefault()}
-                          className="flex items-center gap-1.5 text-gray-900 dark:text-white font-bold hover:underline"
-                        >
-                          <svg className="w-3.5 h-3.5 text-gray-450" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                          </svg>
-                          {cand.cv}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-xs font-medium text-gray-500 dark:text-gray-400">
-                      {cand.createdDate}
-                    </TableCell>
-                    <TableCell className="py-4 px-4">
-                      <TableStageDropdown
-                        stage={cand.stage}
-                        onChange={(s) => handleStageChange(cand.id, s)}
-                      />
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-right">
-                      <TableActions
-                        onEdit={() => {
-                          setEditingCandidate(cand);
-                          setIsModalOpen(true);
-                        }}
-                        onDelete={() => handleDeleteCandidate(cand.id)}
-                        className="justify-end"
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </td>
+                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                        {cand.phone}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                        {cand.job}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                        {cand.cv !== "-" ? (
+                          <a
+                            href="#"
+                            onClick={(e) => e.preventDefault()}
+                            className="flex items-center gap-1.5 text-gray-900 dark:text-white font-bold hover:underline"
+                          >
+                            <svg className="w-3.5 h-3.5 text-gray-450" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            {cand.cv}
+                          </a>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-medium text-gray-500 dark:text-gray-400">
+                        {cand.createdDate}
+                      </td>
+                      <td className="py-4 px-4">
+                        <TableStageDropdown
+                          stage={cand.stage}
+                          onChange={(s) => handleStageChange(cand.id, s)}
+                        />
+                      </td>
+                      <td className="py-4 px-4 text-right">
+                        <TableActions
+                          onEdit={() => {
+                            setEditingCandidate(cand);
+                            setIsModalOpen(true);
+                          }}
+                          onDelete={() => handleDeleteCandidate(cand.id)}
+                          className="justify-end"
+                        />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
 
           {/* Footer controls: pagination + entries count */}
           <div className="flex justify-end border-t border-gray-300 dark:border-gray-800 pt-4 mt-2">
             {/* Pagination Controls */}
             <div className="flex items-center gap-1.5">
-              <Pagination className="mt-0 w-auto">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      disabled={currentPage === 1}
-                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                      className="h-9 w-9 rounded-xl disabled:opacity-40 disabled:pointer-events-none"
-                    />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }).map((_, i) => (
-                    <PaginationItem key={i}>
-                      <PaginationLink
-                        isActive={currentPage === i + 1}
-                        onClick={() => setCurrentPage(i + 1)}
-                        className="h-9 w-9 rounded-xl text-xs font-bold"
-                      >
-                        {i + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext
-                      disabled={currentPage === totalPages}
-                      onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                      className="h-9 w-9 rounded-xl disabled:opacity-40 disabled:pointer-events-none"
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                className="mt-0 w-auto"
+              />
             </div>
           </div>
         </div>

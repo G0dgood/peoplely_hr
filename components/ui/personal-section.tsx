@@ -3,8 +3,13 @@
 import * as React from "react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
+import { Employee } from "@/store/services/employeesApi";
 
-export function PersonalSection() {
+interface PersonalSectionProps {
+  employee?: Employee | null;
+}
+
+export function PersonalSection({ employee }: PersonalSectionProps) {
   return (
     <div className="flex flex-col gap-6">
       {/* Personal Info Section */}
@@ -17,13 +22,13 @@ export function PersonalSection() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
           {[
-            { label: "Full Name", value: "Pristia Candra Nelson" },
+            { label: "Full Name", value: employee?.name || "Pristia Candra Nelson" },
             { label: "Gender", value: "Female" },
             { label: "Date of Birth", value: "23 May 1997" },
             { label: "Marital Status", value: "-" },
             { label: "Nationality", value: "Indonesia" },
             { label: "Personal Tax ID", value: "-" },
-            { label: "Email Address", value: "lincoln@gmail.com" },
+            { label: "Email Address", value: employee?.email || "lincoln@gmail.com" },
             { label: "Social Insurance", value: "-" },
             { label: "Health Insurance", value: "Axa Insurance" },
             { label: "Phone Number", value: "089318298493" },

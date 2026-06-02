@@ -18,17 +18,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { AddFolderDrawer } from "@/components/ui/drawer";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 import { ShareModal, ShareOption } from "@/components/ui/modal/share-modal";
 import { DeleteModal } from "@/components/ui/modal";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { TableActions } from "@/components/ui/table-actions";
 import { RowPerPage } from "@/components/ui/row-per-page";
 
@@ -106,6 +99,7 @@ const DEFAULT_TAGS = [
 ];
 
 export default function DocumentsPage() {
+  const isLoading = false;
   const [folders, setFolders] = React.useState<DocumentFolder[]>(INITIAL_FOLDERS);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [sortKey, setSortKey] = React.useState<SortKey>("name");
@@ -207,7 +201,7 @@ export default function DocumentsPage() {
         <div className="flex items-center gap-3">
           {/* Date Range Selection Indicator */}
           <div className="flex items-center gap-2.5 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white select-none">
-            <span>01 Jan 2023 - 10 Mar 2023</span>
+            01 Jan 2023 - 10 Mar 2023
             <HiOutlineCalendarDays className="text-gray-400 text-lg" />
           </div>
 
@@ -228,156 +222,162 @@ export default function DocumentsPage() {
           <RowPerPage itemsPerPage={10} />
         </div>
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          <table>
+            <thead>
+              <tr >
+                <th >
                   <div
                     onClick={() => handleSort("name")}
                     className="flex items-center gap-1.5 cursor-pointer select-none"
                   >
-                    <span>Name</span>
+                    Name
                     <HiOutlineChevronUpDown className="text-sm" />
                   </div>
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <th >
                   <div
                     onClick={() => handleSort("creatorName")}
                     className="flex items-center gap-1.5 cursor-pointer select-none"
                   >
-                    <span>Created By</span>
+                    Created By
                     <HiOutlineChevronUpDown className="text-sm" />
                   </div>
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                  <span>Created Date</span>
-                </TableHead>
+                <th >
+                  Created Date
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <th >
                   <div
                     onClick={() => handleSort("description")}
                     className="flex items-center gap-1.5 cursor-pointer select-none"
                   >
-                    <span>Description</span>
+                    Description
                     <HiOutlineChevronUpDown className="text-sm" />
                   </div>
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <th >
                   <div
                     onClick={() => handleSort("filesCount")}
                     className="flex items-center gap-1.5 cursor-pointer select-none"
                   >
-                    <span>Number Of Files</span>
+                    Number Of Files
                     <HiOutlineChevronUpDown className="text-sm" />
                   </div>
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                  <span>Size</span>
-                </TableHead>
+                <th >
+                  Size
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                  <span>Share With</span>
-                </TableHead>
+                <th >
+                  Share With
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right pr-6">
-                  <span>Action</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {folders.map((folder) => (
-                <TableRow
-                  key={folder.id}
-                  className="border-b border-gray-50 dark:border-gray-800/80 hover:bg-gray-50/20 dark:hover:bg-gray-800/10"
-                >
-                  {/* Folder Name */}
-                  <TableCell className="py-4 px-4">
-                    <Link
-                      href={`/documents/${folder.id}`}
-                      className="flex items-center gap-3 group hover:opacity-80"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg group-hover:text-primary transition-colors">
-                        <HiOutlineFolder />
-                      </div>
-                      <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                        {folder.name}
-                      </span>
-                    </Link>
-                  </TableCell>
-
-                  {/* Creator */}
-                  <TableCell className="py-4 px-4">
-                    <div className="flex items-center gap-2">
-                      {folder.creatorAvatar ? (
-                        <Avatar
-                          src={folder.creatorAvatar}
-                          size="sm"
-                          className="rounded-full w-6 h-6"
-                        />
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                          {folder.creatorInitials}
+                <th className="text-right pr-6">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={8} text="Loading folders..." />
+              ) : folders.length === 0 ? (
+                <NoRecordFound colSpan={8} text="No folders found." />
+              ) : (
+                folders.map((folder) => (
+                  <tr
+                    key={folder.id}
+                    className="hover:bg-gray-50/20 dark:hover:bg-gray-800/10"
+                  >
+                    {/* Folder Name */}
+                    <td className="py-4 px-4">
+                      <Link
+                        href={`/documents/${folder.id}`}
+                        className="flex items-center gap-3 group hover:opacity-80"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-400 dark:text-gray-500 text-lg group-hover:text-primary transition-colors">
+                          <HiOutlineFolder />
                         </div>
-                      )}
-                      <span className="text-xs font-bold text-gray-900 dark:text-white">
-                        {folder.creatorName}
-                      </span>
-                    </div>
-                  </TableCell>
+                        <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                          {folder.name}
+                        </span>
+                      </Link>
+                    </td>
 
-                  {/* Created Date */}
-                  <TableCell className="py-4 px-4">
-                    <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
-                      <HiOutlineCalendarDays className="text-base text-gray-350 dark:text-gray-500" />
-                      <span>{folder.createdDate}</span>
-                    </div>
-                  </TableCell>
+                    {/* Creator */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2">
+                        {folder.creatorAvatar ? (
+                          <Avatar
+                            src={folder.creatorAvatar}
+                            size="sm"
+                            className="rounded-full w-6 h-6"
+                          />
+                        ) : (
+                          <div className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                            {folder.creatorInitials}
+                          </div>
+                        )}
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          {folder.creatorName}
+                        </span>
+                      </div>
+                    </td>
 
-                  {/* Description */}
-                  <TableCell className="py-4 px-4 text-xs font-semibold text-gray-550 dark:text-gray-400">
-                    {folder.description}
-                  </TableCell>
+                    {/* Created Date */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
+                        <HiOutlineCalendarDays className="text-base text-gray-350 dark:text-gray-500" />
+                        {folder.createdDate}
+                      </div>
+                    </td>
 
-                  {/* Number of Files */}
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
-                    {folder.filesCount}
-                  </TableCell>
+                    {/* Description */}
+                    <td className="py-4 px-4 text-xs font-semibold text-gray-550 dark:text-gray-400">
+                      {folder.description}
+                    </td>
 
-                  {/* Size */}
-                  <TableCell className="py-4 px-4 text-xs font-semibold text-gray-550 dark:text-gray-400">
-                    {folder.size}
-                  </TableCell>
+                    {/* Number of Files */}
+                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                      {folder.filesCount}
+                    </td>
 
-                  {/* Share With (Interactive Modal Trigger) */}
-                  <TableCell className="py-4 px-4">
-                    <button
-                      onClick={() => setActiveShareFolderId(folder.id)}
-                      className="text-xs font-bold text-gray-900 dark:text-white hover:text-primary hover:underline transition-colors text-left"
-                    >
-                      {folder.shareWith}
-                    </button>
-                  </TableCell>
+                    {/* Size */}
+                    <td className="py-4 px-4 text-xs font-semibold text-gray-550 dark:text-gray-400">
+                      {folder.size}
+                    </td>
 
-                  {/* Action */}
-                  <TableCell className="py-4 px-4 text-right pr-6">
-                    <div className="flex justify-end">
-                      <TableActions
-                        onView={() => window.location.href = `/documents/${folder.id}`}
-                        onDelete={() => {
-                          setFolderToDelete(folder);
-                          setIsDeleteModalOpen(true);
-                        }}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    {/* Share With (Interactive Modal Trigger) */}
+                    <td className="py-4 px-4">
+                      <button
+                        onClick={() => setActiveShareFolderId(folder.id)}
+                        className="text-xs font-bold text-gray-900 dark:text-white hover:text-primary hover:underline transition-colors text-left"
+                      >
+                        {folder.shareWith}
+                      </button>
+                    </td>
+
+                    {/* Action */}
+                    <td className="py-4 px-4 text-right pr-6">
+                      <div className="flex justify-end">
+                        <TableActions
+                          onView={() => window.location.href = `/documents/${folder.id}`}
+                          onDelete={() => {
+                            setFolderToDelete(folder);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         <div className="mt-4">

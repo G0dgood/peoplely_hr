@@ -22,14 +22,14 @@ th:last-child {
 }
 
 thead tr {
-  border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+  border-bottom: 1px solid #F9FAFB; /* border-gray-50 */
 }
 
 th {
-  padding: 1rem 1.5rem; /* px-6 py-4 */
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--brand-charcoal); /* Primary Charcoal */
+  padding: 1rem; /* py-4 px-4 */
+  font-size: 10px; /* text-[10px] */
+  font-weight: 700; /* font-bold */
+  color: #9CA3AF; /* text-gray-400 */
   text-transform: uppercase;
   letter-spacing: 0.05em; /* tracking-wider */
   white-space: nowrap;
@@ -41,7 +41,7 @@ tbody {
 }
 
 tbody tr {
-  border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+  border-bottom: 1px solid #F9FAFB; /* border-gray-50 */
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
@@ -70,11 +70,31 @@ table > tfoot > tr > td  {
 /* Utility classes for specific overrides */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
+
+.table-state-cell {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280; /* text-gray-500 */
+}
+
+.table-state-cell.error {
+  color: #EF4444; /* text-red-500 */
+}
+
 .admin-table-container {
   padding: 0 1.5rem;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
+}
+
+/* Ensure all table wrappers have a minimum height to prevent layout collapses */
+.admin-table-container,
+div.overflow-x-auto:has(table) {
+  min-height: 420px;
 }
 
 /* Pagination Footer (Classes still used for layout) */
@@ -154,6 +174,10 @@ table > tfoot > tr > td  {
   color: var(--color-gray-100);
 }
 
+.dark th {
+  color: #6B7280; /* dark:text-gray-500 */
+}
+
 .dark table > thead > tr > td,
 .dark table > tbody > tr > td,
 .dark table > tfoot > tr > td {
@@ -186,4 +210,12 @@ table > tfoot > tr > td  {
 .dark .admin-pagination-page-btn:hover {
   color: white;
   background-color: var(--color-gray-800);
+}
+
+.dark .table-state-cell {
+  color: var(--color-gray-400);
+}
+
+.dark .table-state-cell.error {
+  color: #F87171;
 }

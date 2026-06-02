@@ -6,16 +6,13 @@ import {
   HiOutlinePlus 
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Employee } from "@/store/services/employeesApi";
 
-export function JobSection() {
+interface JobSectionProps {
+  employee?: Employee | null;
+}
+
+export function JobSection({ employee }: JobSectionProps) {
   return (
     <div className="flex flex-col gap-6">
       {/* Employment Information Section */}
@@ -49,26 +46,26 @@ export function JobSection() {
           </button>
         </div>
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Effective Date</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Job Title</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Position Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Employment Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">Line Manager</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">20 Aug 2019</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">UI UX Designer</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">-</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">Fulltime</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">@skylar</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <table>
+            <thead>
+              <tr >
+                <th >Effective Date</th>
+                <th >Job Title</th>
+                <th className="text-center">Position Type</th>
+                <th className="text-center">Employment Type</th>
+                <th className="text-right">Line Manager</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr >
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">20 Aug 2019</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{employee?.role || "UI UX Designer"}</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">-</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">Fulltime</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">{employee?.manager || "@skylar"}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Card>
 
@@ -81,26 +78,26 @@ export function JobSection() {
           </button>
         </div>
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Contract Number</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Contract Name</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Contract Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Start Date</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">End Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">#12345</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">Fulltime Remote</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">Fulltime Remote</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">20 Aug 2019</TableCell>
-                <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">-</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <table>
+            <thead>
+              <tr >
+                <th >Contract Number</th>
+                <th >Contract Name</th>
+                <th className="text-center">Contract Type</th>
+                <th className="text-center">Start Date</th>
+                <th className="text-right">End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr >
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">#12345</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">Fulltime Remote</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">Fulltime Remote</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">20 Aug 2019</td>
+                <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-right">-</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Card>
 

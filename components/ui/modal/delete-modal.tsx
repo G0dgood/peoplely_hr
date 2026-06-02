@@ -2,6 +2,7 @@ import * as React from "react";
 import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "./modal";
 import { Button } from "@/components/ui/button";
 import { HiOutlineExclamationTriangle, HiOutlineXMark } from "react-icons/hi2";
+import { SVGLoader } from "@/components/ui/options";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface DeleteModalProps {
   title?: string;
   description?: string;
   itemName?: string;
+  isLoading?: boolean;
 }
 
 export function DeleteModal({
@@ -19,13 +21,15 @@ export function DeleteModal({
   title = "Confirm Deletion",
   description,
   itemName,
+  isLoading = false,
 }: DeleteModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-sm">
       <ModalHeader className="border-b-0 pb-0 relative">
         <button 
           onClick={onClose} 
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors z-10"
+          disabled={isLoading}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors z-10 disabled:opacity-50 disabled:pointer-events-none"
         >
           <HiOutlineXMark className="text-xl" />
         </button>
@@ -49,20 +53,23 @@ export function DeleteModal({
       </ModalContent>
       
       <ModalFooter className="flex gap-3 pt-6 pb-6 px-8 bg-transparent border-t-0 justify-center">
-        <Button variant="outline" onClick={onClose} className="flex-1 max-w-[140px]">
+        <Button variant="outline" onClick={onClose} disabled={isLoading} className="flex-1 max-w-[140px]">
           Cancel
         </Button>
         <Button 
           variant="primary" 
           onClick={() => {
             onConfirm();
-            onClose();
+            if (!isLoading) onClose();
           }} 
+          disabled={isLoading}
           className="flex-1 max-w-[140px] bg-red-500 hover:bg-red-600 border-red-500 text-white"
+          leftIcon={isLoading ? <SVGLoader width={16} height={16} color="#ffffff" /> : undefined}
         >
-          Yes, Delete
+          {isLoading ? "Deleting..." : "Yes, Delete"}
         </Button>
       </ModalFooter>
     </Modal>
   );
 }
+

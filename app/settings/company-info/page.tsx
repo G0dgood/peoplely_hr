@@ -53,7 +53,6 @@ export default function CompanyInfoPage() {
                 label={countryCode}
                 options={["+1", "+44", "+62", "+91"]}
                 onSelect={(val) => setCountryCode(val)}
-                className="w-24 flex-shrink-0"
               />
               <input
                 value={phone}

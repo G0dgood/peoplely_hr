@@ -7,14 +7,6 @@ import {
   HiOutlineDocumentText
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 export function DocumentsSection() {
   const personalDocuments = [
@@ -38,18 +30,18 @@ export function DocumentsSection() {
         </div>
 
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Document Name</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table>
+            <thead>
+              <tr >
+                <th >Document Name</th>
+                <th className="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
               {personalDocuments.map((doc, index) => (
-                <TableRow key={index} className="border-b border-gray-50 dark:border-gray-800">
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{doc.name}</TableCell>
-                  <TableCell className="py-4 px-4 text-right">
+                <tr key={index} >
+                  <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{doc.name}</td>
+                  <td className="py-4 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         <HiOutlineDocumentText className="text-lg" />
@@ -58,11 +50,11 @@ export function DocumentsSection() {
                         <HiOutlineTrash className="text-lg" />
                       </button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </Card>
 
@@ -76,18 +68,18 @@ export function DocumentsSection() {
         </div>
 
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Document Name</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table>
+            <thead>
+              <tr >
+                <th >Document Name</th>
+                <th className="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
               {payslips.map((doc, index) => (
-                <TableRow key={index} className="border-b border-gray-50 dark:border-gray-800">
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{doc.name}</TableCell>
-                  <TableCell className="py-4 px-4 text-right">
+                <tr key={index} >
+                  <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{doc.name}</td>
+                  <td className="py-4 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         <HiOutlineDocumentText className="text-lg" />
@@ -96,11 +88,11 @@ export function DocumentsSection() {
                         <HiOutlineTrash className="text-lg" />
                       </button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </Card>
     </div>

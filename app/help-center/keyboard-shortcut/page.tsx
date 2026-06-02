@@ -8,14 +8,6 @@ import {
   HiOutlineChevronUpDown,
 } from "react-icons/hi2";
 import { Card } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 interface ShortcutRow {
   windows: string;
@@ -88,48 +80,48 @@ export default function KeyboardShortcutPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b border-gray-300 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30">
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+            <table>
+              <thead>
+                <tr className="border-b border-gray-300 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30">
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     <div className="flex items-center gap-1.5 cursor-pointer select-none">
                       <span>Shortcuts Key on Windows</span>
                       <HiOutlineChevronUpDown className="text-sm" />
                     </div>
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     <div className="flex items-center gap-1.5 cursor-pointer select-none">
                       <span>Shortcuts Key on MacOS</span>
                       <HiOutlineChevronUpDown className="text-sm" />
                     </div>
-                  </TableHead>
-                  <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     <div className="flex items-center gap-1.5 cursor-pointer select-none">
                       <span>Header title</span>
                       <HiOutlineChevronUpDown className="text-sm" />
                     </div>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {filteredShortcuts.map((row, index) => (
-                  <TableRow
+                  <tr
                     key={index}
-                    className="border-b border-gray-50 dark:border-gray-800/80 hover:bg-gray-50/30 dark:hover:bg-gray-800/20"
+                    className="hover:bg-gray-50/30 dark:hover:bg-gray-800/20"
                   >
-                    <TableCell className="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">
+                    <td className="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">
                       {row.windows}
-                    </TableCell>
-                    <TableCell className="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">
+                    </td>
+                    <td className="py-4 px-6 text-xs font-bold text-gray-500 dark:text-gray-400">
                       {row.mac}
-                    </TableCell>
-                    <TableCell className="py-4 px-6 text-xs font-bold text-gray-900 dark:text-white">
+                    </td>
+                    <td className="py-4 px-6 text-xs font-bold text-gray-900 dark:text-white">
                       {row.action}
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
             {filteredShortcuts.length === 0 && (
               <div className="text-center py-10 text-xs text-gray-400 dark:text-gray-500">
                 No matching shortcuts found.

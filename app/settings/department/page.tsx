@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { HiOutlinePaperClip, HiPlus } from "react-icons/hi2";
-import { AddDepartmentDrawer } from "@/components/ui/drawer";
+import { CreateDepartmentModal } from "@/components/ui/modal";
 
 interface OrgNodeData {
   id: string;
@@ -143,9 +143,8 @@ export default function DepartmentPage() {
           <OrgNode node={ORG_DATA} isRoot={true} onAddClick={handleAddClick} />
         </div>
       </div>
-
-      {/* Slide-over Drawer Component */}
-      <AddDepartmentDrawer isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} />
+      {/* Create Department Modal Component */}
+      <CreateDepartmentModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onCreate={(data) => console.log("Created department:", data)} />
     </div>
   );
 }

@@ -21,14 +21,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/ui/date-picker";
 import { RowPerPage } from "@/components/ui/row-per-page";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 const EMPLOYEE_REQUESTS = [
   {
@@ -179,28 +171,28 @@ export default function EmployeeTimeOffPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="w-[50px] py-4 px-4">
+          <table>
+            <thead>
+              <tr >
+                <th className="w-[50px] py-4 px-4">
                   <Checkbox />
-                </TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Employee Name</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">From</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">To</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Type</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Attachment</TableHead>
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-center">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+                </th>
+                <th >Employee Name</th>
+                <th >From</th>
+                <th >To</th>
+                <th >Total</th>
+                <th >Type</th>
+                <th >Attachment</th>
+                <th className="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
               {EMPLOYEE_REQUESTS.map((req, index) => (
-                <TableRow key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
-                  <TableCell className="py-4 px-4">
+                <tr key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors ">
+                  <td className="py-4 px-4">
                     <Checkbox />
-                  </TableCell>
-                  <TableCell className="py-4 px-4">
+                  </td>
+                  <td className="py-4 px-4">
                     <div className="flex items-center gap-3">
                       <Avatar src={req.avatar} size="sm" />
                       <div>
@@ -208,18 +200,18 @@ export default function EmployeeTimeOffPage() {
                         <p className="text-[10px] text-gray-400 dark:text-gray-500">{req.email}</p>
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</TableCell>
-                  <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.type}</TableCell>
-                  <TableCell className="py-4 px-4">
+                  </td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</td>
+                  <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.type}</td>
+                  <td className="py-4 px-4">
                     <div className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400">
                       {req.attachment}
                       {req.attachment !== "-" && <HiOutlineDocumentText className="text-gray-300 text-lg" />}
                     </div>
-                  </TableCell>
-                  <TableCell className="py-4 px-4 text-center">
+                  </td>
+                  <td className="py-4 px-4 text-center">
                     <Badge
                       variant={req.status === "APPROVE" ? "success" : "warning"}
                       tinted
@@ -227,11 +219,11 @@ export default function EmployeeTimeOffPage() {
                     >
                       {req.status}
                     </Badge>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">

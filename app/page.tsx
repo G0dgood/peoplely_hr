@@ -3,39 +3,54 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaRegEye, FaRegEyeSlash, FaCheck, FaGoogle, FaApple, FaExclamationCircle } from "react-icons/fa";
-import { AuthFooter } from "@/components/ui/auth-footer";
+import { FaRegEye, FaRegEyeSlash, FaCheck, FaGoogle, FaApple } from "react-icons/fa";
 import { DemoHelper } from "@/components/ui/demo-helper";
+import { AuthFooter } from "@/components/ui/auth-footer";
+import { toast } from "sonner";
+
+import { useLoginMutation } from "@/store/services/authApi";
+import { useApiError } from "@/hooks/useApiError";
+import { useAppDispatch } from "@/store/hooks";
+import { setCredentials } from "@/store/features/authSlice";
+import { SVGLoader } from "@/components/ui/options";
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Derive form state matching mockup validations:
-  // - pristia@gmail.com -> valid state (checkmark)
-  // - duarte@gmail.com -> error state (red border & alert message)
-  const isPristia = email.trim().toLowerCase() === "pristia@gmail.com";
-  const isDuarte = email.trim().toLowerCase() === "duarte@gmail.com";
+  const [loginUser, { isLoading, error }] = useLoginMutation();
+
+  useApiError(!!error, error, "Login failed");
 
   const hasEmail = email.trim().length > 0;
   const hasPassword = password.length > 0;
   const isFormFilled = hasEmail && hasPassword;
 
-  const emailHasError = isDuarte;
-  const emailIsValidated = isPristia;
+  const inlineError = error ? ((error as any)?.data?.error || (error as any)?.data?.message || "Login failed") : "";
+  const emailHasError = !!inlineError;
+  const emailIsValidated = isFormFilled && !inlineError;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isFormFilled && !emailHasError) {
+    if (!isFormFilled || isLoading) return;
+
+    try {
+      const data = await loginUser({ email, password }).unwrap();
+      toast.success("Logged in successfully!");
+      localStorage.setItem("user", JSON.stringify(data.user));
+      dispatch(setCredentials({ user: data.user, accessToken: "" }));
       router.push("/dashboard");
+    } catch (err) {
+      // Error handled by useApiError hook
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
+    <main className="min-h-screen w-full flex flex-col lg:flex-row bg-white overflow-hidden font-sans">
 
       {/* LEFT PANEL: HERO BANNER */}
       <section className="w-full lg:w-1/2 bg-[#0F1116] flex flex-col justify-between p-4 md:p-8 lg:p-12 relative">
@@ -99,12 +114,6 @@ export default function LoginPage() {
                   </div>
                 )}
               </div>
-              {emailHasError && (
-                <div className="flex items-center gap-1.5 text-error mt-1">
-                  <FaExclamationCircle className="text-xs shrink-0" />
-                  <span className="text-body-xs font-medium">The email you entered is not registered, please check again</span>
-                </div>
-              )}
             </div>
 
             {/* Password Input Group */}
@@ -152,13 +161,20 @@ export default function LoginPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={!isFormFilled}
-              className={`w-full py-3.5 rounded-xl font-bold text-body-sm transition-all ${isFormFilled
+              disabled={!isFormFilled || isLoading}
+              className={`w-full py-3.5 rounded-xl font-bold text-body-sm transition-all shadow-sm flex items-center justify-center gap-2 ${isFormFilled && !isLoading
                 ? "bg-[#11131A] text-white hover:bg-black active:scale-[0.98] cursor-pointer"
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
             >
-              Login
+              {isLoading ? (
+                <>
+                  <SVGLoader width={18} height={18} color="#9CA3AF" />
+                  <span>Logging in...</span>
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
 
             {/* Or Separator */}
@@ -172,20 +188,19 @@ export default function LoginPage() {
             <div className="flex gap-4">
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm"
+                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
               >
                 <FaGoogle className="text-red-500 text-sm" />
                 <span>Google</span>
               </button>
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm"
+                className="flex-1 flex items-center justify-center gap-2.5 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold text-gray-800 text-body-sm shadow-sm"
               >
                 <FaApple className="text-black text-base" />
                 <span>Apple</span>
               </button>
             </div>
-
           </form>
 
           {/* Signup Suggestion */}
@@ -205,6 +220,6 @@ export default function LoginPage() {
 
       </section>
 
-    </div>
+    </main>
   );
 }

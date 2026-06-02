@@ -14,14 +14,6 @@ import { Button } from "@/components/ui/button";
 import { NewHolidayDrawer, NewTypeDrawer, NewPolicyDrawer } from "@/components/ui/drawer";
 import { TypePoliciesSection, INITIAL_POLICIES } from "@/components/ui/type-policies-section";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 const HOLIDAYS = [
   { name: "New Year's Day", date: "01 Jan 2023" },
@@ -121,20 +113,20 @@ export default function TimeOffSettingsPage() {
               </div>
 
               <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                      <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Holiday Name</TableHead>
-                      <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Datet</TableHead>
-                      <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">From</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+                <table>
+                  <thead>
+                    <tr >
+                      <th >Holiday Name</th>
+                      <th >Datet</th>
+                      <th className="text-right">From</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {HOLIDAYS.map((holiday, index) => (
-                      <TableRow key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
-                        <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.name}</TableCell>
-                        <TableCell className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.date}</TableCell>
-                        <TableCell className="py-4 px-4 text-right">
+                      <tr key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors ">
+                        <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.name}</td>
+                        <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.date}</td>
+                        <td className="py-4 px-4 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                               <HiOutlinePencilSquare className="text-lg" />
@@ -143,11 +135,11 @@ export default function TimeOffSettingsPage() {
                               <HiOutlineTrash className="text-lg" />
                             </button>
                           </div>
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                      </tr>
                     ))}
-                  </TableBody>
-                </Table>
+                  </tbody>
+                </table>
               </div>
             </div>
           ) : (

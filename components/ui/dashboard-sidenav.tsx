@@ -45,6 +45,9 @@ export function DashboardSidenav({
     if (pathname.startsWith("/checklist")) {
       setExpandedItems((prev) => prev.includes("checklist") ? prev : [...prev, "checklist"]);
     }
+    if (pathname.startsWith("/employees/department") || pathname.startsWith("/employees/offices")) {
+      setExpandedItems((prev) => prev.includes("employees") ? prev : [...prev, "employees"]);
+    }
   }, [pathname]);
 
   const toggleExpand = (id: string) => {
@@ -124,6 +127,18 @@ export function DashboardSidenav({
                 href="/employees/directory"
               >
                 Directory
+              </SidebarSubItem>
+              <SidebarSubItem
+                active={pathname.startsWith("/employees/department")}
+                href="/employees/department"
+              >
+                Department
+              </SidebarSubItem>
+              <SidebarSubItem
+                active={pathname.startsWith("/employees/offices")}
+                href="/employees/offices"
+              >
+                Offices
               </SidebarSubItem>
               <SidebarSubItem
                 isLast

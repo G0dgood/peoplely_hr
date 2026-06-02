@@ -32,7 +32,6 @@ import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/com
 
 import { PageHeader } from "@/components/ui/page-header";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TableActions } from "@/components/ui/table-actions";
 
 interface Stage {
@@ -707,27 +706,27 @@ export default function RecruitmentSettingsPage() {
 
        {/* Templates table */}
        <div className="border border-gray-300 dark:border-gray-800 rounded-2xl overflow-hidden bg-white dark:bg-gray-950/40">
-        <Table>
-         <TableHeader className="bg-gray-50/50 dark:bg-gray-900/30">
-          <TableRow className="border-b border-gray-300 dark:border-gray-800">
-           <TableHead className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-6">Name</TableHead>
-           <TableHead className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Subject</TableHead>
-           <TableHead className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Stage</TableHead>
-           <TableHead className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Last Modified</TableHead>
-           <TableHead className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4 text-center">Action</TableHead>
-          </TableRow>
-         </TableHeader>
-         <TableBody>
+        <table>
+         <thead className="bg-gray-50/50 dark:bg-gray-900/30">
+          <tr className="border-b border-gray-300 dark:border-gray-800">
+           <th className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-6">Name</th>
+           <th className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Subject</th>
+           <th className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Stage</th>
+           <th className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4">Last Modified</th>
+           <th className="text-[10px] font-bold uppercase tracking-wider text-gray-400 py-3.5 px-4 text-center">Action</th>
+          </tr>
+         </thead>
+         <tbody>
           {filteredTemplates.length === 0 ? (
-           <TableRow>
-            <TableCell colSpan={5} className="text-center py-10 text-xs font-semibold text-gray-450 dark:text-gray-500">
+           <tr>
+            <td colSpan={5} className="text-center py-10 text-xs font-semibold text-gray-450 dark:text-gray-500">
              No email templates found.
-            </TableCell>
-           </TableRow>
+            </td>
+           </tr>
           ) : (
            filteredTemplates.map((t) => (
-            <TableRow key={t.id} className="border-b border-gray-300 dark:border-gray-800 hover:bg-gray-50/20 dark:hover:bg-gray-900/10 transition-colors">
-             <TableCell className="py-4 px-6">
+            <tr key={t.id} className="border-b border-gray-300 dark:border-gray-800 hover:bg-gray-50/20 dark:hover:bg-gray-900/10 transition-colors">
+             <td className="py-4 px-6">
               <div className="flex items-center gap-2">
                <HiOutlineEnvelope className="text-gray-400 dark:text-gray-500 text-base" />
                <span className="text-xs font-bold text-gray-800 dark:text-gray-200">{t.name}</span>
@@ -735,19 +734,19 @@ export default function RecruitmentSettingsPage() {
                 <HiOutlineLockClosed className="text-gray-400 dark:text-gray-550 text-xs" />
                )}
               </div>
-             </TableCell>
-             <TableCell className="py-4 px-4 text-xs font-medium text-gray-500 dark:text-gray-400 max-w-xs truncate">
+             </td>
+             <td className="py-4 px-4 text-xs font-medium text-gray-500 dark:text-gray-400 max-w-xs truncate">
               {t.subject}
-             </TableCell>
-             <TableCell className="py-4 px-4">
+             </td>
+             <td className="py-4 px-4">
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-[#10B981] border border-emerald-100 dark:border-emerald-900/50">
                {t.stage}
               </span>
-             </TableCell>
-             <TableCell className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+             </td>
+             <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
               {t.lastModified}
-             </TableCell>
-             <TableCell className="py-4 px-4 text-center">
+             </td>
+             <td className="py-4 px-4 text-center">
               <div className="flex justify-center">
                <TableActions
                 onEdit={() => {
@@ -760,12 +759,12 @@ export default function RecruitmentSettingsPage() {
                 onDelete={!t.isLocked ? () => handleDeleteTemplate(t.id) : undefined}
                />
               </div>
-             </TableCell>
-            </TableRow>
+             </td>
+            </tr>
            ))
           )}
-         </TableBody>
-        </Table>
+         </tbody>
+        </table>
        </div>
 
        <div className="mt-2">

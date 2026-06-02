@@ -2,105 +2,38 @@
 
 import { useState } from "react";
 import { Button } from "./button";
-import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "./modal";
-import { Input } from "./input";
-import { Avatar } from "./avatar";
-import { FaCloudUploadAlt, FaCalendarAlt } from "react-icons/fa";
-
-import { Calendar } from "./calendar";
+import { Modal, ModalContent, UploadCVModal, CreateDepartmentModal, AddProfileDrawer } from "./modal";
 
 export function ModalShowcase() {
   const [openModal, setOpenModal] = useState<string | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("23 Mar 2023");
 
   return (
     <div className="flex flex-wrap gap-6">
       <Button onClick={() => setOpenModal('addProfile')}>Add New Profile (Right Sheet)</Button>
       <Button onClick={() => setOpenModal('uploadCV')} variant="outline">Upload CV (Center)</Button>
+      <Button onClick={() => setOpenModal('createDept')} variant="ghost">Create Department (Center)</Button>
       <Button onClick={() => setOpenModal('success')} variant="primary">Success Dialog (Center)</Button>
 
-      {/* Add New Profile (Right Sheet Modal) */}
-      <Modal
+      {/* Add New Profile (Right Sheet Drawer) */}
+      <AddProfileDrawer
         isOpen={openModal === 'addProfile'}
         onClose={() => setOpenModal(null)}
-        position="right"
-      >
-        <ModalHeader onClose={() => setOpenModal(null)}>
-          <ModalTitle>Add New Profile</ModalTitle>
-        </ModalHeader>
-        <ModalContent className="flex flex-col gap-6">
-          <Input label="First Name" placeholder="First Name" required />
-          <Input label="Last Name" placeholder="Last Name" required />
-          <Input label="Email Address" placeholder="Email Address" type="email" required />
-
-          <div className="relative">
-            <Input
-              label="Join Date"
-              value={selectedDate}
-              readOnly
-              onClick={() => setShowDatePicker(!showDatePicker)}
-              rightIcon={<FaCalendarAlt className="text-gray-400 cursor-pointer" />}
-              required
-            />
-            {showDatePicker && (
-              <div className="absolute right-0 bottom-full mb-2 z-50 shadow-2xl">
-                <Calendar
-                  onSelect={(date) => {
-                    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-                    setSelectedDate(date.toLocaleDateString('en-GB', options));
-                    setShowDatePicker(false);
-                  }}
-                  onClose={() => setShowDatePicker(false)}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-body-sm font-bold text-gray-900 dark:text-white">Role</label>
-            <select className="w-full h-12 px-4 rounded-xl text-body-md bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white outline-none focus:border-primary">
-              <option>UI/UX Designer</option>
-              <option>Frontend Engineer</option>
-              <option>Product Manager</option>
-            </select>
-          </div>
-        </ModalContent>
-        <ModalFooter>
-          <Button variant="outline" className="flex-1 justify-center" onClick={() => setOpenModal(null)}>Cancel</Button>
-          <Button variant="primary" className="flex-1 justify-center" onClick={() => setOpenModal(null)}>Create</Button>
-        </ModalFooter>
-      </Modal>
+        onCreate={(data) => console.log("Created profile:", data)}
+      />
 
       {/* Upload CV (Center Modal) */}
-      <Modal
+      <UploadCVModal
         isOpen={openModal === 'uploadCV'}
         onClose={() => setOpenModal(null)}
-        position="center"
-      >
-        <ModalHeader onClose={() => setOpenModal(null)}>
-          <ModalTitle>Upload CV</ModalTitle>
-        </ModalHeader>
-        <ModalContent>
-          <div className="flex flex-col gap-4">
-            <p className="text-body-sm text-gray-500 mb-2">Please upload the candidate&apos;s CV here.</p>
-            <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-12 flex flex-col items-center justify-center text-center gap-4 hover:border-primary transition-colors cursor-pointer bg-gray-50 dark:bg-gray-800/50">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl">
-                <FaCloudUploadAlt />
-              </div>
-              <div>
-                <p className="font-bold text-gray-900 dark:text-white mb-1">Drag & Drop here to upload</p>
-                <p className="text-xs text-gray-500">or click to select file from your computer</p>
-              </div>
-              <Button variant="primary" size="sm">Browse Files</Button>
-            </div>
-          </div>
-        </ModalContent>
-        <ModalFooter>
-          <Button variant="outline" className="flex-1 justify-center" onClick={() => setOpenModal(null)}>Cancel</Button>
-          <Button variant="primary" className="flex-1 justify-center" onClick={() => setOpenModal(null)}>Upload</Button>
-        </ModalFooter>
-      </Modal>
+        onUpload={(file) => console.log("Uploaded file:", file)}
+      />
+
+      {/* Create Department (Center Modal) */}
+      <CreateDepartmentModal
+        isOpen={openModal === 'createDept'}
+        onClose={() => setOpenModal(null)}
+        onCreate={(data) => console.log("Created department:", data)}
+      />
 
       {/* Welcome Dialog (Center Modal) */}
       <Modal

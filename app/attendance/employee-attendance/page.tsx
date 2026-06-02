@@ -15,25 +15,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EditPaidTimeModal } from "@/components/ui/modal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { PageHeader } from "@/components/ui/page-header";
 import { RowPerPage } from "@/components/ui/row-per-page";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/pagination";
 
 const INITIAL_EMPLOYEE_DATA = [
   {
@@ -241,54 +225,54 @@ export default function EmployeeAttendancePage() {
 
           {/* Table Container */}
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
-                  <TableHead className="py-4 px-4 rounded-l-xl w-12">
+            <table>
+              <thead>
+                <tr className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
+                  <th className="py-4 px-4 rounded-l-xl w-12">
                     <Checkbox
                       checked={selectedRows.length === records.length}
                       onChange={(e) => handleSelectAll(e.target.checked)}
                     />
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Employee Name
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Employee Type
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Paid Time/ Work Schedule
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Overtime
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Status
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     11 Apr
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">
+                  </th>
+                  <th className="text-right rounded-r-xl">
                     Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {records.map((row, index) => {
                   const isChecked = selectedRows.includes(row.id);
                   const isMenuOpen = activeMenuIndex === index;
                   return (
-                    <TableRow
+                    <tr
                       key={row.id}
                       className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-200 dark:border-gray-800"
                     >
-                      <TableCell className="py-5 px-4">
+                      <td className="py-5 px-4">
                         <Checkbox
                           checked={isChecked}
                           onChange={(e) => handleSelectRow(row.id, e.target.checked)}
                         />
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                      </td>
+                      <td className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
                         <div className="flex items-center gap-3">
                           <Avatar fallback={row.fallback} size="sm" />
                           <div className="flex flex-col">
@@ -296,17 +280,17 @@ export default function EmployeeAttendancePage() {
                             <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{row.email}</span>
                           </div>
                         </div>
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      </td>
+                      <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
                         {row.type}
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      </td>
+                      <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
                         {row.paid}/{row.schedule}
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      </td>
+                      <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
                         {row.overtime}
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs">
+                      </td>
+                      <td className="py-5 px-4 text-xs">
                         {row.status ? (
                           <Badge variant="success" tinted>
                             {row.status}
@@ -314,11 +298,11 @@ export default function EmployeeAttendancePage() {
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-gray-900 dark:text-white">
+                      </td>
+                      <td className="py-5 px-4 text-xs font-semibold text-gray-900 dark:text-white">
                         {row.dateVal}
-                      </TableCell>
-                      <TableCell className="py-5 px-4 text-right relative">
+                      </td>
+                      <td className="py-5 px-4 text-right relative">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -351,12 +335,12 @@ export default function EmployeeAttendancePage() {
                             </button>
                           </div>
                         )}
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   );
                 })}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination Footer */}

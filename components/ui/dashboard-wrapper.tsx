@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { DashboardSidenav } from "@/components/ui/dashboard-sidenav";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { selectCurrentUser, selectIsAuthenticated, logOut } from "@/store/features/authSlice";
+import { LogoutModal } from "@/components/ui/modal";
 
 export function DashboardWrapper({
   children,
@@ -13,7 +16,17 @@ export function DashboardWrapper({
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectCurrentUser);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  const handleLogout = () => {
+    dispatch(logOut());
+    router.push("/login");
+  };
 
   const isAuthPage = ["/", "/login", "/register", "/forgot-password", "/onboarding", "/otp-verify", "/password-success", "/update-password", "/checkout"].includes(pathname);
 
@@ -29,9 +42,24 @@ export function DashboardWrapper({
     setMobileNavOpen(false);
   }, [pathname]);
 
+  // Auth guard: redirect unauthenticated users away from protected routes
+  useEffect(() => {
+    if (isMainRoute && !isAuthenticated) {
+      router.replace("/login");
+    }
+    if (isAuthPage && isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [isMainRoute, isAuthPage, isAuthenticated, router]);
+
   // If it's an auth page OR an unknown page (404), hide the Sidebar/Header.
   if (isAuthPage || !isMainRoute) {
     return <main className={isDarkMode ? "dark bg-[#0a0a0a]" : "bg-white"}>{children}</main>;
+  }
+
+  // Show nothing while redirecting unauthenticated users
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
@@ -43,7 +71,13 @@ export function DashboardWrapper({
           onClick={() => setMobileNavOpen(false)}
         />
       )}
-      <DashboardHeader onMenuClick={() => setMobileNavOpen(!mobileNavOpen)} />
+      <DashboardHeader
+        onMenuClick={() => setMobileNavOpen(!mobileNavOpen)}
+        userName={user?.name || undefined}
+        userRole={user?.email || undefined}
+        userAvatar={user?.name ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=10B981&color=fff` : undefined}
+        onLogout={() => setIsLogoutModalOpen(true)}
+      />
       <DashboardSidenav
         isDarkMode={isDarkMode}
         collapsed={collapsed}
@@ -53,6 +87,11 @@ export function DashboardWrapper({
       <main className={isDarkMode ? "bg-[#0a0a0a]" : "bg-[#FAFBFC]"}>
         {children}
       </main>
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 }

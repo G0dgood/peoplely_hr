@@ -2,37 +2,134 @@
 
 import * as React from "react";
 import { Toggle } from "@/components/ui/toggle";
+import { CreateJobTitleModal } from "@/components/ui/modal/create-job-title-modal";
+import { DeleteModal } from "@/components/ui/modal/delete-modal";
+import { TableActions } from "@/components/ui/table-actions";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
+import { toast } from "sonner";
+import { useApiError } from "@/hooks/useApiError";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
+import {
+  useGetJobTitlesQuery,
+  useCreateJobTitleMutation,
+  useUpdateJobTitleMutation,
+  useDeleteJobTitleMutation,
+  JobTitle
+} from "@/store/services/jobTitleApi";
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/features/authSlice";
 import {
   HiOutlineMagnifyingGlass,
   HiPlus,
-  HiOutlineLink,
-  HiOutlineTrash,
   HiChevronUpDown,
 } from "react-icons/hi2";
 
-interface JobTitle {
-  id: string;
-  title: string;
-  employees: number;
-  active: boolean;
-}
-
-const INITIAL_DATA: JobTitle[] = [
-  { id: "1", title: "UI UX Designer", employees: 10, active: true },
-  { id: "2", title: "UI UX Designer", employees: 10, active: true },
-  { id: "3", title: "UI UX Designer", employees: 10, active: true },
-  { id: "4", title: "UI UX Designer", employees: 10, active: true },
-];
-
 export default function JobTitlesPage() {
-  const [search, setSearch] = React.useState("");
-  const [jobs, setJobs] = React.useState<JobTitle[]>(INITIAL_DATA);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const companyId = currentUser?.companyId ?? "";
 
-  const toggleJob = (id: string) => {
-    setJobs((prev) =>
-      prev.map((job) => (job.id === id ? { ...job, active: !job.active } : job))
-    );
+  const { data: empData, isLoading: isEmployeesLoading, error: employeesError } = useGetEmployeesQuery({ companyId });
+  const employees = empData?.employees || [];
+
+  const { data: jobsData, isLoading: isJobsLoading, error: jobsError } = useGetJobTitlesQuery({ companyId });
+  const jobs = jobsData?.jobTitles || [];
+
+  const [createJobTitle, { error: createError, isLoading: isCreating }] = useCreateJobTitleMutation();
+  const [updateJobTitle, { error: updateError, isLoading: isUpdating }] = useUpdateJobTitleMutation();
+  const [deleteJobTitle, { error: deleteError, isLoading: isDeleting }] = useDeleteJobTitleMutation();
+
+  const [search, setSearch] = React.useState("");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [editingJob, setEditingJob] = React.useState<JobTitle | null>(null);
+  const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
+  const [sortOrder, setSortOrder] = React.useState<"asc" | "desc" | null>(null);
+
+  const isLoading = isEmployeesLoading || isJobsLoading;
+
+  // Set up API error listeners
+  useApiError(!!employeesError, employeesError, "Failed to load employees");
+  useApiError(!!jobsError, jobsError, "Failed to load job titles");
+  useApiError(!!createError, createError, "Failed to create job title");
+  useApiError(!!updateError, updateError, "Failed to update job title");
+  useApiError(!!deleteError, deleteError, "Failed to delete job title");
+
+  const getJobEmployeesCount = (jobTitleName: string) => {
+    return employees.filter(e => e.role.toLowerCase() === jobTitleName.toLowerCase()).length;
   };
+
+  const handleSaveJobTitle = async (formData: { title: string }) => {
+    try {
+      if (editingJob) {
+        await updateJobTitle({
+          id: editingJob.id,
+          body: {
+            title: formData.title,
+          }
+        }).unwrap();
+        toast.success(`Job title "${formData.title}" updated successfully!`);
+      } else {
+        await createJobTitle({
+          title: formData.title,
+          companyId,
+        }).unwrap();
+        toast.success(`Job title "${formData.title}" created successfully!`);
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      // Handled by useApiError
+    } finally {
+      setEditingJob(null);
+    }
+  };
+
+  const handleToggleActive = async (job: JobTitle) => {
+    try {
+      await updateJobTitle({
+        id: job.id,
+        body: {
+          active: !job.active
+        }
+      }).unwrap();
+      toast.success(`Job title "${job.title}" is now ${!job.active ? "active" : "inactive"}.`);
+    } catch (err) {
+      // Handled by useApiError
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteId) {
+      try {
+        await deleteJobTitle(deleteId).unwrap();
+        toast.success("Job title deleted successfully.");
+      } catch (err) {
+        // Handled by useApiError
+      }
+      setDeleteId(null);
+    }
+  };
+
+  const handleSort = () => {
+    setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+  };
+
+  const filteredJobs = React.useMemo(() => {
+    let result = jobs.filter((job) =>
+      job.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    if (sortOrder) {
+      result = [...result].sort((a, b) => {
+        const countA = getJobEmployeesCount(a.title);
+        const countB = getJobEmployeesCount(b.title);
+        return sortOrder === "asc" ? countA - countB : countB - countA;
+      });
+    }
+
+    return result;
+  }, [jobs, search, sortOrder, employees]);
+
+  const selectedDeleteJob = jobs.find(j => j.id === deleteId);
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900">
@@ -53,7 +150,13 @@ export default function JobTitlesPage() {
             <HiOutlineMagnifyingGlass className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
           </div>
           {/* Add New Button */}
-          <button className="h-10 px-4 rounded-xl bg-[#11131A] dark:bg-white text-white dark:text-gray-900 text-xs font-bold flex items-center gap-2 hover:opacity-90 transition-opacity">
+          <button
+            onClick={() => {
+              setEditingJob(null);
+              setIsModalOpen(true);
+            }}
+            className="h-10 px-4 rounded-xl bg-[#11131A] dark:bg-white text-white dark:text-gray-900 text-xs font-bold flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer"
+          >
             <HiPlus className="text-base" />
             Add New
           </button>
@@ -68,7 +171,7 @@ export default function JobTitlesPage() {
             <div className="flex-[2]">Job Title</div>
             <div className="flex-[2] flex items-center gap-1">
               Number of Employees
-              <HiChevronUpDown className="text-sm cursor-pointer" />
+              <HiChevronUpDown className="text-sm cursor-pointer hover:text-gray-700" onClick={handleSort} />
             </div>
             <div className="flex-1 text-center">Active</div>
             <div className="flex-1 text-right">Action</div>
@@ -76,50 +179,79 @@ export default function JobTitlesPage() {
 
           {/* Table Rows */}
           <div className="flex flex-col">
-            {jobs.map((job, index) => (
-              <div
-                key={job.id}
-                className={`flex items-center py-4 ${
-                  index !== jobs.length - 1
-                    ? "border-b border-gray-50 dark:border-gray-800/50"
-                    : ""
-                }`}
-              >
-                {/* Job Title */}
-                <div className="flex-[2] text-xs font-bold text-gray-900 dark:text-white">
-                  {job.title}
-                </div>
-
-                {/* Number of Employees */}
-                <div className="flex-[2] text-xs font-bold text-gray-900 dark:text-white">
-                  {job.employees}
-                </div>
-
-                {/* Active Toggle */}
-                <div className="flex-1 flex justify-center">
-                  <Toggle checked={job.active} onChange={() => toggleJob(job.id)} />
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex-1 flex items-center justify-end gap-2">
-                  <button className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white hover:bg-blue-600 transition-colors">
-                    <HiOutlineLink className="text-sm" />
-                  </button>
-                  <button className="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
-                    <HiOutlineTrash className="text-sm" />
-                  </button>
-                </div>
+            {isLoading ? (
+              <div className="py-12 flex justify-center">
+                <SVGLoaderFetch colSpan={1} text="Loading job titles..." asTable={false} />
               </div>
-            ))}
-            
-            {jobs.length === 0 && (
-              <div className="py-8 text-center text-xs font-semibold text-gray-400">
-                No job titles found.
+            ) : filteredJobs.length === 0 ? (
+              <div className="py-12 flex justify-center">
+                <NoRecordFound colSpan={1} text="No job titles found." asTable={false} />
               </div>
+            ) : (
+              filteredJobs.map((job, index) => {
+                const count = getJobEmployeesCount(job.title);
+                return (
+                  <div
+                    key={job.id}
+                    className={`flex items-center py-4 ${
+                      index !== filteredJobs.length - 1
+                        ? "border-b border-gray-50 dark:border-gray-800/50"
+                        : ""
+                    }`}
+                  >
+                    {/* Job Title */}
+                    <div className="flex-[2] text-xs font-bold text-gray-900 dark:text-white">
+                      {job.title}
+                    </div>
+
+                    {/* Number of Employees */}
+                    <div className="flex-[2] text-xs font-bold text-gray-900 dark:text-white">
+                      {count}
+                    </div>
+
+                    {/* Active Toggle */}
+                    <div className="flex-1 flex justify-center">
+                      <Toggle checked={job.active} onChange={() => handleToggleActive(job)} />
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex-1 flex items-center justify-end gap-2">
+                      <TableActions
+                        onEdit={() => {
+                          setEditingJob(job);
+                          setIsModalOpen(true);
+                        }}
+                        onDelete={() => setDeleteId(job.id)}
+                      />
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
       </div>
+
+      {/* Modal Components */}
+      <CreateJobTitleModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingJob(null);
+        }}
+        onCreate={handleSaveJobTitle}
+        initialData={editingJob}
+        isLoading={isCreating || isUpdating}
+      />
+
+      <DeleteModal
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDeleteConfirm}
+        itemName={selectedDeleteJob?.title}
+        isLoading={isDeleting}
+        description="Deleting this job title will not delete its associated employees, but their job title details will remain active in database records. Are you sure you want to proceed?"
+      />
     </div>
   );
 }

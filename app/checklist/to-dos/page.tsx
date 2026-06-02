@@ -12,20 +12,13 @@ import {
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 import { ChecklistDetailDrawer, NewTaskDrawer } from "@/components/ui/drawer";
 import { HiPlus } from "react-icons/hi2";
 import { PageHeader } from "@/components/ui/page-header";
 import { Pagination } from "@/components/ui/pagination";
 import { RowPerPage } from "@/components/ui/row-per-page";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 
 interface ChecklistTask {
@@ -87,6 +80,7 @@ const INITIAL_TASKS: ChecklistTask[] = [
 type SortOrder = "asc" | "desc";
 
 export default function ChecklistToDosPage() {
+  const isLoading = false;
   const [tasks, setTasks] = React.useState<ChecklistTask[]>(INITIAL_TASKS);
   const [statusFilter, setStatusFilter] = React.useState<"In Progress" | "Completed">("In Progress");
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -222,14 +216,14 @@ export default function ChecklistToDosPage() {
           <RowPerPage itemsPerPage={10} />
         </div>
         <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-gray-50 dark:border-gray-800">
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider w-[50%]">
+          <table>
+            <thead>
+              <tr >
+                <th className="w-[50%]">
                   Task
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <th >
                   <div
                     onClick={handleSortDueDate}
                     className="flex items-center gap-1.5 cursor-pointer select-none"
@@ -237,101 +231,100 @@ export default function ChecklistToDosPage() {
                     <span>Due Date</span>
                     <HiOutlineChevronUpDown className="text-sm" />
                   </div>
-                </TableHead>
+                </th>
 
-                <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                <th >
                   Checklist
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTasks.map((task) => (
-                <TableRow
-                  key={task.id}
-                  onClick={() => setSelectedTask(task)}
-                  className="border-b border-gray-50 dark:border-gray-800/80 hover:bg-gray-50/20 dark:hover:bg-gray-800/10 cursor-pointer"
-                >
-                  {/* Task name with circular checkbox */}
-                  <TableCell className="py-4 px-4">
-                    <div className="flex items-center gap-3.5">
-                      <div
-                        className="relative flex items-center justify-center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={task.completed}
-                          onChange={() => handleToggleTask(task.id)}
-                          className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 appearance-none checked:bg-primary checked:border-primary cursor-pointer transition-all flex items-center justify-center"
-                        />
-                        {task.completed && (
-                          <svg
-                            className="w-3 h-3 text-white absolute pointer-events-none"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      <span
-                        className={`text-xs font-bold transition-all ${task.completed
-                          ? "text-gray-400 line-through dark:text-gray-550"
-                          : "text-gray-900 dark:text-white"
-                          }`}
-                      >
-                        {task.taskName}
-                      </span>
-                    </div>
-                  </TableCell>
-
-                  {/* Due Date */}
-                  <TableCell className="py-4 px-4">
-                    <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
-                      <HiOutlineCalendarDays className="text-base text-gray-350 dark:text-gray-500" />
-                      <span>{task.dueDate}</span>
-                    </div>
-                  </TableCell>
-
-                  {/* Checklist User Info */}
-                  <TableCell className="py-4 px-4">
-                    <div className="flex items-center gap-2.5">
-                      {task.employeeAvatar ? (
-                        <Avatar
-                          src={task.employeeAvatar}
-                          size="sm"
-                          className="rounded-full w-7 h-7"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                          {task.employeeInitials}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={3} text="Loading tasks..." />
+              ) : filteredTasks.length === 0 ? (
+                <NoRecordFound colSpan={3} text="No checklists found for this status." />
+              ) : (
+                filteredTasks.map((task) => (
+                  <tr
+                    key={task.id}
+                    onClick={() => setSelectedTask(task)}
+                    className="hover:bg-gray-50/20 dark:hover:bg-gray-800/10 cursor-pointer"
+                  >
+                    {/* Task name with circular checkbox */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3.5">
+                        <div
+                          className="relative flex items-center justify-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={task.completed}
+                            onChange={() => handleToggleTask(task.id)}
+                            className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 appearance-none checked:bg-primary checked:border-primary cursor-pointer transition-all flex items-center justify-center"
+                          />
+                          {task.completed && (
+                            <svg
+                              className="w-3 h-3 text-white absolute pointer-events-none"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )}
                         </div>
-                      )}
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-gray-900 dark:text-white leading-tight">
-                          {task.employeeName}
-                        </span>
-                        <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 leading-none mt-0.5">
-                          {task.type}
+                        <span
+                          className={`text-xs font-bold transition-all ${task.completed
+                            ? "text-gray-400 line-through dark:text-gray-550"
+                            : "text-gray-900 dark:text-white"
+                            }`}
+                        >
+                          {task.taskName}
                         </span>
                       </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {filteredTasks.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={3} className="py-12 text-center text-xs text-gray-400 dark:text-gray-500">
-                    No checklists found for this status.
-                  </TableCell>
-                </TableRow>
+                    </td>
+
+                    {/* Due Date */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2 text-xs font-bold text-gray-400 dark:text-gray-500">
+                        <HiOutlineCalendarDays className="text-base text-gray-350 dark:text-gray-500" />
+                        <span>{task.dueDate}</span>
+                      </div>
+                    </td>
+
+                    {/* Checklist User Info */}
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2.5">
+                        {task.employeeAvatar ? (
+                          <Avatar
+                            src={task.employeeAvatar}
+                            size="sm"
+                            className="rounded-full w-7 h-7"
+                          />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                            {task.employeeInitials}
+                          </div>
+                        )}
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white leading-tight">
+                            {task.employeeName}
+                          </span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 leading-none mt-0.5">
+                            {task.type}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
 
         <div className="mt-4">

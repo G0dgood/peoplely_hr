@@ -34,14 +34,6 @@ import { Pagination } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import {
- Table,
- TableBody,
- TableCell,
- TableHead,
- TableHeader,
- TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { RowPerPage } from "@/components/ui/row-per-page";
 
@@ -938,37 +930,37 @@ export default function JobDetailPage() {
      </div>
      <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-3xl overflow-hidden">
       <div className="overflow-x-auto">
-       <Table>
-        <TableHeader>
-         <TableRow className="border-b border-gray-300 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
-          <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+       <table>
+        <thead>
+         <tr className="border-b border-gray-300 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
+          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
            <div className="flex items-center gap-1.5">Name <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
-          </TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          </th>
+          <th >
            <div className="flex items-center gap-1.5">Phone Number <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
-          </TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          </th>
+          <th >
            <div className="flex items-center gap-1.5">CV <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
-          </TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          </th>
+          <th >
            <div className="flex items-center gap-1.5">Created Date <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
-          </TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          </th>
+          <th >
            <div className="flex items-center gap-1.5">Stages <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
-          </TableHead>
-          <TableHead className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">
+          </th>
+          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">
            Action
-          </TableHead>
-         </TableRow>
-        </TableHeader>
-        <TableBody>
+          </th>
+         </tr>
+        </thead>
+        <tbody>
          {candidates.map((c) => (
-          <TableRow
+          <tr
            key={c.id}
-           className="group border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+           className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
           >
            {/* Name */}
-           <TableCell className="py-4 px-6">
+           <td className="py-4 px-6">
             <div
              onClick={() => setSelectedCandidate(c)}
              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group/name"
@@ -979,15 +971,15 @@ export default function JobDetailPage() {
               <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{c.email}</span>
              </div>
             </div>
-           </TableCell>
+           </td>
 
            {/* Phone */}
-           <TableCell className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+           <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
             {c.phone}
-           </TableCell>
+           </td>
 
            {/* CV */}
-           <TableCell className="py-4 px-4">
+           <td className="py-4 px-4">
             {c.cv ? (
              <div className="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
               <span>{c.cv}</span>
@@ -997,23 +989,23 @@ export default function JobDetailPage() {
             ) : (
              <span className="text-xs text-gray-300 dark:text-gray-600">-</span>
             )}
-           </TableCell>
+           </td>
 
            {/* Created Date */}
-           <TableCell className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+           <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
             {c.createdDate}
-           </TableCell>
+           </td>
 
            {/* Stages */}
-           <TableCell className="py-4 px-4">
+           <td className="py-4 px-4">
             <StageDropdown
              stage={c.stage}
              onChange={(s) => handleStageChange(c.id, s)}
             />
-           </TableCell>
+           </td>
 
            {/* Actions */}
-           <TableCell className="py-4 px-6 text-right">
+           <td className="py-4 px-6 text-right">
             <div className="flex items-center justify-end gap-2">
              <button className="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
               <HiOutlinePencilSquare className="text-sm" />
@@ -1027,11 +1019,11 @@ export default function JobDetailPage() {
               <HiOutlineTrash className="text-sm" />
              </button>
             </div>
-           </TableCell>
-          </TableRow>
+           </td>
+          </tr>
          ))}
-        </TableBody>
-       </Table>
+        </tbody>
+       </table>
       </div>
 
       {/* Pagination Footer */}

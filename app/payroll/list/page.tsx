@@ -20,18 +20,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/ui/date-picker";
 import { RowPerPage } from "@/components/ui/row-per-page";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/pagination";
 
 type PayrollStatus = "PAID" | "PENDING" | "PROCESSING" | "FAILED";
 
@@ -173,6 +166,7 @@ const STATUS_CONFIG: Record<PayrollStatus, { variant: "success" | "warning" | "e
 };
 
 export default function PayrollListPage() {
+  const isLoading = false;
   const [records, setRecords] = React.useState(PAYROLL_DATA);
   const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
   const [dateRange, setDateRange] = React.useState("01 Apr 2023 - 30 Apr 2023");
@@ -285,165 +279,171 @@ export default function PayrollListPage() {
 
           {/* Table */}
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
-                  <TableHead className="py-4 px-4 rounded-l-xl w-12">
+            <table>
+              <thead>
+                <tr className="border-none bg-gray-50/50 dark:bg-gray-800/30 rounded-xl">
+                  <th className="py-4 px-4 rounded-l-xl w-12">
                     <Checkbox
                       checked={selectedRows.length === records.length && records.length > 0}
                       onChange={(e) => handleSelectAll(e.target.checked)}
                     />
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Employee Name
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Department
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Base Salary
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Bonus
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Deductions
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Net Pay
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Period
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                  </th>
+                  <th >
                     Status
-                  </TableHead>
-                  <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right rounded-r-xl">
+                  </th>
+                  <th className="text-right rounded-r-xl">
                     Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {records.map((row, index) => {
-                  const isChecked = selectedRows.includes(row.id);
-                  const isMenuOpen = activeMenuIndex === index;
-                  const statusCfg = STATUS_CONFIG[row.status];
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <SVGLoaderFetch colSpan={10} text="Loading payroll..." />
+                ) : records.length === 0 ? (
+                  <NoRecordFound colSpan={10} text="No payroll records found." />
+                ) : (
+                  records.map((row, index) => {
+                    const isChecked = selectedRows.includes(row.id);
+                    const isMenuOpen = activeMenuIndex === index;
+                    const statusCfg = STATUS_CONFIG[row.status];
 
-                  return (
-                    <TableRow
-                      key={row.id}
-                      className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-300 dark:border-gray-800"
-                    >
-                      <TableCell className="py-5 px-4">
-                        <Checkbox
-                          checked={isChecked}
-                          onChange={(e) => handleSelectRow(row.id, e.target.checked)}
-                        />
-                      </TableCell>
+                    return (
+                      <tr
+                        key={row.id}
+                        className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-300 dark:border-gray-800"
+                      >
+                        <td className="py-5 px-4">
+                          <Checkbox
+                            checked={isChecked}
+                            onChange={(e) => handleSelectRow(row.id, e.target.checked)}
+                          />
+                        </td>
 
-                      {/* Employee */}
-                      <TableCell className="py-5 px-4">
-                        <div className="flex items-center gap-3">
-                          <Avatar fallback={row.fallback} size="sm" />
+                        {/* Employee */}
+                        <td className="py-5 px-4">
+                          <div className="flex items-center gap-3">
+                            <Avatar fallback={row.fallback} size="sm" />
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white">{row.name}</span>
+                              <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{row.email}</span>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Department */}
+                        <td className="py-5 px-4">
                           <div className="flex flex-col">
-                            <span className="text-xs font-bold text-gray-900 dark:text-white">{row.name}</span>
-                            <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{row.email}</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white">{row.department}</span>
+                            <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{row.jobTitle}</span>
                           </div>
-                        </div>
-                      </TableCell>
+                        </td>
 
-                      {/* Department */}
-                      <TableCell className="py-5 px-4">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900 dark:text-white">{row.department}</span>
-                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{row.jobTitle}</span>
-                        </div>
-                      </TableCell>
+                        {/* Base Salary */}
+                        <td className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                          {row.baseSalary}
+                        </td>
 
-                      {/* Base Salary */}
-                      <TableCell className="py-5 px-4 text-xs font-bold text-gray-900 dark:text-white">
-                        {row.baseSalary}
-                      </TableCell>
+                        {/* Bonus */}
+                        <td className="py-5 px-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                          {row.bonus}
+                        </td>
 
-                      {/* Bonus */}
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                        {row.bonus}
-                      </TableCell>
+                        {/* Deductions */}
+                        <td className="py-5 px-4 text-xs font-semibold text-red-500 dark:text-red-400">
+                          -{row.deductions}
+                        </td>
 
-                      {/* Deductions */}
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-red-500 dark:text-red-400">
-                        -{row.deductions}
-                      </TableCell>
+                        {/* Net Pay */}
+                        <td className="py-5 px-4 text-xs font-black text-gray-900 dark:text-white">
+                          {row.netPay}
+                        </td>
 
-                      {/* Net Pay */}
-                      <TableCell className="py-5 px-4 text-xs font-black text-gray-900 dark:text-white">
-                        {row.netPay}
-                      </TableCell>
+                        {/* Period */}
+                        <td className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          {row.period}
+                        </td>
 
-                      {/* Period */}
-                      <TableCell className="py-5 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        {row.period}
-                      </TableCell>
+                        {/* Status */}
+                        <td className="py-5 px-4">
+                          <Badge variant={statusCfg.variant} tinted className="text-[10px] uppercase tracking-wider px-2.5 py-1">
+                            {statusCfg.label}
+                          </Badge>
+                        </td>
 
-                      {/* Status */}
-                      <TableCell className="py-5 px-4">
-                        <Badge variant={statusCfg.variant} tinted className="text-[10px] uppercase tracking-wider px-2.5 py-1">
-                          {statusCfg.label}
-                        </Badge>
-                      </TableCell>
+                        {/* Action */}
+                        <td className="py-5 px-4 text-right relative">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuIndex(isMenuOpen ? null : index);
+                            }}
+                            className="inline-flex w-8 h-8 items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                          >
+                            <HiOutlineEllipsisVertical className="text-sm" />
+                          </button>
 
-                      {/* Action */}
-                      <TableCell className="py-5 px-4 text-right relative">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuIndex(isMenuOpen ? null : index);
-                          }}
-                          className="inline-flex w-8 h-8 items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
-                        >
-                          <HiOutlineEllipsisVertical className="text-sm" />
-                        </button>
-
-                        {isMenuOpen && (
-                          <div className="absolute right-4 mt-1 w-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
-                            <button
-                              onClick={() => router.push(`/payroll/list/${row.id}`)}
-                              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                            >
-                              <HiOutlineEye className="text-gray-400 text-sm" />
-                              View Details
-                            </button>
-                            {row.status !== "PAID" && (
+                          {isMenuOpen && (
+                            <div className="absolute right-4 mt-1 w-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl shadow-xl z-50 overflow-hidden text-left">
                               <button
-                                onClick={() => handleMarkPaid(index)}
-                                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-t border-gray-300 dark:border-gray-800/60 transition-colors"
+                                onClick={() => router.push(`/payroll/list/${row.id}`)}
+                                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                               >
-                                <HiOutlineCheck className="text-gray-400 text-sm" />
-                                Mark as Paid
+                                <HiOutlineEye className="text-gray-400 text-sm" />
+                                View Details
                               </button>
-                            )}
-                            {row.status === "PENDING" && (
-                              <button
-                                onClick={() => {
-                                  const updated = [...records];
-                                  updated[index].status = "FAILED";
-                                  setRecords(updated);
-                                  setActiveMenuIndex(null);
-                                }}
-                                className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 border-t border-gray-300 dark:border-gray-800/60 transition-colors"
-                              >
-                                <HiOutlineXMark className="text-red-400 text-sm" />
-                                Reject
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                              {row.status !== "PAID" && (
+                                <button
+                                  onClick={() => handleMarkPaid(index)}
+                                  className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-t border-gray-300 dark:border-gray-800/60 transition-colors"
+                                >
+                                  <HiOutlineCheck className="text-gray-400 text-sm" />
+                                  Mark as Paid
+                                </button>
+                              )}
+                              {row.status === "PENDING" && (
+                                <button
+                                  onClick={() => {
+                                    const updated = [...records];
+                                    updated[index].status = "FAILED";
+                                    setRecords(updated);
+                                    setActiveMenuIndex(null);
+                                  }}
+                                  className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 border-t border-gray-300 dark:border-gray-800/60 transition-colors"
+                                >
+                                  <HiOutlineXMark className="text-red-400 text-sm" />
+                                  Reject
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination Footer */}

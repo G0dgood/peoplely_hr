@@ -8,6 +8,7 @@ import { Dropdown } from "@/components/ui/dropdown";
 import { HiOutlineArrowDownTray, HiOutlineChevronRight } from "react-icons/hi2";
 import { Pagination } from "@/components/ui/pagination";
 import { RowPerPage } from "@/components/ui/row-per-page";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 interface BalanceRecord {
   name: string;
@@ -39,6 +40,7 @@ const ALL_RECORDS: BalanceRecord[] = [
 const PAGE_SIZE_OPTIONS = [8, 16, 24];
 
 export default function TimeOffBalancePage() {
+  const isLoading = false;
   const [officeFilter, setOfficeFilter] = React.useState("All Offices");
   const [jobFilter, setJobFilter] = React.useState("All Jobs");
   const [statusFilter, setStatusFilter] = React.useState("All Status");
@@ -114,38 +116,41 @@ export default function TimeOffBalancePage() {
         <div className="overflow-x-auto -mx-8 px-8">
           <table className="w-full text-left border-collapse min-w-[860px]">
             <thead>
-              <tr className="border-b border-gray-50 dark:border-gray-800 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
-                <th className="pb-3 pr-4">Employee Name</th>
-                <th className="pb-3 px-4">Employee ID</th>
-                <th className="pb-3 px-4">Department</th>
-                <th className="pb-3 px-4">Job Title</th>
-                <th className="pb-3 px-4">Office</th>
-                <th className="pb-3 px-4 text-center">Entitlement</th>
+              <tr className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Job Title</th>
+                <th>Office</th>
+                <th>Entitlement</th>
                 <th className="pb-3 px-4 text-center">Carry Over</th>
                 <th className="pb-3 pl-4 text-center">Request</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50/50 dark:divide-gray-800/40">
-              {paginated.map((emp) => (
-                <tr key={emp.id} className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors">
-                  <td className="py-4 pr-4 flex items-center gap-3">
-                    <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{emp.name}</span>
-                      <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{emp.email}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{emp.id}</td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">{emp.department}</td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">{emp.jobTitle}</td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">{emp.office}</td>
-                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white text-center">{emp.entitlement}</td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-center">{emp.carryOver}</td>
-                  <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-center">{emp.request}</td>
-                </tr>
-              ))}
-              {paginated.length === 0 && (
-                <tr><td colSpan={8} className="py-12 text-center text-xs font-semibold text-gray-400">No employees match the selected filters.</td></tr>
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={8} text="Loading balance..." />
+              ) : paginated.length === 0 ? (
+                <NoRecordFound colSpan={8} text="No employees match the selected filters." />
+              ) : (
+                paginated.map((emp) => (
+                  <tr key={emp.id} className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors">
+                    <td className="py-4 pr-4 flex items-center gap-3">
+                      <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{emp.name}</span>
+                        <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{emp.email}</span>
+                      </div>
+                    </td>
+                    <td>{emp.id}</td>
+                    <td>{emp.department}</td>
+                    <td>{emp.jobTitle}</td>
+                    <td>{emp.office}</td>
+                    <td>{emp.entitlement}</td>
+                    <td>{emp.carryOver}</td>
+                    <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-center">{emp.request}</td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>

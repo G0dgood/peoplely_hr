@@ -8,14 +8,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
-import {
- Table,
- TableBody,
- TableCell,
- TableHead,
- TableHeader,
- TableRow,
-} from "@/components/ui/table";
 import { PageHeader } from "@/components/ui/page-header";
 
 const STATS = [
@@ -181,26 +173,26 @@ export default function DashboardPage() {
      </div>
 
      <div className="overflow-x-auto">
-      <Table>
-       <TableHeader>
-        <TableRow className="border-b border-gray-50 dark:border-gray-800">
-         <TableHead className="w-[50px] py-4 px-2">
+      <table>
+       <thead>
+        <tr >
+         <th className="w-[50px] py-4 px-2">
           <Checkbox />
-         </TableHead>
-         <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Employee Name</TableHead>
-         <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Job Title</TableHead>
-         <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Line Manager</TableHead>
-         <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Department</TableHead>
-         <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Office</TableHead>
-        </TableRow>
-       </TableHeader>
-       <TableBody>
+         </th>
+         <th >Employee Name</th>
+         <th >Job Title</th>
+         <th >Line Manager</th>
+         <th >Department</th>
+         <th >Office</th>
+        </tr>
+       </thead>
+       <tbody>
         {EMPLOYEES.map((emp) => (
-         <TableRow key={emp.email} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors border-b border-gray-50 dark:border-gray-800">
-          <TableCell className="py-4 px-2">
+         <tr key={emp.email} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors ">
+          <td className="py-4 px-2">
            <Checkbox />
-          </TableCell>
-          <TableCell className="py-4 px-4">
+          </td>
+          <td className="py-4 px-4">
            <div className="flex items-center gap-3">
             <Avatar src={emp.avatar} size="sm" />
             <div>
@@ -208,15 +200,15 @@ export default function DashboardPage() {
              <p className="text-[10px] text-gray-400 dark:text-gray-500">{emp.email}</p>
             </div>
            </div>
-          </TableCell>
-          <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.role}</TableCell>
-          <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.manager}</TableCell>
-          <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.department}</TableCell>
-          <TableCell className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.office}</TableCell>
-         </TableRow>
+          </td>
+          <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.role}</td>
+          <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.manager}</td>
+          <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.department}</td>
+          <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">{emp.office}</td>
+         </tr>
         ))}
-       </TableBody>
-      </Table>
+       </tbody>
+      </table>
      </div>
     </Card>
 

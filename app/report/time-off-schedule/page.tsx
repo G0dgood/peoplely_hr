@@ -118,7 +118,7 @@ export default function TimeOffSchedulePage() {
     <div className="overflow-x-auto -mx-8 px-8">
      <table className="w-full text-left border-collapse min-w-[860px]">
       <thead>
-       <tr className="border-b border-gray-50 dark:border-gray-800 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
+       <tr className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
         <th className="pb-3 pr-4">Employee Name</th>
         <th className="pb-3 px-4">Employee ID</th>
         <th className="pb-3 px-4">Job Title</th>

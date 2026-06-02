@@ -22,14 +22,7 @@ import { DeleteModal, ViewFileModal } from "@/components/ui/modal";
 import { RowPerPage } from "@/components/ui/row-per-page";
 import { Pagination } from "@/components/ui/pagination";
 import { TableActions } from "@/components/ui/table-actions";
-import {
- Table,
- TableBody,
- TableCell,
- TableHead,
- TableHeader,
- TableRow,
-} from "@/components/ui/table";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 
 
@@ -49,6 +42,7 @@ const INITIAL_FILES: FileItem[] = [
 ];
 
 export default function DocumentFolderDetailPage() {
+ const isLoading = false;
  const params = useParams();
  const folderId = params?.id as string;
  const folderName = FOLDER_NAMES[folderId] || "Esential Tax";
@@ -183,61 +177,62 @@ export default function DocumentFolderDetailPage() {
       </div>
 
       <div className="overflow-x-auto w-full">
-       <Table>
-        <TableHeader>
-         <TableRow className="border-b border-gray-300 dark:border-gray-800">
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+       <table>
+        <thead>
+         <tr className="border-b border-gray-300 dark:border-gray-800">
+          <th >
            <div className="flex items-center gap-1.5 cursor-pointer select-none">
             <span>Name</span>
             <HiOutlineChevronUpDown className="text-sm" />
            </div>
-          </TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Size</TableHead>
-          <TableHead className="py-4 px-4 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right pr-6">Action</TableHead>
-         </TableRow>
-        </TableHeader>
-        <TableBody>
-         {filteredFiles.map((file) => (
-          <TableRow key={file.id} className="border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50/10 dark:hover:bg-gray-800/10">
-           {/* Name with File Icon */}
-           <TableCell className="py-4 px-4">
-            <div className="flex items-center gap-3">
-             <HiOutlineDocumentText className="text-lg text-gray-400 dark:text-gray-500" />
-             <span className="text-xs font-bold text-gray-900 dark:text-white">{file.name}</span>
-            </div>
-           </TableCell>
+          </th>
+          <th >Size</th>
+          <th className="text-right pr-6">Action</th>
+         </tr>
+        </thead>
+        <tbody>
+         {isLoading ? (
+          <SVGLoaderFetch colSpan={3} text="Loading files..." />
+         ) : filteredFiles.length === 0 ? (
+          <NoRecordFound colSpan={3} text="No files found." />
+         ) : (
+          filteredFiles.map((file) => (
+           <tr key={file.id} className="hover:bg-gray-50/10 dark:hover:bg-gray-800/10">
+            {/* Name with File Icon */}
+            <td className="py-4 px-4">
+             <div className="flex items-center gap-3">
+              <HiOutlineDocumentText className="text-lg text-gray-400 dark:text-gray-500" />
+              <span className="text-xs font-bold text-gray-900 dark:text-white">{file.name}</span>
+             </div>
+            </td>
 
-           {/* Size */}
-           <TableCell className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
-            {file.size}
-           </TableCell>
+            {/* Size */}
+            <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+             {file.size}
+            </td>
 
-           {/* Action Circles */}
-           <TableCell className="py-4 px-4 text-right pr-6">
-            <div className="flex justify-end">
-             <TableActions
-              onView={() => {
-               setFileToView(file);
-               setIsViewModalOpen(true);
-              }}
-              onDownload={() => {}}
-              onDelete={() => {
-               setFileToDelete(file);
-               setIsDeleteModalOpen(true);
-              }}
-             />
-            </div>
-           </TableCell>
+            {/* Action Circles */}
+            <td className="py-4 px-4 text-right pr-6">
+             <div className="flex justify-end">
+              <TableActions
+               onView={() => {
+                setFileToView(file);
+                setIsViewModalOpen(true);
+               }}
+               onDownload={() => {}}
+               onDelete={() => {
+                setFileToDelete(file);
+                setIsDeleteModalOpen(true);
+               }}
+              />
+             </div>
+            </td>
 
-          </TableRow>
-         ))}
-        </TableBody>
-       </Table>
-       {filteredFiles.length === 0 && (
-        <div className="text-center py-12 text-xs text-gray-400 dark:text-gray-500">
-         No matching files found.
-        </div>
-       )}
+           </tr>
+          ))
+         )}
+        </tbody>
+       </table>
       </div>
 
       {/* Pagination Controls Footer */}

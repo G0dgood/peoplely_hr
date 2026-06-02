@@ -5,6 +5,8 @@ import { authApi } from "./services/authApi";
 import { officeApi } from "./services/officeApi";
 import { departmentApi } from "./services/departmentApi";
 import { jobTitleApi } from "./services/jobTitleApi";
+import { companyApi } from "./services/companyApi";
+import { workScheduleApi } from "./services/workScheduleApi";
 import authReducer from "./features/authSlice";
 
 export const store = configureStore({
@@ -14,6 +16,8 @@ export const store = configureStore({
     [officeApi.reducerPath]: officeApi.reducer,
     [departmentApi.reducerPath]: departmentApi.reducer,
     [jobTitleApi.reducerPath]: jobTitleApi.reducer,
+    [companyApi.reducerPath]: companyApi.reducer,
+    [workScheduleApi.reducerPath]: workScheduleApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -22,7 +26,9 @@ export const store = configureStore({
       authApi.middleware,
       officeApi.middleware,
       departmentApi.middleware,
-      jobTitleApi.middleware
+      jobTitleApi.middleware,
+      companyApi.middleware,
+      workScheduleApi.middleware
     ),
 });
 

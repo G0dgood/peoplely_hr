@@ -4,7 +4,6 @@ import * as React from "react";
 import { 
   HiOutlineChevronLeft, 
   HiOutlineChevronRight,
-  HiOutlineCalendarDays
 } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 
@@ -18,21 +17,123 @@ interface DatePickerProps {
 export function DatePicker({ isOpen, onClose, onSave }: DatePickerProps) {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   
-  // Simulated January 2023 data
-  const calendarDays = [
-    { day: 29, isCurrentMonth: false }, { day: 30, isCurrentMonth: false }, { day: 31, isCurrentMonth: false },
-    { day: 1, isCurrentMonth: true }, { day: 2, isCurrentMonth: true }, { day: 3, isCurrentMonth: true }, { day: 4, isCurrentMonth: true },
-    { day: 5, isCurrentMonth: true }, { day: 6, isCurrentMonth: true }, { day: 7, isCurrentMonth: true }, { day: 8, isCurrentMonth: true },
-    { day: 9, isCurrentMonth: true, isSelected: true, isStart: true }, { day: 10, isCurrentMonth: true, isInRange: true }, { day: 11, isCurrentMonth: true, isInRange: true },
-    { day: 12, isCurrentMonth: true, isInRange: true }, { day: 13, isCurrentMonth: true, isInRange: true }, { day: 14, isCurrentMonth: true, isInRange: true }, { day: 15, isCurrentMonth: true, isSelected: true, isEnd: true },
-    { day: 16, isCurrentMonth: true }, { day: 17, isCurrentMonth: true }, { day: 18, isCurrentMonth: true }, { day: 19, isCurrentMonth: true },
-    { day: 20, isCurrentMonth: true }, { day: 21, isCurrentMonth: true }, { day: 22, isCurrentMonth: true }, { day: 23, isCurrentMonth: true },
-    { day: 24, isCurrentMonth: true }, { day: 25, isCurrentMonth: true }, { day: 26, isCurrentMonth: true }, { day: 27, isCurrentMonth: true },
-    { day: 28, isCurrentMonth: true }, { day: 29, isCurrentMonth: true }, { day: 30, isCurrentMonth: true }, { day: 31, isCurrentMonth: true },
-    { day: 1, isCurrentMonth: false }
-  ];
+  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  const [rangeStart, setRangeStart] = React.useState<Date | null>(null);
+  const [rangeEnd, setRangeEnd] = React.useState<Date | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setCurrentMonth(new Date());
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
+
+  // First day of current month
+  const firstDayOfMonth = new Date(year, month, 1);
+  
+  // Day of the week of first day (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  let dayOfWeek = firstDayOfMonth.getDay();
+  // Adjust to Mon=1, Tue=2, ..., Sun=7
+  if (dayOfWeek === 0) dayOfWeek = 7;
+  
+  const prevMonthDaysCount = dayOfWeek - 1;
+  const days: { date: Date; isCurrentMonth: boolean }[] = [];
+  
+  // Add previous month's trailing days
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  for (let i = prevMonthDaysCount - 1; i >= 0; i--) {
+    days.push({
+      date: new Date(year, month - 1, prevMonthLastDay - i),
+      isCurrentMonth: false
+    });
+  }
+  
+  // Add current month's days
+  const currentMonthDaysCount = new Date(year, month + 1, 0).getDate();
+  for (let i = 1; i <= currentMonthDaysCount; i++) {
+    days.push({
+      date: new Date(year, month, i),
+      isCurrentMonth: true
+    });
+  }
+  
+  // Add next month's leading days to complete the 6-week grid (42 cells)
+  const remainingCells = 42 - days.length;
+  for (let i = 1; i <= remainingCells; i++) {
+    days.push({
+      date: new Date(year, month + 1, i),
+      isCurrentMonth: false
+    });
+  }
+
+  const handlePrevMonth = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentMonth(new Date(year, month - 1, 1));
+  };
+
+  const handleNextMonth = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentMonth(new Date(year, month + 1, 1));
+  };
+
+  const handleDayClick = (date: Date) => {
+    const clickedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    
+    if (!rangeStart || (rangeStart && rangeEnd)) {
+      setRangeStart(clickedDate);
+      setRangeEnd(null);
+    } else {
+      if (clickedDate < rangeStart) {
+        setRangeStart(clickedDate);
+      } else {
+        setRangeEnd(clickedDate);
+      }
+    }
+  };
+
+  const isSelected = (date: Date) => {
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (rangeStart && d.getTime() === rangeStart.getTime()) return true;
+    if (rangeEnd && d.getTime() === rangeEnd.getTime()) return true;
+    return false;
+  };
+
+  const isInRange = (date: Date) => {
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (!rangeStart || !rangeEnd) return false;
+    return d > rangeStart && d < rangeEnd;
+  };
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const headerLabel = `${monthNames[month]} ${year}`;
+
+  const formatDate = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const m = months[date.getMonth()];
+    const y = date.getFullYear();
+    return `${day} ${m} ${y}`;
+  };
+
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!rangeStart) return;
+    
+    let result = formatDate(rangeStart);
+    if (rangeEnd) {
+      result = `${result} - ${formatDate(rangeEnd)}`;
+    }
+    
+    onSave?.(result);
+    onClose();
+  };
 
   return (
     <div className="absolute top-full left-0 mt-2 z-50">
@@ -47,11 +148,19 @@ export function DatePicker({ isOpen, onClose, onSave }: DatePickerProps) {
           <div className="flex flex-col gap-4">
             {/* Month/Year Header */}
             <div className="flex items-center justify-between">
-              <button className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <button 
+                type="button"
+                onClick={handlePrevMonth}
+                className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              >
                 <HiOutlineChevronLeft className="text-lg" />
               </button>
-              <span className="text-sm font-bold text-gray-900 dark:text-white text-center">January 2023</span>
-              <button className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <span className="text-sm font-bold text-gray-900 dark:text-white text-center">{headerLabel}</span>
+              <button 
+                type="button"
+                onClick={handleNextMonth}
+                className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              >
                 <HiOutlineChevronRight className="text-lg" />
               </button>
             </div>
@@ -66,23 +175,31 @@ export function DatePicker({ isOpen, onClose, onSave }: DatePickerProps) {
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-y-1">
-                {calendarDays.map((date, index) => {
-                  let cellClass = "relative h-8 flex items-center justify-center text-xs font-bold transition-all ";
+                {days.map((item, index) => {
+                  const date = item.date;
+                  const isSel = isSelected(date);
+                  const inRange = isInRange(date);
                   
-                  if (date.isSelected) {
+                  let cellClass = "relative h-8 flex items-center justify-center text-xs font-bold transition-all cursor-pointer ";
+                  
+                  if (isSel) {
                     cellClass += "bg-primary text-white rounded-lg z-10 ";
-                  } else if (date.isInRange) {
+                  } else if (inRange) {
                     cellClass += "bg-primary/10 text-primary ";
-                  } else if (!date.isCurrentMonth) {
+                  } else if (!item.isCurrentMonth) {
                     cellClass += "text-gray-200 dark:text-gray-700 ";
                   } else {
                     cellClass += "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg ";
                   }
 
                   return (
-                    <div key={index} className={cellClass}>
-                      {date.day}
-                      {date.isInRange && !date.isSelected && (
+                    <div 
+                      key={index} 
+                      className={cellClass}
+                      onClick={() => handleDayClick(date)}
+                    >
+                      {date.getDate()}
+                      {inRange && !isSel && (
                         <div className="absolute inset-0 bg-primary/10 -z-10" />
                       )}
                     </div>
@@ -95,6 +212,7 @@ export function DatePicker({ isOpen, onClose, onSave }: DatePickerProps) {
           {/* Action Footer */}
           <div className="flex items-center gap-3">
             <Button 
+              type="button"
               variant="outline" 
               className="flex-1 h-10 text-xs font-bold"
               onClick={onClose}
@@ -102,12 +220,11 @@ export function DatePicker({ isOpen, onClose, onSave }: DatePickerProps) {
               Cancel
             </Button>
             <Button 
+              type="button"
               variant="primary" 
               className="flex-1 h-10 text-xs font-bold"
-              onClick={() => {
-                onSave?.("01 Jan 2023 - 15 Jan 2023");
-                onClose();
-              }}
+              disabled={!rangeStart}
+              onClick={handleSave}
             >
               Save
             </Button>

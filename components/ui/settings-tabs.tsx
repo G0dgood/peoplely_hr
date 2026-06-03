@@ -12,7 +12,7 @@ export interface SettingsTabItem {
 export interface SettingsTabsProps {
   tabs: SettingsTabItem[];
   activeTab: string;
-  onChange: (id: any) => void;
+  onChange: (id: string) => void;
   variant?: "emerald" | "gray" | "primary";
   className?: string;
 }

@@ -7,74 +7,72 @@ import {
   HiOutlineUserPlus,
   HiOutlineUserMinus,
   HiOutlinePlus,
-  HiOutlineEye,
-  HiOutlineLink,
-  HiOutlineTrash,
   HiOutlineClipboardDocumentList,
 } from "react-icons/hi2";
 import { NewTemplateDrawer, LinkTaskDrawer } from "@/components/ui/drawer";
 import { EmptyState } from "@/components/ui/empty-state";
 import { DeleteModal } from "@/components/ui/modal";
 
-interface TemplateItem {
-  id: string;
-  name: string;
-  description: string;
-}
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/features/authSlice";
+import {
+  useGetChecklistTemplatesQuery,
+  useCreateChecklistTemplateMutation,
+  useDeleteChecklistTemplateMutation,
+  ChecklistTemplate,
+} from "@/store/services/checklistTemplatesApi";
+import { SVGLoaderFetch } from "@/components/ui/options";
+import { useApiError } from "@/hooks/useApiError";
+import { toast } from "sonner";
+import { TableActions } from "@/components/ui/table-actions";
+import { useRouter } from "next/navigation";
 
 export default function ChecklistSettingPage() {
+  const router = useRouter();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const companyId = currentUser?.companyId ?? "";
+
   const [activeTab, setActiveTab] = React.useState<"onboarding" | "offboarding">("onboarding");
   const [isNewTemplateOpen, setIsNewTemplateOpen] = React.useState(false);
-  const [templateToDelete, setTemplateToDelete] = React.useState<TemplateItem | null>(null);
-  const [templateToLink, setTemplateToLink] = React.useState<TemplateItem | null>(null);
+  const [templateToDelete, setTemplateToDelete] = React.useState<ChecklistTemplate | null>(null);
+  const [templateToLink, setTemplateToLink] = React.useState<ChecklistTemplate | null>(null);
 
-  // Mock template states
-  const [onboardingTemplates, setOnboardingTemplates] = React.useState<TemplateItem[]>([
-    {
-      id: "onboarding-1",
-      name: "Onboarding v.1",
-      description: "Files about the importance of essential tasks",
-    },
-    {
-      id: "onboarding-2",
-      name: "Probation",
-      description: "Files about the importance of essential tasks",
-    },
-  ]);
+  const { data, isLoading, error: loadError } = useGetChecklistTemplatesQuery(
+    { companyId, type: activeTab },
+    { skip: !companyId }
+  );
 
-  const [offboardingTemplates, setOffboardingTemplates] = React.useState<TemplateItem[]>([
-    {
-      id: "offboarding-1",
-      name: "Standard Offboarding",
-      description: "Tasks for employee departure and offboarding processes",
-    },
-    {
-      id: "offboarding-2",
-      name: "Contract Expiration",
-      description: "Standard checklist for contract non-renewals",
-    },
-  ]);
+  const [createTemplate, { isLoading: isCreatingTemplate, error: createError }] = useCreateChecklistTemplateMutation();
+  const [deleteTemplate, { isLoading: isDeletingTemplate, error: deleteError }] = useDeleteChecklistTemplateMutation();
 
-  const activeTemplates = activeTab === "onboarding" ? onboardingTemplates : offboardingTemplates;
+  useApiError(!!loadError, loadError, "Failed to load templates");
+  useApiError(!!createError, createError, "Failed to create template");
+  useApiError(!!deleteError, deleteError, "Failed to delete template");
 
-  const handleCreateTemplate = (name: string, description: string) => {
-    const newTemplate: TemplateItem = {
-      id: `${activeTab}-${Date.now()}`,
-      name,
-      description: description || "Files about the importance of essential tasks",
-    };
-    if (activeTab === "onboarding") {
-      setOnboardingTemplates((prev) => [...prev, newTemplate]);
-    } else {
-      setOffboardingTemplates((prev) => [...prev, newTemplate]);
+  const activeTemplates = data?.checklistTemplates || [];
+
+  const handleCreateTemplate = async (name: string, description: string) => {
+    try {
+      await createTemplate({
+        name,
+        description,
+        type: activeTab,
+        companyId,
+      }).unwrap();
+      toast.success(`Template "${name}" created successfully!`);
+    } catch (err) {
+      console.error("Failed to create template:", err);
+      throw err;
     }
   };
 
-  const handleDeleteTemplate = (id: string) => {
-    if (activeTab === "onboarding") {
-      setOnboardingTemplates((prev) => prev.filter((t) => t.id !== id));
-    } else {
-      setOffboardingTemplates((prev) => prev.filter((t) => t.id !== id));
+  const handleDeleteTemplate = async (id: string) => {
+    try {
+      await deleteTemplate(id).unwrap();
+      toast.success("Template deleted successfully!");
+      setTemplateToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete template:", err);
     }
   };
 
@@ -126,7 +124,7 @@ export default function ChecklistSettingPage() {
 
             <button
               onClick={() => setIsNewTemplateOpen(true)}
-              className="h-11 px-5 text-xs font-bold text-white bg-[#11131A] dark:bg-white dark:text-gray-900 rounded-xl hover:opacity-90 transition-all flex items-center gap-2"
+              className="h-11 px-5 text-xs font-bold text-white bg-[#11131A] dark:bg-white dark:text-gray-900 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 cursor-pointer"
             >
               <HiOutlinePlus className="text-sm font-bold" />
               <span>New Template</span>
@@ -134,49 +132,9 @@ export default function ChecklistSettingPage() {
           </div>
 
           <div className="flex flex-col gap-4">
-            {activeTemplates.map((template) => (
-              <div
-                key={template.id}
-                className="p-6 border border-gray-300 dark:border-gray-800/80 rounded-2xl flex items-center justify-between gap-4 bg-white dark:bg-gray-900 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
-              >
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {template.name}
-                  </h3>
-                  <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-1">
-                    {template.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <Link
-                    href="/checklist/setting/detail"
-                    title="View details"
-                    className="w-8 h-8 rounded-full bg-[#EAFBEF] text-[#10B981] dark:bg-[#10B981]/10 dark:text-[#10B981] flex items-center justify-center hover:scale-105 transition-transform"
-                  >
-                    <HiOutlineEye className="text-sm" />
-                  </Link>
-
-                  <button
-                    title="Link tasks"
-                    onClick={() => setTemplateToLink(template)}
-                    className="w-8 h-8 rounded-full bg-[#EBF5FF] text-[#3B82F6] dark:bg-[#3B82F6]/10 dark:text-[#3B82F6] flex items-center justify-center hover:scale-105 transition-transform"
-                  >
-                    <HiOutlineLink className="text-sm" />
-                  </button>
-
-                  <button
-                    title="Delete template"
-                    onClick={() => setTemplateToDelete(template)}
-                    className="w-8 h-8 rounded-full bg-[#FEE2E2] text-[#EF4444] dark:bg-[#EF4444]/10 dark:text-[#EF4444] flex items-center justify-center hover:scale-105 transition-transform"
-                  >
-                    <HiOutlineTrash className="text-sm" />
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {activeTemplates.length === 0 && (
+            {isLoading ? (
+              <SVGLoaderFetch text="Loading templates..." asTable={false} />
+            ) : activeTemplates.length === 0 ? (
               <EmptyState
                 icon={<HiOutlineClipboardDocumentList className="text-3xl text-gray-300" />}
                 title="No templates configured"
@@ -184,6 +142,28 @@ export default function ChecklistSettingPage() {
                 actionLabel="New Template"
                 onAction={() => setIsNewTemplateOpen(true)}
               />
+            ) : (
+              activeTemplates.map((template) => (
+                <div
+                  key={template.id}
+                  className="p-6 border border-gray-300 dark:border-gray-800/80 rounded-2xl flex items-center justify-between gap-4 bg-white dark:bg-gray-900 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                      {template.name}
+                    </h3>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-1">
+                      {template.description}
+                    </p>
+                  </div>
+
+                  <TableActions
+                    onView={() => router.push(`/checklist/setting/detail?id=${template.id}`)}
+                    onLink={() => setTemplateToLink(template)}
+                    onDelete={() => setTemplateToDelete(template)}
+                  />
+                </div>
+              ))
             )}
           </div>
         </Card>
@@ -198,13 +178,14 @@ export default function ChecklistSettingPage() {
       <DeleteModal
         isOpen={templateToDelete !== null}
         onClose={() => setTemplateToDelete(null)}
-        onConfirm={() => {
+        onConfirm={async () => {
           if (templateToDelete) {
-            handleDeleteTemplate(templateToDelete.id);
+            await handleDeleteTemplate(templateToDelete.id);
           }
         }}
         itemName={templateToDelete?.name}
         title="Delete Template"
+        isLoading={isDeletingTemplate}
       />
 
       <LinkTaskDrawer
@@ -212,7 +193,6 @@ export default function ChecklistSettingPage() {
         onClose={() => setTemplateToLink(null)}
         templateName={templateToLink?.name}
         onSave={(selectedTaskIds) => {
-          // Placeholder for saving logic
           console.log(`Linked tasks ${selectedTaskIds} to template ${templateToLink?.id}`);
         }}
       />

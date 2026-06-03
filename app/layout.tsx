@@ -4,6 +4,7 @@ import "./globals.css";
 import { DashboardWrapper } from "@/components/ui/dashboard-wrapper";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { ReduxProvider } from "@/store/provider";
+import { SocketProvider } from "@/store/socket-context";
 import { Toaster } from "sonner";
 
 const manrope = Manrope({
@@ -28,11 +29,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
-          <DashboardWrapper>
-            {children}
-          </DashboardWrapper>
-          <ProgressBar />
-          <Toaster position="top-right" richColors />
+          <SocketProvider>
+            <DashboardWrapper>
+              {children}
+            </DashboardWrapper>
+            <ProgressBar />
+            <Toaster position="top-right" richColors />
+          </SocketProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -1,15 +1,16 @@
 import * as React from "react";
-import { HiOutlineEye, HiOutlinePencilSquare, HiOutlineTrash, HiOutlineArrowDownTray } from "react-icons/hi2";
+import { HiOutlineEye, HiOutlinePencilSquare, HiOutlineTrash, HiOutlineArrowDownTray, HiOutlineLink } from "react-icons/hi2";
 
 export interface TableActionsProps {
   onView?: () => void;
   onEdit?: () => void;
   onDownload?: () => void;
   onDelete?: () => void;
+  onLink?: () => void;
   className?: string;
 }
 
-export function TableActions({ onView, onEdit, onDownload, onDelete, className = "" }: TableActionsProps) {
+export function TableActions({ onView, onEdit, onDownload, onDelete, onLink, className = "" }: TableActionsProps) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {onView && (
@@ -26,6 +27,14 @@ export function TableActions({ onView, onEdit, onDownload, onDelete, className =
           className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
         >
           <HiOutlinePencilSquare className="text-lg" />
+        </button>
+      )}
+      {onLink && (
+        <button
+          onClick={onLink}
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+        >
+          <HiOutlineLink className="text-lg" />
         </button>
       )}
       {onDownload && (

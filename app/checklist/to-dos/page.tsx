@@ -21,67 +21,22 @@ import { RowPerPage } from "@/components/ui/row-per-page";
 import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 
-interface ChecklistTask {
-  id: number;
-  taskName: string;
-  dueDate: string;
-  employeeName: string;
-  employeeAvatar: string;
-  employeeInitials?: string;
-  type: string; // e.g. "Onboarding" or "Offboarding"
-  completed: boolean;
-  description?: string;
-}
-
-const INITIAL_TASKS: ChecklistTask[] = [
-  {
-    id: 1,
-    taskName: "Collect Documents - Hard Copies",
-    dueDate: "24 Mar 2023",
-    employeeName: "Jennifer Law",
-    employeeAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120",
-    type: "Onboarding",
-    completed: false,
-    description: "Collect all necessary hard-copy documents from the new hire:\n1. ID card photocopies.\n2. Health check record."
-  },
-  {
-    id: 2,
-    taskName: "Upload signed work contract",
-    dueDate: "21 Jan 2023",
-    employeeName: "Dulce Philips",
-    employeeAvatar: "",
-    employeeInitials: "DP",
-    type: "Onboarding",
-    completed: false,
-    description: "Please upload the scanned copy of the fully signed employment contract for verification."
-  },
-  {
-    id: 3,
-    taskName: "Upload signed work contract",
-    dueDate: "10 Jan 2023",
-    employeeName: "Miracle Francis",
-    employeeAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
-    type: "Onboarding",
-    completed: false,
-    description: "Please upload the scanned copy of the fully signed employment contract for verification."
-  },
-  {
-    id: 4,
-    taskName: "Collect Documents - Hard Copies",
-    dueDate: "01 Jan 2022",
-    employeeName: "Davis Curtis",
-    employeeAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120",
-    type: "Onboarding",
-    completed: false,
-    description: "Collect all necessary hard-copy documents from the new hire:\n1. ID card photocopies.\n2. Health check record."
-  },
-];
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/features/authSlice";
+import {
+  ChecklistTask,
+  useGetChecklistTasksQuery,
+  useUpdateChecklistTaskMutation,
+} from "@/store/services/checklistTasksApi";
+import { toast } from "sonner";
+import { useApiError } from "@/hooks/useApiError";
 
 type SortOrder = "asc" | "desc";
 
 export default function ChecklistToDosPage() {
-  const isLoading = false;
-  const [tasks, setTasks] = React.useState<ChecklistTask[]>(INITIAL_TASKS);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const companyId = currentUser?.companyId ?? "";
+
   const [statusFilter, setStatusFilter] = React.useState<"In Progress" | "Completed">("In Progress");
   const [searchQuery, setSearchQuery] = React.useState("");
   const [sortOrder, setSortOrder] = React.useState<SortOrder>("asc");
@@ -89,63 +44,48 @@ export default function ChecklistToDosPage() {
   const [selectedTask, setSelectedTask] = React.useState<ChecklistTask | null>(null);
   const [isNewTaskOpen, setIsNewTaskOpen] = React.useState(false);
 
-  const handleToggleTask = (id: number) => {
-    // Toggle completion status with a slight delay for positive UI transition feel
-    setTimeout(() => {
-      setTasks((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+  const { data, isLoading, error } = useGetChecklistTasksQuery(
+    { companyId, search: searchQuery, status: statusFilter },
+    { skip: !companyId }
+  );
+
+  const [updateChecklistTask, { isLoading: isUpdating, error: updateError }] = useUpdateChecklistTaskMutation();
+
+  useApiError(!!error, error, "Failed to load checklist tasks");
+  useApiError(!!updateError, updateError, "Failed to update task status");
+
+  const tasks = data?.checklistTasks || [];
+
+  const handleToggleTask = async (id: string) => {
+    const taskToToggle = tasks.find((t) => t.id === id);
+    if (!taskToToggle) return;
+    try {
+      const isCompleting = !taskToToggle.completed;
+      await updateChecklistTask({ id, completed: isCompleting }).unwrap();
+      if (selectedTask?.id === id) {
+        setSelectedTask(null);
+      }
+      toast.success(
+        isCompleting
+          ? `Task "${taskToToggle.taskName}" completed successfully!`
+          : `Task "${taskToToggle.taskName}" marked as in progress.`
       );
-    }, 250);
-  };
-
-  const handleCreateTask = (taskData: {
-    taskName: string;
-    dueDate: string;
-    employeeName: string;
-    description: string;
-  }) => {
-    const initials = taskData.employeeName
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-
-    const newTask: ChecklistTask = {
-      id: tasks.length + 1,
-      taskName: taskData.taskName,
-      dueDate: taskData.dueDate,
-      employeeName: taskData.employeeName,
-      employeeAvatar: "",
-      employeeInitials: initials || "EE",
-      type: "Onboarding",
-      completed: false,
-      description: taskData.description,
-    };
-    setTasks((prev) => [newTask, ...prev]);
+    } catch (err) {
+      console.error("Failed to toggle task:", err);
+    }
   };
 
   const handleSortDueDate = () => {
-    const isAsc = sortOrder === "asc";
-    setSortOrder(isAsc ? "desc" : "asc");
-
-    setTasks((prev) => {
-      return [...prev].sort((a, b) => {
-        const dateA = new Date(a.dueDate).getTime();
-        const dateB = new Date(b.dueDate).getTime();
-        return isAsc ? dateA - dateB : dateB - dateA;
-      });
-    });
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
   };
 
-  // Filter tasks based on search bar and dropdown status filter
-  const filteredTasks = tasks.filter((task) => {
-    const matchesStatus =
-      statusFilter === "Completed" ? task.completed : !task.completed;
-    const matchesSearch =
-      task.taskName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.employeeName.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const sortedTasks = React.useMemo(() => {
+    return [...tasks].sort((a, b) => {
+      const dateA = new Date(a.dueDate).getTime();
+      const dateB = new Date(b.dueDate).getTime();
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
+  }, [tasks, sortOrder]);
 
   return (
     <div className="flex flex-col gap-8 p-2 md:p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
@@ -241,10 +181,10 @@ export default function ChecklistToDosPage() {
             <tbody>
               {isLoading ? (
                 <SVGLoaderFetch colSpan={3} text="Loading tasks..." />
-              ) : filteredTasks.length === 0 ? (
+              ) : sortedTasks.length === 0 ? (
                 <NoRecordFound colSpan={3} text="No checklists found for this status." />
               ) : (
-                filteredTasks.map((task) => (
+                sortedTasks.map((task) => (
                   <tr
                     key={task.id}
                     onClick={() => setSelectedTask(task)}
@@ -338,13 +278,14 @@ export default function ChecklistToDosPage() {
         onClose={() => setSelectedTask(null)}
         task={selectedTask}
         onMarkAsComplete={handleToggleTask}
+        isCompleting={isUpdating}
       />
 
       {/* New Task Creator Drawer */}
       <NewTaskDrawer
         isOpen={isNewTaskOpen}
         onClose={() => setIsNewTaskOpen(false)}
-        onCreate={handleCreateTask}
+        companyId={companyId}
       />
     </div>
   );

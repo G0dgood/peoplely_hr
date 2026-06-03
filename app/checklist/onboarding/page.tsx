@@ -13,131 +13,165 @@ import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 
-
-interface OnboardingTask {
-  id: number;
-  taskName: string;
-  dueDate: string;
-  completed: boolean;
-}
-
-interface OnboardingEmployee {
-  id: number;
-  name: string;
-  avatar: string;
-  initials?: string;
-  joinDate: string;
-  office: string; // e.g. "Unpixel Office", "HQ"
-  tasks: OnboardingTask[];
-}
-
-const INITIAL_ONBOARDING: OnboardingEmployee[] = [
-  {
-    id: 1,
-    name: "Jennifer Law",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120",
-    joinDate: "23 Feb, 2023",
-    office: "Unpixel Office",
-    tasks: [
-      { id: 1, taskName: "Collect Documents - Hard Copies", dueDate: "24 Mar 2023", completed: true },
-      { id: 2, taskName: "Upload signed work contract", dueDate: "21 Jan 2023", completed: false },
-      { id: 3, taskName: "Setup workspace and emails", dueDate: "22 Feb 2023", completed: false },
-      { id: 4, taskName: "Team introduction meeting", dueDate: "25 Feb 2023", completed: false },
-      { id: 5, taskName: "Submit bank details for payroll", dueDate: "28 Feb 2023", completed: false },
-      { id: 6, taskName: "Review company handbook", dueDate: "05 Mar 2023", completed: false },
-      { id: 7, taskName: "Security compliance check", dueDate: "10 Mar 2023", completed: false },
-      { id: 8, taskName: "Complete health benefit forms", dueDate: "12 Mar 2023", completed: false },
-      { id: 9, taskName: "Assign first onboarding project", dueDate: "15 Mar 2023", completed: false },
-      { id: 10, taskName: "Schedule 30-day review", dueDate: "20 Mar 2023", completed: false },
-    ],
-  },
-  {
-    id: 2,
-    name: "Gustavo Lubin",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
-    joinDate: "23 Feb, 2023",
-    office: "Unpixel Office",
-    tasks: [
-      { id: 1, taskName: "Collect Documents - Hard Copies", dueDate: "24 Mar 2023", completed: true },
-      { id: 2, taskName: "Upload signed work contract", dueDate: "21 Jan 2023", completed: true },
-      { id: 3, taskName: "Setup workspace and emails", dueDate: "22 Feb 2023", completed: true },
-      { id: 4, taskName: "Team introduction meeting", dueDate: "25 Feb 2023", completed: true },
-      { id: 5, taskName: "Submit bank details for payroll", dueDate: "28 Feb 2023", completed: true },
-      { id: 6, taskName: "Review company handbook", dueDate: "05 Mar 2023", completed: false },
-      { id: 7, taskName: "Security compliance check", dueDate: "10 Mar 2023", completed: false },
-      { id: 8, taskName: "Complete health benefit forms", dueDate: "12 Mar 2023", completed: false },
-      { id: 9, taskName: "Assign first onboarding project", dueDate: "15 Mar 2023", completed: false },
-      { id: 10, taskName: "Schedule 30-day review", dueDate: "20 Mar 2023", completed: false },
-    ],
-  },
-  {
-    id: 3,
-    name: "Miracle Kenter",
-    avatar: "",
-    initials: "MK",
-    joinDate: "23 Feb, 2023",
-    office: "HQ",
-    tasks: [
-      { id: 1, taskName: "Collect Documents - Hard Copies", dueDate: "24 Mar 2023", completed: true },
-      { id: 2, taskName: "Upload signed work contract", dueDate: "21 Jan 2023", completed: true },
-      { id: 3, taskName: "Setup workspace and emails", dueDate: "22 Feb 2023", completed: true },
-      { id: 4, taskName: "Team introduction meeting", dueDate: "25 Feb 2023", completed: true },
-      { id: 5, taskName: "Submit bank details for payroll", dueDate: "28 Feb 2023", completed: true },
-      { id: 6, taskName: "Review company handbook", dueDate: "05 Mar 2023", completed: true },
-      { id: 7, taskName: "Security compliance check", dueDate: "10 Mar 2023", completed: true },
-      { id: 8, taskName: "Complete health benefit forms", dueDate: "12 Mar 2023", completed: false },
-      { id: 9, taskName: "Assign first onboarding project", dueDate: "15 Mar 2023", completed: false },
-      { id: 10, taskName: "Schedule 30-day review", dueDate: "20 Mar 2023", completed: false },
-    ],
-  },
-];
+import { useAppSelector } from "@/store/hooks";
+import { selectCurrentUser } from "@/store/features/authSlice";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
+import {
+  useGetChecklistTasksQuery,
+  useUpdateChecklistTaskMutation,
+  ChecklistTask,
+} from "@/store/services/checklistTasksApi";
+import { useApiError } from "@/hooks/useApiError";
+import { toast } from "sonner";
+import { SVGLoaderFetch } from "@/components/ui/options";
+import { useGetOfficesQuery } from "@/store/services/officeApi";
 
 export default function OnboardingChecklistPage() {
-  const [employees, setEmployees] = React.useState<OnboardingEmployee[]>(INITIAL_ONBOARDING);
-  const [officeFilter, setOfficeFilter] = React.useState<string>("Unpixel Office");
+  const currentUser = useAppSelector(selectCurrentUser);
+  const companyId = currentUser?.companyId ?? "";
+
+  const [officeFilter, setOfficeFilter] = React.useState<string>("All Offices");
   const [statusFilter, setStatusFilter] = React.useState<"In Progress" | "Completed">("In Progress");
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  const [expandedIds, setExpandedIds] = React.useState<number[]>([1]); // default expand Jennifer Law (id 1)
+  const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
   const [isOfficeDropdownOpen, setIsOfficeDropdownOpen] = React.useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = React.useState(false);
 
-  const toggleExpand = (id: number) => {
+  const { data: empData, isLoading: isLoadingEmployees, error: empError } = useGetEmployeesQuery(
+    { companyId },
+    { skip: !companyId }
+  );
+
+  const { data: taskData, isLoading: isLoadingTasks, error: taskError } = useGetChecklistTasksQuery(
+    { companyId },
+    { skip: !companyId }
+  );
+
+  const { data: officesData, isLoading: isLoadingOffices, error: officeError } = useGetOfficesQuery(
+    { companyId },
+    { skip: !companyId }
+  );
+
+  const [updateChecklistTask, { error: updateError }] = useUpdateChecklistTaskMutation();
+
+  useApiError(!!empError, empError, "Failed to load employees");
+  useApiError(!!taskError, taskError, "Failed to load checklist tasks");
+  useApiError(!!officeError, officeError, "Failed to load offices");
+  useApiError(!!updateError, updateError, "Failed to update task status");
+
+  const officeOptions = React.useMemo(() => {
+    return ["All Offices", ...(officesData?.offices.map((o) => o.name) || [])];
+  }, [officesData]);
+
+  const employeesList = empData?.employees || [];
+  const checklistTasks = taskData?.checklistTasks || [];
+
+  // Filter tasks belonging to onboarding
+  const onboardingTasks = React.useMemo(() => {
+    return checklistTasks.filter((t) => t.type.toLowerCase() === "onboarding");
+  }, [checklistTasks]);
+
+  // Group onboarding tasks by employeeName
+  const groupedEmployees = React.useMemo(() => {
+    const map = new Map<string, ChecklistTask[]>();
+    for (const t of onboardingTasks) {
+      const list = map.get(t.employeeName) || [];
+      list.push(t);
+      map.set(t.employeeName, list);
+    }
+
+    const result = Array.from(map.entries()).map(([employeeName, tasks], index) => {
+      // Find employee details if exists
+      const emp = employeesList.find((e) => e.name.toLowerCase() === employeeName.toLowerCase());
+      
+      const initials = employeeName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+
+      const joinDate = emp
+        ? new Date(emp.createdAt).toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          })
+        : "N/A";
+
+      return {
+        id: emp?.id || `temp-${index}`,
+        name: employeeName,
+        avatar: emp?.avatar || "",
+        initials: initials || "EE",
+        joinDate,
+        office: emp?.office || "HQ",
+        tasks,
+      };
+    });
+
+    return result;
+  }, [onboardingTasks, employeesList]);
+
+  // Auto-expand the first employee on load
+  React.useEffect(() => {
+    if (groupedEmployees.length > 0 && expandedIds.length === 0) {
+      setExpandedIds([groupedEmployees[0].id]);
+    }
+  }, [groupedEmployees, expandedIds]);
+
+  const toggleExpand = (id: string) => {
     setExpandedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const handleToggleTask = (employeeId: number, taskId: number) => {
-    setEmployees((prev) =>
-      prev.map((emp) => {
-        if (emp.id !== employeeId) return emp;
-        return {
-          ...emp,
-          tasks: emp.tasks.map((task) =>
-            task.id === taskId ? { ...task, completed: !task.completed } : task
-          ),
-        };
-      })
-    );
+  const handleToggleTask = async (employeeId: string | number, taskId: string) => {
+    const taskToToggle = onboardingTasks.find((t) => t.id === taskId);
+    if (!taskToToggle) return;
+    try {
+      const isCompleting = !taskToToggle.completed;
+      await updateChecklistTask({ id: taskId, completed: isCompleting }).unwrap();
+      toast.success(
+        isCompleting
+          ? `Task "${taskToToggle.taskName}" completed successfully!`
+          : `Task "${taskToToggle.taskName}" marked as in progress.`
+      );
+    } catch (err) {
+      console.error("Failed to toggle task:", err);
+    }
   };
 
-  // Filter employees
-  const filteredEmployees = employees.filter((emp) => {
-    // Office filter
-    const matchesOffice = officeFilter === "All Offices" || emp.office === officeFilter;
+  // Filter employees based on UI selections
+  const filteredEmployees = React.useMemo(() => {
+    return groupedEmployees.filter((emp) => {
+      // Office filter
+      const matchesOffice = officeFilter === "All Offices" || emp.office === officeFilter;
 
-    // Search query filter
-    const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase());
+      // Search query filter
+      const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-    // Status filter
-    const completedTasksCount = emp.tasks.filter((t) => t.completed).length;
-    const isCompleted = completedTasksCount === emp.tasks.length;
-    const matchesStatus =
-      statusFilter === "Completed" ? isCompleted : !isCompleted;
+      // Status filter
+      const completedTasksCount = emp.tasks.filter((t) => t.completed).length;
+      const isCompleted = completedTasksCount === emp.tasks.length;
+      const matchesStatus =
+        statusFilter === "Completed" ? isCompleted : !isCompleted;
 
-    return matchesOffice && matchesSearch && matchesStatus;
-  });
+      return matchesOffice && matchesSearch && matchesStatus;
+    });
+  }, [groupedEmployees, officeFilter, searchQuery, statusFilter]);
+
+  if (isLoadingEmployees || isLoadingTasks || isLoadingOffices) {
+    return (
+      <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
+        <PageHeader title="Checklist - Onboarding" description="These are some of the tasks that must be completed" />
+        <div className="flex-1 flex items-center justify-center py-20 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl">
+          <SVGLoaderFetch text="Loading onboarding checklists..." asTable={false} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
@@ -158,7 +192,7 @@ export default function OnboardingChecklistPage() {
 
             {isOfficeDropdownOpen && (
               <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl z-50 overflow-hidden">
-                {["All Offices", "Unpixel Office", "HQ"].map((office) => (
+                {officeOptions.map((office) => (
                   <button
                     key={office}
                     onClick={() => {
@@ -220,7 +254,7 @@ export default function OnboardingChecklistPage() {
         {filteredEmployees.map((emp) => {
           const completedCount = emp.tasks.filter((t) => t.completed).length;
           const totalCount = emp.tasks.length;
-          const progressPercent = Math.round((completedCount / totalCount) * 100);
+          const progressPercent = Math.round((completedCount / totalCount) * 100) || 0;
           const isExpanded = expandedIds.includes(emp.id);
 
           // Progress color helpers
@@ -241,7 +275,7 @@ export default function OnboardingChecklistPage() {
           return (
             <Card
               key={emp.id}
-              className="border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 overflow-hidden flex flex-col transition-all duration-300"
+              className="border border-gray-50/50 dark:border-gray-800/40 bg-white dark:bg-gray-900 overflow-hidden flex flex-col transition-all duration-300 rounded-2xl"
             >
               {/* Accordion Header Row */}
               <div
@@ -306,7 +340,7 @@ export default function OnboardingChecklistPage() {
 
                   {/* Actions / Link Button */}
                   <div 
-                    className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center cursor-pointer"
+                    className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-50 hover:text-white transition-all flex items-center justify-center cursor-pointer"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <HiOutlineLink className="text-sm" />

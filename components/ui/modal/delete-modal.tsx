@@ -7,7 +7,7 @@ import { SVGLoader } from "@/components/ui/options";
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   title?: string;
   description?: string;
   itemName?: string;
@@ -58,9 +58,17 @@ export function DeleteModal({
         </Button>
         <Button 
           variant="primary" 
-          onClick={() => {
-            onConfirm();
-            if (!isLoading) onClose();
+          onClick={async () => {
+            const res = onConfirm();
+            if (res instanceof Promise) {
+              try {
+                await res;
+              } catch (e) {
+                // Handled by parent or mutation hook
+              }
+            } else {
+              onClose();
+            }
           }} 
           disabled={isLoading}
           className="flex-1 max-w-[140px] bg-red-500 hover:bg-red-600 border-red-500 text-white"

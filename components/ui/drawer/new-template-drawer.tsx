@@ -4,31 +4,42 @@ import * as React from "react";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SVGLoader } from "@/components/ui/options";
 
 interface NewTemplateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (name: string, description: string) => void;
+  onCreate: (name: string, description: string) => Promise<void> | void;
 }
 
 export function NewTemplateDrawer({ isOpen, onClose, onCreate }: NewTemplateDrawerProps) {
-  const [name, setName] = React.useState("Onboarding v.1");
-  const [description, setDescription] = React.useState("Files about the importance of essential tasks");
+  const [name, setName] = React.useState("");
+  const [description, setDescription] = React.useState("");
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   React.useEffect(() => {
     if (isOpen) {
-      setName("Onboarding v.1");
-      setDescription("Files about the importance of essential tasks");
+      setName("");
+      setDescription("");
+      setIsSubmitting(false);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onCreate(name, description);
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await onCreate(name, description);
+      onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -97,9 +108,11 @@ export function NewTemplateDrawer({ isOpen, onClose, onCreate }: NewTemplateDraw
           </Button>
           <Button
             type="submit"
+            disabled={isSubmitting}
+            leftIcon={isSubmitting ? <SVGLoader width={16} height={16} color="currentColor" /> : undefined}
             className="flex-1 font-bold h-12 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
           >
-            Create
+            {isSubmitting ? "Creating..." : "Create"}
           </Button>
         </div>
       </form>

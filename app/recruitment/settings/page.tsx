@@ -24,11 +24,12 @@ import {
  HiOutlineBars3BottomLeft,
 } from "react-icons/hi2";
 import { SettingsTabs, SettingsTabItem } from "@/components/ui/settings-tabs";
+import { DetailEmailTemplateDrawer } from "@/components/ui/drawer";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter } from "@/components/ui/modal";
+import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter, CreateEmailTemplateModal, CreateStageModal, RenameResourceModal, CreateTagModal, RenameTagModal, RenameStageModal, CreateResourceModal } from "@/components/ui/modal";
 
 import { PageHeader } from "@/components/ui/page-header";
 
@@ -84,9 +85,7 @@ export default function RecruitmentSettingsPage() {
 
  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
  const [isAddStageOpen, setIsAddStageOpen] = React.useState(false);
- const [newStageName, setNewStageName] = React.useState("");
  const [editingStage, setEditingStage] = React.useState<Stage | null>(null);
- const [editStageName, setEditStageName] = React.useState("");
  const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
  const dropdownRef = React.useRef<HTMLDivElement>(null);
 
@@ -135,35 +134,27 @@ export default function RecruitmentSettingsPage() {
   setDraggedIndex(null);
  };
 
- const handleAddStage = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newStageName.trim()) return;
-
+ const handleCreateStage = (name: string) => {
   const offeredIndex = stages.findIndex((s) => s.id === "offered");
   const insertIndex = offeredIndex !== -1 ? offeredIndex : stages.length;
-
   const newStage: Stage = {
-   id: newStageName.toLowerCase().replace(/\s+/g, "-"),
-   name: newStageName.trim(),
+   id: name.toLowerCase().replace(/\s+/g, "-"),
+   name: name,
    isLocked: false,
   };
-
   const updated = [...stages];
   updated.splice(insertIndex, 0, newStage);
   setStages(updated);
-  setNewStageName("");
   setIsAddStageOpen(false);
  };
 
- const handleRenameStage = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!editingStage || !editStageName.trim()) return;
+ const handleRenameStage = (name: string) => {
+  if (!editingStage) return;
 
   setStages((prev) =>
-   prev.map((s) => (s.id === editingStage.id ? { ...s, name: editStageName.trim() } : s))
+   prev.map((s) => (s.id === editingStage.id ? { ...s, name } : s))
   );
   setEditingStage(null);
-  setEditStageName("");
  };
 
  const handleDeleteStage = (id: string) => {
@@ -179,41 +170,32 @@ export default function RecruitmentSettingsPage() {
   { id: "finance", name: "Finance", candidateCount: 5 },
   { id: "product", name: "Product", candidateCount: 0 },
  ]);
- const [newTagName, setNewTagName] = React.useState("");
  const [isAddTagOpen, setIsAddTagOpen] = React.useState(false);
  const [editingTag, setEditingTag] = React.useState<TagItem | null>(null);
- const [editTagName, setEditTagName] = React.useState("");
 
  const [resources, setResources] = React.useState<ResourceItem[]>([
   { id: "1", name: "Interview Evaluation Sheet", updatedAt: "Updated 3 days ago" },
   { id: "2", name: "Candidate Assessment Checklist", updatedAt: "Updated 1 week ago" },
  ]);
- const [newResourceName, setNewResourceName] = React.useState("");
  const [isAddResourceOpen, setIsAddResourceOpen] = React.useState(false);
  const [editingResource, setEditingResource] = React.useState<ResourceItem | null>(null);
- const [editResourceName, setEditResourceName] = React.useState("");
 
- const handleAddTag = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newTagName.trim()) return;
+ const handleCreateTag = (name: string) => {
   const newTag: TagItem = {
-   id: newTagName.toLowerCase().replace(/\s+/g, "-"),
-   name: newTagName.trim(),
+   id: name.toLowerCase().replace(/\s+/g, "-"),
+   name: name,
    candidateCount: 0,
   };
   setTags((prev) => [...prev, newTag]);
-  setNewTagName("");
   setIsAddTagOpen(false);
  };
 
- const handleRenameTag = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!editingTag || !editTagName.trim()) return;
+ const handleRenameTag = (name: string) => {
+  if (!editingTag) return;
   setTags((prev) =>
-   prev.map((t) => (t.id === editingTag.id ? { ...t, name: editTagName.trim() } : t))
+   prev.map((t) => (t.id === editingTag.id ? { ...t, name } : t))
   );
   setEditingTag(null);
-  setEditTagName("");
  };
 
  const handleDeleteTag = (id: string) => {
@@ -221,27 +203,22 @@ export default function RecruitmentSettingsPage() {
   setActiveTagDropdown(null);
  };
 
- const handleAddResource = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newResourceName.trim()) return;
+ const handleCreateResource = (name: string) => {
   const newResource: ResourceItem = {
    id: Date.now().toString(),
-   name: newResourceName.trim(),
+   name: name,
    updatedAt: "Updated just now",
   };
   setResources((prev) => [...prev, newResource]);
-  setNewResourceName("");
   setIsAddResourceOpen(false);
  };
 
- const handleRenameResource = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!editingResource || !editResourceName.trim()) return;
+ const handleRenameResource = (name: string) => {
+  if (!editingResource) return;
   setResources((prev) =>
-   prev.map((r) => (r.id === editingResource.id ? { ...r, name: editResourceName.trim() } : r))
+   prev.map((r) => (r.id === editingResource.id ? { ...r, name } : r))
   );
   setEditingResource(null);
-  setEditResourceName("");
  };
 
  const handleDeleteResource = (id: string) => {
@@ -286,16 +263,8 @@ export default function RecruitmentSettingsPage() {
  const stageFilterRef = React.useRef<HTMLDivElement>(null);
 
  const [isAddTemplateOpen, setIsAddTemplateOpen] = React.useState(false);
- const [newTemplateName, setNewTemplateName] = React.useState("");
- const [newTemplateSubject, setNewTemplateSubject] = React.useState("");
- const [newTemplateBody, setNewTemplateBody] = React.useState("");
- const [newTemplateStage, setNewTemplateStage] = React.useState("Applied");
 
  const [editingTemplate, setEditingTemplate] = React.useState<EmailTemplate | null>(null);
- const [editTemplateName, setEditTemplateName] = React.useState("");
- const [editTemplateSubject, setEditTemplateSubject] = React.useState("");
- const [editTemplateBody, setEditTemplateBody] = React.useState("");
- const [editTemplateStage, setEditTemplateStage] = React.useState("");
 
  // Close stage filter dropdown on click outside
  React.useEffect(() => {
@@ -308,15 +277,13 @@ export default function RecruitmentSettingsPage() {
   return () => document.removeEventListener("mousedown", handleOutsideStageFilter);
  }, []);
 
- const handleAddTemplate = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newTemplateName.trim() || !newTemplateSubject.trim() || !newTemplateBody.trim()) return;
+ const handleCreateTemplate = (data: { name: string; stage: string; subject: string; body: string }) => {
   const newTemplate: EmailTemplate = {
-   id: newTemplateName.toLowerCase().replace(/\s+/g, "-"),
-   name: newTemplateName.trim(),
-   subject: newTemplateSubject.trim(),
-   body: newTemplateBody.trim(),
-   stage: newTemplateStage,
+   id: data.name.toLowerCase().replace(/\s+/g, "-"),
+   name: data.name,
+   subject: data.subject,
+   body: data.body,
+   stage: data.stage,
    lastModified: new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
@@ -325,25 +292,19 @@ export default function RecruitmentSettingsPage() {
    isLocked: false,
   };
   setTemplates((prev) => [...prev, newTemplate]);
-  setNewTemplateName("");
-  setNewTemplateSubject("");
-  setNewTemplateBody("");
-  setNewTemplateStage("Applied");
   setIsAddTemplateOpen(false);
  };
 
- const handleSaveTemplate = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!editingTemplate || !editTemplateName.trim() || !editTemplateSubject.trim() || !editTemplateBody.trim()) return;
+ const handleUpdateTemplate = (data: { id: string; name: string; subject: string; body: string; stage: string }) => {
   setTemplates((prev) =>
    prev.map((t) =>
-    t.id === editingTemplate.id
+    t.id === data.id
      ? {
       ...t,
-      name: editTemplateName.trim(),
-      subject: editTemplateSubject.trim(),
-      body: editTemplateBody.trim(),
-      stage: editTemplateStage,
+      name: data.name,
+      subject: data.subject,
+      body: data.body,
+      stage: data.stage,
       lastModified: new Date().toLocaleDateString("en-GB", {
        day: "numeric",
        month: "short",
@@ -444,16 +405,15 @@ export default function RecruitmentSettingsPage() {
                ref={dropdownRef}
                className="absolute right-0 top-full mt-1 z-50 w-36 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl shadow-lg py-1.5 flex flex-col gap-0.5"
               >
-               <button
-                onClick={() => {
-                 setEditingStage(stage);
-                 setEditStageName(stage.name);
-                 setActiveDropdown(null);
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-               >
-                <HiOutlinePencilSquare className="text-sm" /> Rename
-               </button>
+                <button
+                 onClick={() => {
+                  setEditingStage(stage);
+                  setActiveDropdown(null);
+                 }}
+                 className="flex items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                 <HiOutlinePencilSquare className="text-sm" /> Rename
+                </button>
                <button
                 onClick={() => handleDeleteStage(stage.id)}
                 className="flex items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-955/20"
@@ -481,7 +441,6 @@ export default function RecruitmentSettingsPage() {
          <Button
           variant="primary"
           onClick={() => {
-           setNewTagName("");
            setIsAddTagOpen(true);
           }}
           className="bg-[#11131A] dark:bg-white dark:text-gray-900 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
@@ -491,10 +450,7 @@ export default function RecruitmentSettingsPage() {
         ) : (
          <Button
           variant="primary"
-          onClick={() => {
-           setNewResourceName("");
-           setIsAddResourceOpen(true);
-          }}
+          onClick={() => setIsAddResourceOpen(true)}
           className="bg-[#11131A] dark:bg-white dark:text-gray-900 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
          >
           <HiOutlinePlus className="text-sm" /> New Resource
@@ -556,10 +512,9 @@ export default function RecruitmentSettingsPage() {
               <button
                onClick={() => {
                 setEditingTag(tag);
-                setEditTagName(tag.name);
                 setActiveTagDropdown(null);
                }}
-               className="flex items-center gap-2 px-3 py-1.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+               className="flex items-center gap-2 px-3 py-1.5 text-left text-xs font-semibold text-gray-770 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                <HiOutlinePencilSquare className="text-xs" /> Rename
               </button>
@@ -613,10 +568,9 @@ export default function RecruitmentSettingsPage() {
                <button
                 onClick={() => {
                  setEditingResource(resource);
-                 setEditResourceName(resource.name);
                  setActiveResourceDropdown(null);
                 }}
-                className="flex items-center gap-2 px-3 py-1.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 px-3 py-1.5 text-left text-xs font-semibold text-gray-770 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                >
                 <HiOutlinePencilSquare className="text-xs" /> Rename
                </button>
@@ -645,16 +599,10 @@ export default function RecruitmentSettingsPage() {
         <h2 className="text-lg font-bold text-gray-900 dark:text-white">Email Template</h2>
         <Button
          variant="primary"
-         onClick={() => {
-          setNewTemplateName("");
-          setNewTemplateSubject("");
-          setNewTemplateBody("");
-          setNewTemplateStage("Applied");
-          setIsAddTemplateOpen(true);
-         }}
+         onClick={() => setIsAddTemplateOpen(true)}
          className="bg-[#11131A] dark:bg-white dark:text-gray-900 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
         >
-         <HiOutlinePlus className="text-sm" /> Add Template
+         <HiOutlinePlus className="text-sm" /> New Template
         </Button>
        </div>
 
@@ -751,10 +699,6 @@ export default function RecruitmentSettingsPage() {
                <TableActions
                 onEdit={() => {
                  setEditingTemplate(t);
-                 setEditTemplateName(t.name);
-                 setEditTemplateSubject(t.subject);
-                 setEditTemplateBody(t.body);
-                 setEditTemplateStage(t.stage);
                 }}
                 onDelete={!t.isLocked ? () => handleDeleteTemplate(t.id) : undefined}
                />
@@ -776,525 +720,64 @@ export default function RecruitmentSettingsPage() {
    </div>
 
    {/* MODAL 1: Create New Stage */}
-   <Modal isOpen={isAddStageOpen} onClose={() => setIsAddStageOpen(false)}>
-    <form onSubmit={handleAddStage} className="flex flex-col bg-white dark:bg-gray-950">
-     <ModalHeader onClose={() => setIsAddStageOpen(false)}>
-      <ModalTitle>Add New Stage</ModalTitle>
-     </ModalHeader>
-     <ModalContent>
-      <Input
-       label="Stage Name"
-       required
-       placeholder="e.g. Technical Test"
-       value={newStageName}
-       onChange={(e) => setNewStageName(e.target.value)}
-       className="text-xs font-semibold"
-      />
-     </ModalContent>
-     <ModalFooter className="flex items-center justify-end gap-3 px-6">
-      <Button
-       type="button"
-       variant="outline"
-       onClick={() => setIsAddStageOpen(false)}
-       className="px-6 h-12 rounded-xl text-xs font-bold"
-      >
-       Cancel
-      </Button>
-      <Button
-       type="submit"
-       variant="primary"
-       className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-      >
-       Create
-      </Button>
-     </ModalFooter>
-    </form>
-   </Modal>
+   <CreateStageModal
+    isOpen={isAddStageOpen}
+    onClose={() => setIsAddStageOpen(false)}
+    onCreate={handleCreateStage}
+   />
 
    {/* MODAL 2: Rename Stage */}
-   <Modal isOpen={editingStage !== null} onClose={() => setEditingStage(null)}>
-    {editingStage && (
-     <form onSubmit={handleRenameStage} className="flex flex-col bg-white dark:bg-gray-950">
-      <ModalHeader onClose={() => setEditingStage(null)}>
-       <ModalTitle>Rename Stage</ModalTitle>
-      </ModalHeader>
-      <ModalContent>
-       <Input
-        label="Stage Name"
-        required
-        placeholder="e.g. Phone Screen"
-        value={editStageName}
-        onChange={(e) => setEditStageName(e.target.value)}
-        className="text-xs font-semibold"
-       />
-      </ModalContent>
-      <ModalFooter className="flex items-center justify-end gap-3 px-6">
-       <Button
-        type="button"
-        variant="outline"
-        onClick={() => setEditingStage(null)}
-        className="px-6 h-12 rounded-xl text-xs font-bold"
-       >
-        Cancel
-       </Button>
-       <Button
-        type="submit"
-        variant="primary"
-        className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-       >
-        Save
-       </Button>
-      </ModalFooter>
-     </form>
-    )}
-   </Modal>
+   <RenameStageModal
+    isOpen={editingStage !== null}
+    onClose={() => setEditingStage(null)}
+    onRename={handleRenameStage}
+    initialName={editingStage?.name || ""}
+   />
 
    {/* MODAL 3: Create New Tag */}
-   <Modal isOpen={isAddTagOpen} onClose={() => setIsAddTagOpen(false)}>
-    <form onSubmit={handleAddTag} className="flex flex-col bg-white dark:bg-gray-950">
-     <ModalHeader onClose={() => setIsAddTagOpen(false)}>
-      <ModalTitle>Add New Tag</ModalTitle>
-     </ModalHeader>
-     <ModalContent>
-      <Input
-       label="Tag Name"
-       required
-       placeholder="e.g. Design"
-       value={newTagName}
-       onChange={(e) => setNewTagName(e.target.value)}
-       className="text-xs font-semibold"
-      />
-     </ModalContent>
-     <ModalFooter className="flex items-center justify-end gap-3 px-6">
-      <Button
-       type="button"
-       variant="outline"
-       onClick={() => setIsAddTagOpen(false)}
-       className="px-6 h-12 rounded-xl text-xs font-bold"
-      >
-       Cancel
-      </Button>
-      <Button
-       type="submit"
-       variant="primary"
-       className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-      >
-       Create
-      </Button>
-     </ModalFooter>
-    </form>
-   </Modal>
+   <CreateTagModal
+    isOpen={isAddTagOpen}
+    onClose={() => setIsAddTagOpen(false)}
+    onCreate={handleCreateTag}
+   />
 
    {/* MODAL 4: Rename Tag */}
-   <Modal isOpen={editingTag !== null} onClose={() => setEditingTag(null)}>
-    {editingTag && (
-     <form onSubmit={handleRenameTag} className="flex flex-col bg-white dark:bg-gray-950">
-      <ModalHeader onClose={() => setEditingTag(null)}>
-       <ModalTitle>Rename Tag</ModalTitle>
-      </ModalHeader>
-      <ModalContent>
-       <Input
-        label="Tag Name"
-        required
-        placeholder="e.g. Engineering"
-        value={editTagName}
-        onChange={(e) => setEditTagName(e.target.value)}
-        className="text-xs font-semibold"
-       />
-      </ModalContent>
-      <ModalFooter className="flex items-center justify-end gap-3 px-6">
-       <Button
-        type="button"
-        variant="outline"
-        onClick={() => setEditingTag(null)}
-        className="px-6 h-12 rounded-xl text-xs font-bold"
-       >
-        Cancel
-       </Button>
-       <Button
-        type="submit"
-        variant="primary"
-        className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-       >
-        Save
-       </Button>
-      </ModalFooter>
-     </form>
-    )}
-   </Modal>
+   <RenameTagModal
+    isOpen={editingTag !== null}
+    onClose={() => setEditingTag(null)}
+    onRename={handleRenameTag}
+    initialName={editingTag?.name || ""}
+   />
 
    {/* MODAL 5: Create New Resource */}
-   <Modal isOpen={isAddResourceOpen} onClose={() => setIsAddResourceOpen(false)}>
-    <form onSubmit={handleAddResource} className="flex flex-col bg-white dark:bg-gray-950">
-     <ModalHeader onClose={() => setIsAddResourceOpen(false)}>
-      <ModalTitle>Add New Resource</ModalTitle>
-     </ModalHeader>
-     <ModalContent>
-      <Input
-       label="Resource Name"
-       required
-       placeholder="e.g. Interview Evaluation Sheet"
-       value={newResourceName}
-       onChange={(e) => setNewResourceName(e.target.value)}
-       className="text-xs font-semibold"
-      />
-     </ModalContent>
-     <ModalFooter className="flex items-center justify-end gap-3 px-6">
-      <Button
-       type="button"
-       variant="outline"
-       onClick={() => setIsAddResourceOpen(false)}
-       className="px-6 h-12 rounded-xl text-xs font-bold"
-      >
-       Cancel
-      </Button>
-      <Button
-       type="submit"
-       variant="primary"
-       className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-      >
-       Create
-      </Button>
-     </ModalFooter>
-    </form>
-   </Modal>
+   <CreateResourceModal
+    isOpen={isAddResourceOpen}
+    onClose={() => setIsAddResourceOpen(false)}
+    onCreate={handleCreateResource}
+   />
 
    {/* MODAL 6: Rename Resource */}
-   <Modal isOpen={editingResource !== null} onClose={() => setEditingResource(null)}>
-    {editingResource && (
-     <form onSubmit={handleRenameResource} className="flex flex-col bg-white dark:bg-gray-950">
-      <ModalHeader onClose={() => setEditingResource(null)}>
-       <ModalTitle>Rename Resource</ModalTitle>
-      </ModalHeader>
-      <ModalContent>
-       <Input
-        label="Resource Name"
-        required
-        placeholder="e.g. Interview Evaluation Sheet"
-        value={editResourceName}
-        onChange={(e) => setEditResourceName(e.target.value)}
-        className="text-xs font-semibold"
-       />
-      </ModalContent>
-      <ModalFooter className="flex items-center justify-end gap-3 px-6">
-       <Button
-        type="button"
-        variant="outline"
-        onClick={() => setEditingResource(null)}
-        className="px-6 h-12 rounded-xl text-xs font-bold"
-       >
-        Cancel
-       </Button>
-       <Button
-        type="submit"
-        variant="primary"
-        className="px-6 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-       >
-        Save
-       </Button>
-      </ModalFooter>
-     </form>
-    )}
-   </Modal>
+   <RenameResourceModal
+    isOpen={editingResource !== null}
+    onClose={() => setEditingResource(null)}
+    onRename={handleRenameResource}
+    initialName={editingResource?.name || ""}
+   />
 
    {/* MODAL 7: Create New Email Template */}
-   <Modal isOpen={isAddTemplateOpen} onClose={() => setIsAddTemplateOpen(false)} position="right" className="sm:max-w-2xl h-full rounded-none sm:rounded-l-3xl">
-    <form onSubmit={handleAddTemplate} className="flex flex-col h-full bg-white dark:bg-gray-950">
-     <ModalHeader className="border-b-0 pb-0" onClose={() => setIsAddTemplateOpen(false)}>
-      <ModalTitle className="text-xl font-bold text-gray-900 dark:text-white">Add New Email Template</ModalTitle>
-     </ModalHeader>
-     <ModalContent className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-5">
-      <div className="grid grid-cols-2 gap-4">
-       <Input
-        label="Template Name"
-        required
-        placeholder="e.g. Interview Invite"
-        value={newTemplateName}
-        onChange={(e) => setNewTemplateName(e.target.value)}
-        className="text-xs font-semibold"
-       />
-       <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Trigger Stage</label>
-        <div className="relative">
-         <select
-          value={newTemplateStage}
-          onChange={(e) => setNewTemplateStage(e.target.value)}
-          className="w-full h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer pr-10 transition-colors"
-         >
-          {["Applied", "Screening", "1st Interview", "2nd Interview", "Offered", "Hired", "Rejected"].map((s) => (
-           <option key={s} value={s}>{s}</option>
-          ))}
-         </select>
-         <HiOutlineChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs" />
-        </div>
-       </div>
-      </div>
-
-      <Input
-       label="Email Subject"
-       required
-       placeholder="e.g. Interview scheduled for {{job_title}}"
-       value={newTemplateSubject}
-       onChange={(e) => setNewTemplateSubject(e.target.value)}
-       className="text-xs font-semibold"
-      />
-
-      <div className="flex flex-col gap-1.5 w-full">
-       <label className="text-[11px] font-bold text-gray-555 dark:text-gray-400">Email Body</label>
-       {/* Rich Editor Toolbar and Textarea wrapper */}
-       <div className="flex flex-col border border-gray-300 dark:border-gray-700 rounded-2xl overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-        {/* Editor Toolbar */}
-        <div className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-50/50 dark:bg-gray-900/60 border-b border-gray-300 dark:border-gray-700 flex-wrap">
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Bold"
-         >
-          B
-         </button>
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 italic font-serif hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Italic"
-         >
-          I
-         </button>
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 underline hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Underline"
-         >
-          U
-         </button>
-         <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Insert Emoji"
-         >
-          <HiOutlineFaceSmile className="text-lg" />
-         </button>
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Insert Link"
-         >
-          <HiOutlineLink className="text-lg" />
-         </button>
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Bullet List"
-         >
-          <HiOutlineListBullet className="text-lg" />
-         </button>
-         <button
-          type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Align Left"
-         >
-          <HiOutlineBars3BottomLeft className="text-lg" />
-         </button>
-        </div>
-
-        {/* Body Editor textarea */}
-        <textarea
-         required
-         placeholder="Dear {{candidate_name}}, ..."
-         value={newTemplateBody}
-         onChange={(e) => setNewTemplateBody(e.target.value)}
-         className="w-full min-h-[220px] bg-white dark:bg-gray-955 p-6 text-xs font-semibold text-gray-800 dark:text-gray-200 focus:outline-none placeholder:text-gray-400 resize-none font-sans leading-relaxed"
-        />
-       </div>
-      </div>
-      <div className="text-[10px] text-gray-400 bg-gray-50 dark:bg-gray-900/60 p-2.5 rounded-lg flex flex-wrap gap-x-3 gap-y-1">
-       <span className="font-bold">Supported Placeholders:</span>
-       <span>{"{{candidate_name}}"}</span>
-       <span>{"{{job_title}}"}</span>
-       <span>{"{{company_name}}"}</span>
-      </div>
-     </ModalContent>
-     <ModalFooter className="border-t-0 pt-0 pb-8 flex items-center justify-end gap-3 px-6">
-      <Button
-       type="button"
-       variant="outline"
-       onClick={() => setIsAddTemplateOpen(false)}
-       className="px-8 h-12 rounded-xl text-xs font-bold"
-      >
-       Cancel
-      </Button>
-      <Button
-       type="submit"
-       variant="primary"
-       className="px-8 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer"
-      >
-       Create
-      </Button>
-     </ModalFooter>
-    </form>
-   </Modal>
+   <CreateEmailTemplateModal
+    isOpen={isAddTemplateOpen}
+    onClose={() => setIsAddTemplateOpen(false)}
+    onCreate={handleCreateTemplate}
+   />
 
    {/* DRAWER: Detail Email Template (Edit Template Slide-Over) */}
-   <div className={`fixed inset-0 z-50 overflow-hidden transition-all duration-300 ${editingTemplate ? "visible" : "invisible pointer-events-none"
-    }`}>
-    {/* Backdrop overlay */}
-    <div
-     onClick={() => setEditingTemplate(null)}
-     className={`absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${editingTemplate ? "opacity-100" : "opacity-0"
-      }`}
-    />
-
-    {/* Sliding Panel */}
-    <div className={`absolute top-0 right-0 h-full w-full max-w-xl md:max-w-2xl bg-white dark:bg-gray-950 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out transform ${editingTemplate ? "translate-x-0" : "translate-x-full"
-     }`}>
-     {/* Dismiss slide button (vertically centered on the left border of the drawer panel) */}
-     <div className="absolute top-1/2 -translate-y-1/2 -left-30 z-50">
-      <button
-       type="button"
-       onClick={() => setEditingTemplate(null)}
-       className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-800 hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
-      >
-       <HiOutlineChevronRight className="text-xl" />
-      </button>
-     </div>
-
-     {editingTemplate && (
-      <form onSubmit={handleSaveTemplate} className="flex flex-col h-full bg-white dark:bg-gray-950">
-       {/* Header */}
-       <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Detail Email Template</h3>
-        <button
-         type="button"
-         onClick={() => setEditingTemplate(null)}
-         className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
-        >
-         <HiOutlineXMark className="text-xl" />
-        </button>
-       </div>
-
-       {/* Scrollable Content Container */}
-       <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-5">
-        {/* Two columns at the top: Stage and Email Template */}
-        <div className="grid grid-cols-2 gap-4">
-         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Stage</label>
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900/60 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-500 dark:text-gray-405 cursor-not-allowed">
-           <span>{editTemplateStage}</span>
-           <HiOutlineDocumentText className="text-gray-400 text-base" />
-          </div>
-         </div>
-         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Email Template</label>
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900/60 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-500 dark:text-gray-405 cursor-not-allowed">
-           <span>{editTemplateName}</span>
-           <HiOutlineDocumentText className="text-gray-400 text-base" />
-          </div>
-         </div>
-        </div>
-
-        {/* Subject field */}
-        <div className="flex flex-col gap-1.5">
-         <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-          Subject <span className="text-red-500">*</span>
-         </label>
-         <input
-          type="text"
-          required
-          placeholder="Offer from {{company_name}}"
-          value={editTemplateSubject}
-          onChange={(e) => setEditTemplateSubject(e.target.value)}
-          className="h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl px-4 text-xs font-bold text-gray-800 dark:text-gray-200 focus:outline-none transition-colors"
-         />
-        </div>
-
-        {/* Rich Editor Toolbar and Textarea wrapper */}
-        <div className="flex flex-col border border-gray-300 dark:border-gray-700 rounded-2xl overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-         {/* Editor Toolbar */}
-         <div className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-50/50 dark:bg-gray-900/60 border-b border-gray-300 dark:border-gray-700 flex-wrap">
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Bold"
-          >
-           B
-          </button>
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 italic font-serif hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Italic"
-          >
-           I
-          </button>
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-750 dark:text-gray-300 underline hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Underline"
-          >
-           U
-          </button>
-          <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Insert Emoji"
-          >
-           <HiOutlineFaceSmile className="text-lg" />
-          </button>
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Insert Link"
-          >
-           <HiOutlineLink className="text-lg" />
-          </button>
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Bullet List"
-          >
-           <HiOutlineListBullet className="text-lg" />
-          </button>
-          <button
-           type="button"
-           className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           title="Align Left"
-          >
-           <HiOutlineBars3BottomLeft className="text-lg" />
-          </button>
-         </div>
-
-         {/* Body Editor textarea */}
-         <textarea
-          required
-          value={editTemplateBody}
-          onChange={(e) => setEditTemplateBody(e.target.value)}
-          className="w-full min-h-[300px] bg-white dark:bg-gray-950 p-6 text-xs font-semibold text-gray-800 dark:text-gray-200 focus:outline-none placeholder:text-gray-400 resize-none font-sans leading-relaxed"
-         />
-        </div>
-       </div>
-
-       {/* Footer */}
-       <div className="px-8 py-5 border-t border-gray-200 dark:border-gray-800 flex items-center justify-end gap-3 bg-gray-50/20 dark:bg-gray-955">
-        <Button
-         type="button"
-         variant="outline"
-         onClick={() => setEditingTemplate(null)}
-         className="px-8 h-12 rounded-xl text-xs font-bold transition-all"
-        >
-         Cancel
-        </Button>
-        <Button
-         type="submit"
-         variant="primary"
-         className="px-8 h-12 rounded-xl text-xs font-bold bg-[#11131A] dark:bg-white dark:text-gray-900 cursor-pointer transition-all"
-        >
-         Save
-        </Button>
-       </div>
-      </form>
-     )}
-    </div>
-   </div>
+   <DetailEmailTemplateDrawer
+    isOpen={editingTemplate !== null}
+    onClose={() => setEditingTemplate(null)}
+    onSave={handleUpdateTemplate}
+    template={editingTemplate}
+   />
   </div>
  );
 }

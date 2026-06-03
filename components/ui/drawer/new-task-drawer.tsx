@@ -16,40 +16,76 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
+import { SVGLoader } from "@/components/ui/options";
+import { DatePicker } from "@/components/ui/date-picker";
+
+import { useCreateChecklistTaskMutation } from "@/store/services/checklistTasksApi";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
+import { useGetRolesQuery } from "@/store/services/rolePermissionApi";
+import { toast } from "sonner";
+import { useApiError } from "@/hooks/useApiError";
 
 interface NewTaskDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (taskData: {
-    taskName: string;
-    dueDate: string;
-    employeeName: string;
-    description: string;
-  }) => void;
+  companyId: string;
 }
 
-export function NewTaskDrawer({ isOpen, onClose, onCreate }: NewTaskDrawerProps) {
-  const [taskName, setTaskName] = React.useState("Prepare company welcome kit");
+export function NewTaskDrawer({ isOpen, onClose, companyId }: NewTaskDrawerProps) {
+  const [createTask, { isLoading, error: createError }] = useCreateChecklistTaskMutation();
+  const { data: empData, error: empError } = useGetEmployeesQuery({ companyId }, { skip: !companyId });
+  const employeeOptions = React.useMemo(() => empData?.employees.map((e) => e.name) || [], [empData]);
+
+  const { data: rolesData, error: rolesError } = useGetRolesQuery({ companyId }, { skip: !companyId });
+  const roleOptions = React.useMemo(() => rolesData?.roles.map((r) => r.name) || [], [rolesData]);
+
+  useApiError(!!createError, createError, "Failed to create task");
+  useApiError(!!empError, empError, "Failed to load employees");
+  useApiError(!!rolesError, rolesError, "Failed to load roles");
+
+  const [taskName, setTaskName] = React.useState("");
   const [taskType, setTaskType] = React.useState("Checkbox");
   const [assigneeType, setAssigneeType] = React.useState("Specific Employee");
-  const [assigneeName, setAssigneeName] = React.useState("Dulce Philips");
-  const [dueDate, setDueDate] = React.useState("14 Feb 2023");
-  const [description, setDescription] = React.useState(
-    "Please ensure that your new team member have a prepared workstation with:\n1. Laptop\n2. Work email\n3. Internet/Team sites access"
-  );
+  const [assigneeName, setAssigneeName] = React.useState("");
+  const [dueDate, setDueDate] = React.useState("");
+  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+  const [description, setDescription] = React.useState("");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      if (assigneeType === "Specific Employee" && employeeOptions.length > 0 && !assigneeName) {
+        setAssigneeName(employeeOptions[0]);
+      } else if (assigneeType === "Role" && roleOptions.length > 0 && !assigneeName) {
+        setAssigneeName(roleOptions[0]);
+      }
+    }
+  }, [isOpen, employeeOptions, roleOptions, assigneeType, assigneeName]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskName || !dueDate || !assigneeName) return;
-    onCreate({
-      taskName,
-      dueDate,
-      employeeName: assigneeName,
-      description,
-    });
-    onClose();
+    try {
+      await createTask({
+        taskName,
+        dueDate,
+        employeeName: assigneeName,
+        description,
+        companyId,
+      }).unwrap();
+      toast.success(`Task "${taskName}" created successfully!`);
+      onClose();
+      // Reset form fields
+      setTaskName("");
+      setTaskType("Checkbox");
+      setAssigneeType("Specific Employee");
+      setAssigneeName(employeeOptions.length > 0 ? employeeOptions[0] : "");
+      setDueDate("");
+      setDescription("");
+    } catch (err) {
+      console.error("Failed to create task:", err);
+    }
   };
 
   return (
@@ -115,21 +151,48 @@ export function NewTaskDrawer({ isOpen, onClose, onCreate }: NewTaskDrawerProps)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
               <Dropdown
                 label={assigneeType}
-                options={["Specific Employee", "All Employees", "Manager"]}
-                onSelect={(val) => setAssigneeType(val)}
+                options={["Specific Employee", "All Employees", "Role"]}
+                onSelect={(val) => {
+                  setAssigneeType(val);
+                  if (val === "All Employees") {
+                    setAssigneeName("All Employees");
+                  } else if (val === "Role") {
+                    setAssigneeName(roleOptions.length > 0 ? roleOptions[0] : "");
+                  } else if (employeeOptions.length > 0) {
+                    setAssigneeName(employeeOptions[0]);
+                  } else {
+                    setAssigneeName("");
+                  }
+                }}
                 className="w-full"
               />
 
-              <div className="relative">
-                <Input
-                  value={assigneeName}
-                  onChange={(e) => setAssigneeName(e.target.value)}
-                  required
-                  placeholder="Employee name"
-                  className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
+              {assigneeType === "Specific Employee" && employeeOptions.length > 0 ? (
+                <Dropdown
+                  label={assigneeName || "Select Employee"}
+                  options={employeeOptions}
+                  onSelect={(val) => setAssigneeName(val)}
+                  className="w-full"
                 />
-                <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
-              </div>
+              ) : assigneeType === "Role" && roleOptions.length > 0 ? (
+                <Dropdown
+                  label={assigneeName || "Select Role"}
+                  options={roleOptions}
+                  onSelect={(val) => setAssigneeName(val)}
+                  className="w-full"
+                />
+              ) : (
+                <div className="relative">
+                  <Input
+                    value={assigneeName}
+                    onChange={(e) => setAssigneeName(e.target.value)}
+                    required
+                    placeholder="Assignee / Role name"
+                    className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
+                  />
+                  <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
+                </div>
+              )}
             </div>
           </div>
 
@@ -139,13 +202,19 @@ export function NewTaskDrawer({ isOpen, onClose, onCreate }: NewTaskDrawerProps)
               Due Date *
             </label>
             <div className="relative">
-              <Input
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                required
-                className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
+              <button
+                type="button"
+                onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                className="w-full flex items-center justify-between h-11 px-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+              >
+                <span>{dueDate || "Select Date"}</span>
+                <HiOutlineCalendarDays className="text-lg text-gray-400" />
+              </button>
+              <DatePicker
+                isOpen={isDatePickerOpen}
+                onClose={() => setIsDatePickerOpen(false)}
+                onSave={(date) => setDueDate(date)}
               />
-              <HiOutlineCalendarDays className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
             </div>
           </div>
 
@@ -226,9 +295,11 @@ export function NewTaskDrawer({ isOpen, onClose, onCreate }: NewTaskDrawerProps)
           </Button>
           <Button
             type="submit"
+            disabled={isLoading}
+            leftIcon={isLoading ? <SVGLoader width={16} height={16} color="currentColor" /> : undefined}
             className="flex-1 font-bold h-12 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
           >
-            Create
+            {isLoading ? "Creating..." : "Create"}
           </Button>
         </div>
       </form>

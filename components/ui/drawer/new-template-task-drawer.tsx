@@ -17,32 +17,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { useGetRolesQuery } from "@/store/services/rolePermissionApi";
+import { SVGLoader } from "@/components/ui/options";
 import { DatePicker } from "@/components/ui/date-picker";
 
-interface TemplateTask {
-  id: string;
-  name: string;
-  tag: "CHECKLIST" | "UPLOAD" | "EMPLOYEE INFORMATION";
-  assignee: string;
-  dueDate: string;
-  description: string;
-}
-
-interface EditTaskDrawerProps {
+interface NewTemplateTaskDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  task: TemplateTask | null;
-  onSave: (updatedData: {
+  companyId: string;
+  onSave: (taskData: {
     name: string;
     tag: "CHECKLIST" | "UPLOAD" | "EMPLOYEE INFORMATION";
     assignee: string;
     dueDate: string;
     description: string;
-  }) => void;
-  companyId: string;
+  }) => Promise<void> | void;
 }
 
-export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: EditTaskDrawerProps) {
+export function NewTemplateTaskDrawer({ isOpen, onClose, companyId, onSave }: NewTemplateTaskDrawerProps) {
   const { data: rolesData } = useGetRolesQuery({ companyId }, { skip: !companyId });
   const roleOptions = React.useMemo(() => rolesData?.roles.map((r) => r.name) || [], [rolesData]);
   const [taskName, setTaskName] = React.useState("");
@@ -51,38 +42,25 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
   const [assigneeName, setAssigneeName] = React.useState("");
   const [dueDate, setDueDate] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
 
   React.useEffect(() => {
-    if (task && isOpen) {
-      setTaskName(task.name);
-      setTaskType(
-        task.tag === "CHECKLIST"
-          ? "Checkbox"
-          : task.tag === "UPLOAD"
-            ? "File Upload"
-            : "Input Text"
-      );
-      
-      const isRole = roleOptions.includes(task.assignee);
-      if (task.assignee === "All Employees") {
-        setAssigneeType("All Employees");
-      } else if (isRole) {
-        setAssigneeType("Role");
-      } else {
-        setAssigneeType("Specific Employee");
-      }
-
-      setAssigneeName(task.assignee);
-      setDueDate(task.dueDate);
-      setDescription(task.description);
+    if (isOpen) {
+      setTaskName("");
+      setTaskType("Checkbox");
+      setAssigneeType("Specific Employee");
+      setAssigneeName("");
+      setDueDate("");
+      setDescription("");
+      setIsSubmitting(false);
       setIsDatePickerOpen(false);
     }
-  }, [task, isOpen, roleOptions]);
+  }, [isOpen]);
 
-  if (!isOpen || !task) return null;
+  if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskName || !dueDate || !assigneeName) return;
 
@@ -94,14 +72,21 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
       tag = "EMPLOYEE INFORMATION";
     }
 
-    onSave({
-      name: taskName,
-      tag,
-      assignee: assigneeName,
-      dueDate,
-      description,
-    });
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await onSave({
+        name: taskName,
+        tag,
+        assignee: assigneeName,
+        dueDate,
+        description,
+      });
+      onClose();
+    } catch (err) {
+      console.error("Failed to create template task:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +106,8 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
           <button
             type="button"
             onClick={onClose}
-            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350"
+            disabled={isSubmitting}
+            className="w-12 h-12 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-all cursor-pointer text-gray-700 dark:text-gray-350 disabled:opacity-50"
           >
             <HiOutlineChevronRight className="text-xl" />
           </button>
@@ -129,7 +115,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
 
         <div className="p-8 flex-1 overflow-y-auto flex flex-col h-full gap-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            Edit Task
+            New Task
           </h2>
 
           {/* Task Name & Task Type */}
@@ -142,6 +128,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
                 value={taskName}
                 onChange={(e) => setTaskName(e.target.value)}
                 required
+                placeholder="Enter task name"
                 className="h-11 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
               />
             </div>
@@ -194,7 +181,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
                     value={assigneeName}
                     onChange={(e) => setAssigneeName(e.target.value)}
                     required
-                    placeholder="Employee name"
+                    placeholder="Assignee / Role name"
                     className="h-11 pr-10 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
                   />
                   <HiOutlineMagnifyingGlass className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-base" />
@@ -213,6 +200,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 required
+                placeholder="e.g. 3 days before join date"
                 className="h-11 pr-12 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-800 text-xs font-semibold rounded-xl"
               />
               <button
@@ -291,6 +279,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter description"
                 rows={6}
                 className="p-4 bg-transparent outline-none text-xs font-semibold text-gray-800 dark:text-gray-200 resize-none leading-relaxed"
               />
@@ -304,15 +293,18 @@ export function EditTaskDrawer({ isOpen, onClose, task, onSave, companyId }: Edi
             type="button"
             variant="outline"
             onClick={onClose}
+            disabled={isSubmitting}
             className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </Button>
           <Button
             type="submit"
+            disabled={isSubmitting}
+            leftIcon={isSubmitting ? <SVGLoader width={16} height={16} color="currentColor" /> : undefined}
             className="flex-1 font-bold h-12 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
           >
-            Save
+            {isSubmitting ? "Creating..." : "Create"}
           </Button>
         </div>
       </form>

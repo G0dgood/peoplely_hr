@@ -138,7 +138,7 @@ export default function OffboardingReportPage() {
   }, [filteredRecords]);
 
   // Custom Bar Label Renderer
-  const renderCustomBarLabel = ({ x, y, width, value }: any) => {
+  const renderCustomBarLabel = ({ x, y, width, value }: { x: number, y: number, width: number, value: number }) => {
     if (value === 0) return null;
     return (
       <text
@@ -255,13 +255,13 @@ export default function OffboardingReportPage() {
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
-                <th className="pb-3 pr-4">Employee Name</th>
-                <th className="pb-3 px-4">Employee ID</th>
-                <th className="pb-3 px-4">Department</th>
-                <th className="pb-3 px-4">Job Title</th>
-                <th className="pb-3 px-4">Employee Type</th>
-                <th className="pb-3 px-4">Resignation Date</th>
-                <th className="pb-3 pl-4 text-right">Last Working Date</th>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Job Title</th>
+                <th>Employee Type</th>
+                <th>Resignation Date</th>
+                <th className="text-right">Last Working Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50/50 dark:divide-gray-800/40">

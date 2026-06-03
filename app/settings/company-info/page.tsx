@@ -84,8 +84,9 @@ export default function CompanyInfoPage() {
         },
       }).unwrap();
       toast.success("Company info updated successfully!");
-    } catch (err: any) {
-      const errMsg = err?.data?.error || "Failed to update company info";
+    } catch (err) {
+      const error = err as { data?: { error?: string } };
+      const errMsg = error?.data?.error || "Failed to update company info";
       toast.error(errMsg);
     }
   };

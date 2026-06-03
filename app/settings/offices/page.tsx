@@ -142,11 +142,11 @@ export default function OfficesPage() {
       <div className="p-4 md:p-8 flex flex-col gap-6 overflow-y-auto max-h-[calc(100vh-200px)]">
         {isLoading ? (
           <div className="flex justify-center py-12">
-            <SVGLoaderFetch colSpan={1} text="Loading offices..." />
+            <SVGLoaderFetch text="Loading offices..." asTable={false} />
           </div>
         ) : offices.length === 0 ? (
           <div className="flex justify-center py-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800/80 rounded-2xl">
-            <NoRecordFound colSpan={1} text="No offices found." />
+            <NoRecordFound text="No offices found." asTable={false} />
           </div>
         ) : (
           offices.map((office) => {

@@ -24,6 +24,8 @@ interface RightChatPanelProps {
   onBack: () => void;
   handleImageAttach: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDocAttach: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sendAudio: (duration: string) => void;
+  toggleReaction: (messageId: string, reaction: string) => void;
 }
 
 export function RightChatPanel({
@@ -36,6 +38,8 @@ export function RightChatPanel({
   onBack,
   handleImageAttach,
   handleDocAttach,
+  sendAudio,
+  toggleReaction,
 }: RightChatPanelProps) {
   const [attachMenu, setAttachMenu] = React.useState(false);
   const bottomRef = React.useRef<HTMLDivElement>(null);
@@ -126,11 +130,12 @@ export function RightChatPanel({
 
             {/* Text bubble */}
             {msg.text && (
-              <div className={`px-4 py-3 rounded-2xl text-xs font-semibold leading-relaxed ${
-                msg.type === "sent"
-                  ? "bg-[#E8FAF4] dark:bg-[#0FAF7A]/15 text-gray-800 dark:text-gray-200 rounded-br-sm"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-xs border border-gray-50 dark:border-gray-700 rounded-bl-sm"
-              }`}>
+              <div
+                onDoubleClick={() => toggleReaction(msg.id, "❤️")}
+                className={`px-4 py-3 rounded-2xl text-xs font-semibold leading-relaxed cursor-pointer ${msg.type === "sent"
+                    ? "bg-[#E8FAF4] dark:bg-[#0FAF7A]/15 text-gray-800 dark:text-gray-200 rounded-br-sm"
+                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-xs border border-gray-50 dark:border-gray-700 rounded-bl-sm"
+                  }`}>
                 {msg.text}
               </div>
             )}
@@ -139,7 +144,7 @@ export function RightChatPanel({
             {msg.audio && (
               <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-2xl rounded-bl-sm shadow-xs border border-gray-50 dark:border-gray-700">
                 <button className="w-7 h-7 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0">
-                  <svg className="w-3 h-3 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  <svg className="w-3 h-3 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 </button>
                 <div className="flex items-center gap-0.5 h-6">
                   {Array.from({ length: 28 }).map((_, i) => (
@@ -174,11 +179,10 @@ export function RightChatPanel({
 
             {/* File attachment */}
             {msg.file && (
-              <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${
-                msg.type === "sent"
-                  ? "bg-[#E8FAF4] dark:bg-[#0FAF7A]/15 rounded-br-sm"
-                  : "bg-white dark:bg-gray-800 shadow-xs border border-gray-50 dark:border-gray-700 rounded-bl-sm"
-              }`}>
+              <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${msg.type === "sent"
+                ? "bg-[#E8FAF4] dark:bg-[#0FAF7A]/15 rounded-br-sm"
+                : "bg-white dark:bg-gray-800 shadow-xs border border-gray-50 dark:border-gray-700 rounded-bl-sm"
+                }`}>
                 <div className="w-9 h-9 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 flex items-center justify-center flex-shrink-0">
                   <HiOutlineDocument className="text-lg text-gray-450 dark:text-gray-550" />
                 </div>
@@ -211,11 +215,10 @@ export function RightChatPanel({
         <div className="relative flex-shrink-0" ref={attachRef}>
           <button
             onClick={() => setAttachMenu((p) => !p)}
-            className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors flex-shrink-0 ${
-              attachMenu
-                ? "bg-[#0FAF7A] text-white"
-                : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500"
-            }`}
+            className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors flex-shrink-0 ${attachMenu
+              ? "bg-[#0FAF7A] text-white"
+              : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500"
+              }`}
           >
             <HiOutlinePaperClip className="text-xl" />
           </button>
@@ -242,7 +245,7 @@ export function RightChatPanel({
 
           {/* Hidden file inputs */}
           <input ref={fileInputRef} type="file" accept="image/*,video/*" className="hidden" onChange={onImageChange} />
-          <input ref={docInputRef}  type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip" className="hidden" onChange={onDocChange} />
+          <input ref={docInputRef} type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip" className="hidden" onChange={onDocChange} />
         </div>
 
         {/* Text input */}
@@ -263,7 +266,10 @@ export function RightChatPanel({
             <HiOutlinePaperAirplane className="text-lg -rotate-45" />
           </button>
         ) : (
-          <button className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer">
+          <button
+            onClick={() => sendAudio("00:05")}
+            className="w-10 h-10 rounded-full bg-[#0FAF7A] flex items-center justify-center text-white flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer"
+          >
             <HiMicrophone className="text-lg" />
           </button>
         )}

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,27 +17,91 @@ import {
   HiOutlineListBullet,
   HiOutlineBars3BottomLeft,
 } from "react-icons/hi2";
+import { Suspense } from "react";
+import { useGetNewsItemQuery, useUpdateNewsMutation } from "@/store/services/newsApi";
+import { useApiError } from "@/hooks/useApiError";
+import { toast } from "sonner";
 
-export default function EditNewsPage() {
+const shareWithToLabel: Record<string, string> = {
+  everyone: "To Everyone",
+  department: "To Department",
+  specific: "To Specific Employees",
+};
+
+const labelToShareWith: Record<string, string> = {
+  "To Everyone": "everyone",
+  "To Department": "department",
+  "To Specific Employees": "specific",
+};
+
+function EditNewsContent() {
   const router = useRouter();
-  const [title, setTitle] = React.useState("Promotion Announcement");
-  const [shareOption, setShareOption] = React.useState("To Everyone");
-  const [content, setContent] = React.useState(
-    `Ladies and Gentlemen:\n\nIt is with great pleasure that I am announcing the promotion of Hugh Gough as one of the new Marketing Directors of InfoTech.\n\nHugh has been with InfoTech for close to ten years, painstakingly climbing the ranks with his dedication and commitment to his work. Three out of those ten years were spent as a marketing manager, where he has shown exemplary performance, as shown in the annual sales and customer retention reports.\n\nHugh has always shown initiative in the performance of his duties, even going above and beyond what is expected of him, in order to ensure that InfoTech delivers quality customer service while producing the expected outputs, well before their respective deadlines. We expect this same level of dedication and commitment to be applied in his new position as one of the heads of the Marketing Department.\n\nAs a Marketing Director, Hugh will be more closely involved in the formulation of marketing plans, with particular focus on the two biggest projects of InfoTech - the Deuz Project and the highly anticipated MegaWide Project, a five-year undertaking expected to launch in the coming year. Of course, these are on top of any other concurrent marketing projects requiring his marketing expertise and leadership.\n\nLet us all congratulate Hughon this promotion, and wish him luck for all his future undertakings.\n\nRegards`
-  );
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") || "";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulate save
-    router.push("/news/detail");
+  const [title, setTitle] = React.useState("");
+  const [shareOption, setShareOption] = React.useState("To Everyone");
+  const [content, setContent] = React.useState("");
+  const [hasInit, setHasInit] = React.useState(false);
+
+  const { data, isLoading: isFetching, error: loadError } = useGetNewsItemQuery(id, { skip: !id });
+  const [updateNews, { isLoading: isSaving, error: updateError }] = useUpdateNewsMutation();
+
+  useApiError(!!loadError, loadError, "Failed to load news article");
+  useApiError(!!updateError, updateError, "Failed to update news article");
+
+  const newsItem = data?.newsItem;
+
+  // Prefill form when article loads
+  React.useEffect(() => {
+    if (newsItem && !hasInit) {
+      setTitle(newsItem.title);
+      setContent(newsItem.content);
+      setShareOption(shareWithToLabel[newsItem.shareWith] || "To Everyone");
+      setHasInit(true);
+    }
+  }, [newsItem, hasInit]);
+
+  const handleSubmit = async (status: "PUBLISHED" | "DRAFT") => {
+    if (!id) return;
+    if (!title.trim()) {
+      toast.error("Please enter a title.");
+      return;
+    }
+    try {
+      await updateNews({
+        id,
+        title,
+        content,
+        shareWith: labelToShareWith[shareOption] || "everyone",
+        status,
+      }).unwrap();
+      toast.success(
+        status === "PUBLISHED"
+          ? "News article published successfully!"
+          : "Changes saved as draft!"
+      );
+      router.push(`/news/detail?id=${id}`);
+    } catch {
+      // error handled by useApiError
+    }
   };
+
+  if (isFetching) {
+    return (
+      <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950 animate-pulse">
+        <div className="h-7 w-32 bg-gray-200 dark:bg-gray-800 rounded" />
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-96" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950">
-      {/* Header section with back button */}
+      {/* Header */}
       <div>
         <Link
-          href="/news/detail"
+          href={id ? `/news/detail?id=${id}` : "/news"}
           className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white hover:text-primary transition-colors select-none"
         >
           <HiOutlineChevronLeft className="text-2xl font-bold" />
@@ -45,7 +109,7 @@ export default function EditNewsPage() {
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <Card className="p-4 md:p-8 border border-gray-300 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl shadow-sm flex flex-col gap-6">
           {/* Title & Share Options */}
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
@@ -82,48 +146,27 @@ export default function EditNewsPage() {
             <div className="border border-gray-300 dark:border-gray-800 rounded-2xl overflow-hidden flex flex-col bg-white dark:bg-gray-900">
               {/* Toolbar */}
               <div className="flex items-center gap-1.5 px-6 py-4 border-b border-gray-300 dark:border-gray-800 text-gray-550 dark:text-gray-455 bg-gray-50/20 dark:bg-gray-900/50">
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineBold className="font-bold text-base" />
                 </button>
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineItalic className="text-base" />
                 </button>
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineUnderline className="text-base" />
                 </button>
                 <div className="w-[1px] h-4 bg-gray-200 dark:bg-gray-800 mx-2" />
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineFaceSmile className="text-base" />
                 </button>
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineLink className="text-base" />
                 </button>
-                <div className="w-[1px] h-4 bg-gray-200 dark:bg-gray-880 mx-2" />
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <div className="w-[1px] h-4 bg-gray-200 dark:bg-gray-800 mx-2" />
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineListBullet className="text-base" />
                 </button>
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors"
-                >
+                <button type="button" className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-sm transition-colors">
                   <HiOutlineBars3BottomLeft className="text-base" />
                 </button>
               </div>
@@ -133,7 +176,6 @@ export default function EditNewsPage() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={14}
-                required
                 className="p-6 bg-transparent outline-none text-xs font-semibold text-gray-700 dark:text-gray-300 resize-none leading-relaxed"
               />
             </div>
@@ -144,20 +186,36 @@ export default function EditNewsPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.push("/news/detail")}
+              disabled={isSaving}
+              onClick={() => router.push(id ? `/news/detail?id=${id}` : "/news")}
               className="flex-1 font-bold h-11 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               Cancel
             </Button>
             <Button
-              type="submit"
+              type="button"
+              disabled={isSaving}
+              onClick={() => handleSubmit(newsItem?.status ?? "PUBLISHED")}
               className="flex-1 font-bold h-11 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
             >
-              Save
+              {isSaving ? "Saving…" : "Save"}
             </Button>
           </div>
         </Card>
-      </form>
+      </div>
     </div>
+  );
+}
+
+export default function EditNewsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full bg-[#FAFCFF] dark:bg-gray-950 animate-pulse">
+        <div className="h-7 w-32 bg-gray-200 dark:bg-gray-800 rounded" />
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-96" />
+      </div>
+    }>
+      <EditNewsContent />
+    </Suspense>
   );
 }

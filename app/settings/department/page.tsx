@@ -131,8 +131,9 @@ export default function DepartmentPage() {
       }).unwrap();
       toast.success(`Department "${formData.department}" created successfully!`);
       setIsAddOpen(false);
-    } catch (err: any) {
-      const errMsg = err?.data?.error || "Failed to create department";
+    } catch (err) {
+      const error = err as { data?: { error?: string } };
+      const errMsg = error?.data?.error || "Failed to create department";
       toast.error(errMsg);
     }
   };

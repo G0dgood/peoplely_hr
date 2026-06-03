@@ -4,24 +4,16 @@ import * as React from "react";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { SVGLoader } from "@/components/ui/options";
 
-interface ChecklistTask {
-  id: number;
-  taskName: string;
-  dueDate: string;
-  employeeName: string;
-  employeeAvatar: string;
-  employeeInitials?: string;
-  type: string;
-  completed: boolean;
-  description?: string;
-}
+import { ChecklistTask } from "@/store/services/checklistTasksApi";
 
 interface ChecklistDetailDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   task: ChecklistTask | null;
-  onMarkAsComplete: (id: number) => void;
+  onMarkAsComplete: (id: string) => void;
+  isCompleting?: boolean;
 }
 
 export function ChecklistDetailDrawer({
@@ -29,6 +21,7 @@ export function ChecklistDetailDrawer({
   onClose,
   task,
   onMarkAsComplete,
+  isCompleting,
 }: ChecklistDetailDrawerProps) {
   if (!isOpen || !task) return null;
 
@@ -40,7 +33,9 @@ export function ChecklistDetailDrawer({
 
   const handleComplete = () => {
     onMarkAsComplete(task.id);
-    onClose();
+    if (isCompleting === undefined) {
+      onClose();
+    }
   };
 
   return (
@@ -140,9 +135,11 @@ export function ChecklistDetailDrawer({
           {!task.completed ? (
             <Button
               onClick={handleComplete}
+              disabled={isCompleting}
+              leftIcon={isCompleting ? <SVGLoader width={16} height={16} color="currentColor" /> : undefined}
               className="flex-1 font-bold h-12 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 hover:opacity-90"
             >
-              Mark as Complete
+              {isCompleting ? "Completing..." : "Mark as Complete"}
             </Button>
           ) : (
             <Button

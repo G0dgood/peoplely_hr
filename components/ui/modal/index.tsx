@@ -10,4 +10,10 @@ export * from "./create-department-modal";
 export * from "./create-office-modal";
 export * from "./create-job-title-modal";
 export * from "./add-profile-drawer";
-
+export * from "./create-email-template-modal";
+export * from "./rename-resource-modal";
+export * from "./create-stage-modal";
+export * from "./create-tag-modal";
+export * from "./rename-tag-modal";
+export * from "./rename-stage-modal";
+export * from "./create-resource-modal";

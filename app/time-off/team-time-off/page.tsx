@@ -25,102 +25,70 @@ import { Pagination } from "@/components/ui/pagination";
 import { DatePicker } from "@/components/ui/date-picker";
 import { RowPerPage } from "@/components/ui/row-per-page";
 import { PageHeader } from "@/components/ui/page-header";
-
-const TEAM_REQUESTS = [
-  {
-    name: "Pristia Candra",
-    email: "lincoln@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "-",
-    status: "APPROVE"
-  },
-  {
-    name: "Hanna Baptista",
-    email: "hanna@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=hanna",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "File.pdf",
-    status: "APPROVE"
-  },
-  {
-    name: "Miracle Geidt",
-    email: "miracle@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "File.pdf",
-    status: "PENDING"
-  },
-  {
-    name: "Rayna Torff",
-    email: "rayna@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=rayna",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "-",
-    status: "APPROVE"
-  },
-  {
-    name: "Giana Lipshutz",
-    email: "giana@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=giana",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "File.pdf",
-    status: "PENDING"
-  },
-  {
-    name: "James George",
-    email: "james@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=james",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "-",
-    status: "APPROVE"
-  },
-  {
-    name: "Jordyn George",
-    email: "jordyn@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=jordyn",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "File.pdf",
-    status: "APPROVE"
-  },
-  {
-    name: "Skylar Herwitz",
-    email: "skylar@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=skylar",
-    from: "01 Mar 2023",
-    to: "03 Mar 2023",
-    total: "3 Days",
-    type: "Engagement",
-    attachment: "File.pdf",
-    status: "APPROVE"
-  },
-];
+import { useAppSelector } from "@/store/hooks";
+import { useGetTimeOffRequestsQuery, useGetTimeOffPoliciesQuery } from "@/store/services/timeOffApi";
+import { useApiError } from "@/hooks/useApiError";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 export default function TeamTimeOffPage() {
+  const user = useAppSelector((state) => state.auth.user);
   const [view, setView] = React.useState<"list" | "calendar">("list");
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
-  const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 10 Mar 2023");
+  const [dateRange, setDateRange] = React.useState("All Dates");
+  const [search, setSearch] = React.useState("");
+  const [selectedType, setSelectedType] = React.useState("All Type");
+  const [selectedStatus, setSelectedStatus] = React.useState("All Status");
+
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(10);
+
+  const { data: requestsData, isLoading: isLoadingRequests, error: requestsError } = useGetTimeOffRequestsQuery(
+    { companyId: user?.companyId },
+    { skip: !user?.companyId }
+  );
+
+  const { data: policiesData, error: policiesError } = useGetTimeOffPoliciesQuery(
+    user?.companyId || "",
+    { skip: !user?.companyId }
+  );
+
+  useApiError(!!requestsError, requestsError, "Failed to load team requests");
+  useApiError(!!policiesError, policiesError, "Failed to load time off policies");
+
+  const requests = requestsData?.timeOffRequests || [];
+
+  const filteredRequests = requests.filter(req => {
+    // Employee Search Filter
+    const employeeName = (req as any).user?.name || "";
+    if (search && !employeeName.toLowerCase().includes(search.toLowerCase())) {
+      return false;
+    }
+    // Type Filter
+    if (selectedType !== "All Type" && req.policy.name !== selectedType) {
+      return false;
+    }
+    // Status Filter
+    if (selectedStatus !== "All Status" && req.status !== selectedStatus) {
+      return false;
+    }
+    // Date Range Filter
+    if (dateRange !== "All Dates" && dateRange !== "Select Date Range" && dateRange.includes(" - ")) {
+      const [startStr, endStr] = dateRange.split(" - ");
+      const filterStart = new Date(startStr);
+      filterStart.setHours(0,0,0,0);
+      const filterEnd = new Date(endStr);
+      filterEnd.setHours(23,59,59,999);
+      
+      const reqStart = new Date(req.startDate);
+      const reqEnd = new Date(req.endDate);
+      
+      return reqStart <= filterEnd && reqEnd >= filterStart;
+    }
+    return true;
+  });
+
+  const totalPages = Math.ceil(filteredRequests.length / limit);
+  const paginatedRequests = filteredRequests.slice((page - 1) * limit, page * limit);
 
   return (
     <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
@@ -133,6 +101,8 @@ export default function TeamTimeOffPage() {
             leftIcon={<HiOutlineMagnifyingGlass />}
             className="w-64 h-11 bg-white dark:bg-gray-900"
             containerClassName="w-auto"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <Button
             variant="primary"
@@ -141,7 +111,7 @@ export default function TeamTimeOffPage() {
           >
             Download CSV
           </Button>
-          <ViewToggle view={view} onChange={(v) => setView(v)} alternateView="calendar" />
+          <ViewToggle view={view} onChange={(v) => setView(v as "list" | "calendar")} alternateView="calendar" />
         </div>
       </div>
 
@@ -167,15 +137,29 @@ export default function TeamTimeOffPage() {
               />
             </div>
             <Dropdown
-              label="All Type"
-              options={["Annual", "Sick Leave", "Engagement"]}
+              label={selectedType}
+              options={["All Type", ...(policiesData?.timeOffPolicies.map(p => p.name) || [])]}
+              onSelect={setSelectedType}
             />
             <Dropdown
-              label="All Status"
-              options={["Approve", "Pending", "Reject"]}
+              label={selectedStatus}
+              options={["All Status", "APPROVED", "PENDING", "REJECTED"]}
+              onSelect={setSelectedStatus}
             />
+            {(selectedType !== "All Type" || selectedStatus !== "All Status" || dateRange !== "All Dates") && (
+              <button
+                onClick={() => {
+                  setSelectedType("All Type");
+                  setSelectedStatus("All Status");
+                  setDateRange("All Dates");
+                }}
+                className="text-xs font-bold text-red-500 hover:underline"
+              >
+                Reset Filters
+              </button>
+            )}
             <div className="ml-auto">
-              <RowPerPage itemsPerPage={8} />
+              <RowPerPage itemsPerPage={limit} onItemsPerPageChange={(v) => { setLimit(v); setPage(1); }} />
             </div>
           </div>
 
@@ -197,33 +181,41 @@ export default function TeamTimeOffPage() {
                 </tr>
               </thead>
               <tbody>
-                {TEAM_REQUESTS.map((req, index) => (
+                {isLoadingRequests ? (
+                  <SVGLoaderFetch colSpan={8} text="Loading requests..." />
+                ) : filteredRequests.length === 0 ? (
+                  <NoRecordFound colSpan={8} text="No requests found." />
+                ) : paginatedRequests.map((req, index) => (
                   <tr key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors ">
                     <td className="py-4 px-4">
                       <Checkbox />
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
-                        <Avatar src={req.avatar} size="sm" />
+                        <Avatar src={(req as any).user?.avatar} size="sm" />
                         <div>
-                          <p className="text-xs font-bold text-gray-900 dark:text-white">{req.name}</p>
-                          <p className="text-[10px] text-gray-400 dark:text-gray-500">{req.email}</p>
+                          <p className="text-xs font-bold text-gray-900 dark:text-white">{(req as any).user?.name || "User"}</p>
+                          <p className="text-[10px] text-gray-400 dark:text-gray-500">{(req as any).user?.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.from}</td>
-                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.to}</td>
-                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.total}</td>
-                    <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.type}</td>
+                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                      {new Date(req.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                      {new Date(req.endDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">{req.totalDays} Days</td>
+                    <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{req.policy?.name || "-"}</td>
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400">
-                        {req.attachment}
-                        {req.attachment !== "-" && <HiOutlineDocumentText className="text-gray-300 text-lg" />}
+                        {req.attachment || "-"}
+                        {req.attachment && <HiOutlineDocumentText className="text-gray-300 text-lg" />}
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
                       <Badge
-                        variant={req.status === "APPROVE" ? "success" : "warning"}
+                        variant={req.status === "APPROVED" ? "success" : req.status === "PENDING" ? "warning" : "error"}
                         tinted
                         className="text-[9px] uppercase tracking-wider px-2 py-0.5"
                       >
@@ -237,12 +229,19 @@ export default function TeamTimeOffPage() {
           </div>
 
           {/* Footer / Pagination */}
-          <div className="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">
-            <Pagination className="mt-0 w-full" />
-          </div>
+          {totalPages > 1 && (
+            <div className="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                className="mt-0 w-full"
+              />
+            </div>
+          )}
         </Card>
       ) : (
-        <TeamTimeOffCalendar />
+        <TeamTimeOffCalendar requests={filteredRequests} />
       )}
     </div>
   );

@@ -214,7 +214,7 @@ export default function OnboardingReportPage() {
   }, [filteredRecords]);
 
   // Custom Bar Label Renderer
-  const renderCustomBarLabel = ({ x, y, width, value }: any) => {
+  const renderCustomBarLabel = ({ x, y, width, value }: { x: number, y: number, width: number, value: number }) => {
     if (value === 0) return null;
     return (
       <text

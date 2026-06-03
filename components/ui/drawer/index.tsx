@@ -17,4 +17,6 @@ export * from "./add-role-drawer";
 export * from "./upgrade-plan-drawer";
 export * from "./amount-subscription-drawer";
 export * from "./edit-candidate-drawer";
-
+export * from "./detail-email-template-drawer";
+export * from "./edit-role-drawer";
+export * from "./new-template-task-drawer";

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export interface ViewToggleProps {
   view: "list" | "calendar" | "grid";
-  onChange: (view: any) => void;
+  onChange: (view: "list" | "calendar" | "grid") => void;
   className?: string;
 }
 

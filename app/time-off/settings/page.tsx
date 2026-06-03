@@ -14,67 +14,100 @@ import { Button } from "@/components/ui/button";
 import { NewHolidayDrawer, NewTypeDrawer, NewPolicyDrawer } from "@/components/ui/drawer";
 import { TypePoliciesSection, INITIAL_POLICIES } from "@/components/ui/type-policies-section";
 import { PageHeader } from "@/components/ui/page-header";
-
-const HOLIDAYS = [
-  { name: "New Year's Day", date: "01 Jan 2023" },
-  { name: "Lunar New Year's Day", date: "22 Jan 2023" },
-  { name: "Lunar New Year Joint Holiday", date: "23 Jan 2023" },
-  { name: "Ascension of the Prophet Muhammad", date: "18 Feb 2023" },
-  { name: "Bali's Day of Silence and Hindu New Year (Nyepi)", date: "22 Mar 2023" },
-  { name: "Joint Holiday for Bali's Day of Silence and Hindu New Year (Nyepi)", date: "23 Mar 2023" },
-  { name: "Ramadan Start", date: "23 Mar 2023" },
-  { name: "Good Friday", date: "07 Apr 2023" },
-  { name: "Easter Sunday", date: "09 Apr 2023" },
-];
+import { useAppSelector } from "@/store/hooks";
+import { 
+  useGetHolidaysQuery, 
+  useGetTimeOffPoliciesQuery,
+  useCreateHolidayMutation,
+  useDeleteHolidayMutation,
+  useCreateTimeOffPolicyMutation,
+  useDeleteTimeOffPolicyMutation
+} from "@/store/services/timeOffApi";
+import { toast } from "sonner";
+import { useApiError } from "@/hooks/useApiError";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
 export default function TimeOffSettingsPage() {
+  const user = useAppSelector((state) => state.auth.user);
   const [activeTab, setActiveTab] = React.useState<"holiday" | "policies">("holiday");
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isTypeDrawerOpen, setIsTypeDrawerOpen] = React.useState(false);
   const [isPolicyDrawerOpen, setIsPolicyDrawerOpen] = React.useState(false);
+
+  const { data: holidaysData, isLoading: isLoadingHolidays, error: holidaysError } = useGetHolidaysQuery(user?.companyId || "", {
+    skip: !user?.companyId
+  });
+  
+  const { data: policiesData, isLoading: isLoadingPolicies, error: policiesError } = useGetTimeOffPoliciesQuery(user?.companyId || "", {
+    skip: !user?.companyId
+  });
+
+  const [createPolicy, { error: createPolicyError }] = useCreateTimeOffPolicyMutation();
+  const [deletePolicy, { error: deletePolicyError }] = useDeleteTimeOffPolicyMutation();
+  const [deleteHoliday, { error: deleteHolidayError }] = useDeleteHolidayMutation();
+
+  useApiError(!!holidaysError, holidaysError, "Failed to load holidays");
+  useApiError(!!policiesError, policiesError, "Failed to load policies");
+  useApiError(!!createPolicyError, createPolicyError, "Failed to create policy");
+  useApiError(!!deletePolicyError, deletePolicyError, "Failed to delete policy");
+  useApiError(!!deleteHolidayError, deleteHolidayError, "Failed to delete holiday");
+
   const [policies, setPolicies] = React.useState(INITIAL_POLICIES);
+
+  // Synchronize backend policies with local state
+  React.useEffect(() => {
+    if (policiesData?.timeOffPolicies) {
+      const mapped = policiesData.timeOffPolicies.map(p => ({
+        type: p.name,
+        status: "PAID" as const,
+        policyName: p.name,
+        description: p.description || "-",
+        eligibility: "Full-time Employees",
+        isEnabled: true
+      }));
+      setPolicies(mapped);
+    }
+  }, [policiesData]);
 
   const tabs: SettingsTabItem[] = [
     { id: "holiday", label: "Holiday", icon: <HiOutlineCalendarDays className="text-lg" /> },
     { id: "policies", label: "Types & Policies", icon: <HiOutlineDocumentText className="text-lg" /> },
   ];
 
+  const holidays = holidaysData?.holidays || [];
+
   const typeNames = Array.from(new Set(policies.map((p) => p.type)));
 
-  const handleAddType = (newType: { name: string; status: "PAID" | "UNPAID"; unit: "Days" | "Hours" }) => {
-    setPolicies([
-      ...policies,
-      {
-        type: newType.name,
-        status: newType.status,
-        policyName: newType.name,
-        description: "-",
-        eligibility: `Full-time Employees only (measured in ${newType.unit})`,
-        isEnabled: true
-      }
-    ]);
+  const handleAddType = async (newType: { name: string; status: "PAID" | "UNPAID"; unit: "Days" | "Hours" }) => {
+    try {
+      await createPolicy({
+        name: newType.name,
+        color: "#3B82F6",
+        companyId: user?.companyId,
+      }).unwrap();
+      toast.success("Leave type created successfully");
+    } catch (err) {
+      toast.error("Failed to create leave type");
+    }
   };
 
-  const handleAddPolicy = (newPolicy: {
+  const handleAddPolicy = async (newPolicy: {
     policyName: string;
     type: string;
     description: string;
     eligibility: string;
   }) => {
-    const existingType = policies.find((p) => p.type === newPolicy.type);
-    const status = existingType ? existingType.status : "UNPAID";
-
-    setPolicies([
-      ...policies,
-      {
-        type: newPolicy.type,
-        status,
-        policyName: newPolicy.policyName,
+    try {
+      await createPolicy({
+        name: newPolicy.policyName,
         description: newPolicy.description,
-        eligibility: newPolicy.eligibility,
-        isEnabled: true
-      }
-    ]);
+        color: "#8B5CF6",
+        companyId: user?.companyId,
+      }).unwrap();
+      toast.success("Policy created successfully");
+    } catch (err) {
+      toast.error("Failed to create policy");
+    }
   };
 
   const handleTogglePolicyEnabled = (index: number) => {
@@ -91,7 +124,7 @@ export default function TimeOffSettingsPage() {
         <SettingsTabs
           tabs={tabs}
           activeTab={activeTab}
-          onChange={setActiveTab}
+          onChange={(tab) => setActiveTab(tab as "holiday" | "policies")}
           variant="emerald"
           className="lg:col-span-3"
         />
@@ -117,21 +150,36 @@ export default function TimeOffSettingsPage() {
                   <thead>
                     <tr >
                       <th >Holiday Name</th>
-                      <th >Datet</th>
-                      <th className="text-right">From</th>
+                      <th >Date</th>
+                      <th className="text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {HOLIDAYS.map((holiday, index) => (
+                    {isLoadingHolidays ? (
+                      <SVGLoaderFetch colSpan={3} text="Loading holidays..." />
+                    ) : holidays.length === 0 ? (
+                      <NoRecordFound colSpan={3} text="No holidays found." />
+                    ) : holidays.map((holiday, index) => (
                       <tr key={index} className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors ">
                         <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.name}</td>
-                        <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">{holiday.date}</td>
+                        <td className="py-4 px-4 text-xs font-bold text-gray-500 dark:text-gray-400">
+                          {new Date(holiday.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </td>
                         <td className="py-4 px-4 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <button className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                              <HiOutlinePencilSquare className="text-lg" />
-                            </button>
-                            <button className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                            <button 
+                              onClick={async () => {
+                                if (confirm(`Are you sure you want to delete the holiday "${holiday.name}"?`)) {
+                                  try {
+                                    await deleteHoliday(holiday.id).unwrap();
+                                    toast.success("Holiday deleted successfully");
+                                  } catch (err) {
+                                    toast.error("Failed to delete holiday");
+                                  }
+                                }
+                              }}
+                              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-650 transition-colors"
+                            >
                               <HiOutlineTrash className="text-lg" />
                             </button>
                           </div>

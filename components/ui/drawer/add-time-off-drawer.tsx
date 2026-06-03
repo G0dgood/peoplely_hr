@@ -11,6 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
+import { useAppSelector } from "@/store/hooks";
+import { useGetTimeOffPoliciesQuery, useCreateTimeOffRequestMutation } from "@/store/services/timeOffApi";
+import { toast } from "sonner";
 
 interface AddTimeOffDrawerProps {
   isOpen: boolean;
@@ -18,13 +21,52 @@ interface AddTimeOffDrawerProps {
 }
 
 export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
+  const user = useAppSelector((state) => state.auth.user);
+  const { data: policiesData } = useGetTimeOffPoliciesQuery(user?.companyId || "", {
+    skip: !user?.companyId,
+  });
+  const [createRequest, { isLoading: isCreating }] = useCreateTimeOffRequestMutation();
+
+  const [policyId, setPolicyId] = React.useState("");
   const [dayType, setDayType] = React.useState<"single" | "multiple">("multiple");
   const [isStartDateOpen, setIsStartDateOpen] = React.useState(false);
   const [isEndDateOpen, setIsEndDateOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState("Select Date");
   const [endDate, setEndDate] = React.useState("Select Date");
+  const [reason, setReason] = React.useState("");
+
+  const handleCreate = async () => {
+    if (!policyId || startDate === "Select Date" || (dayType === "multiple" && endDate === "Select Date")) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const start = new Date(startDate);
+      const end = dayType === "single" ? new Date(startDate) : new Date(endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+      await createRequest({
+        userId: user?.id,
+        policyId,
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
+        totalDays: diffDays,
+        reason,
+        companyId: user?.companyId,
+      }).unwrap();
+
+      toast.success("Time off request submitted successfully");
+      onClose();
+    } catch (err) {
+      toast.error("Failed to submit request");
+    }
+  };
 
   if (!isOpen) return null;
+
+  const policies = policiesData?.timeOffPolicies || [];
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
@@ -55,8 +97,12 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
                 Time Off Type <span className="text-red-500">*</span>
               </label>
               <Dropdown 
-                label="Select type" 
-                options={["Annual Leave", "Sick Leave", "Maternity Leave", "Unpaid Leave", "Other"]}
+                label={policies.find(p => p.id === policyId)?.name || "Select type"} 
+                options={policies.map(p => p.name)}
+                onSelect={(label) => {
+                  const p = policies.find(p => p.name === label);
+                  if (p) setPolicyId(p.id);
+                }}
                 className="w-full"
               />
             </div>
@@ -107,20 +153,22 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
                   onSave={(date) => { setStartDate(date); setIsStartDateOpen(false); }}
                 />
               </div>
-              <div className="relative">
-                <button 
-                  onClick={() => setIsEndDateOpen(true)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
-                >
-                  {endDate}
-                  <HiOutlineCalendarDays className="text-lg text-gray-400" />
-                </button>
-                <DatePicker 
-                  isOpen={isEndDateOpen} 
-                  onClose={() => setIsEndDateOpen(false)} 
-                  onSave={(date) => { setEndDate(date); setIsEndDateOpen(false); }}
-                />
-              </div>
+              {dayType === "multiple" && (
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsEndDateOpen(true)}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 text-left"
+                  >
+                    {endDate}
+                    <HiOutlineCalendarDays className="text-lg text-gray-400" />
+                  </button>
+                  <DatePicker 
+                    isOpen={isEndDateOpen} 
+                    onClose={() => setIsEndDateOpen(false)} 
+                    onSave={(date) => { setEndDate(date); setIsEndDateOpen(false); }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Note */}
@@ -129,6 +177,8 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
                 Note
               </label>
               <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
                 placeholder="Give notes"
                 className="w-full h-24 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl text-xs font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-gray-300 dark:placeholder:text-gray-600 resize-none"
               />
@@ -176,7 +226,12 @@ export function AddTimeOffDrawer({ isOpen, onClose }: AddTimeOffDrawerProps) {
           >
             Cancel
           </Button>
-          <Button variant="primary" className="flex-1 font-bold h-12">
+          <Button 
+            variant="primary" 
+            className="flex-1 font-bold h-12"
+            onClick={handleCreate}
+            disabled={isCreating}
+          >
             Create
           </Button>
         </div>

@@ -3,24 +3,23 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HiOutlineDocumentArrowUp, HiOutlineChevronRight } from "react-icons/hi2";
-
-interface TimeOffRequest {
-  from: string;
-  to: string;
-  total: string;
-  type: string;
-  attachment: string;
-  status: string;
-}
+import { TimeOffRequest } from "@/store/services/timeOffApi";
 
 interface TimeOffDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   request: TimeOffRequest | null;
+  onCancelRequest?: (id: string) => void;
+  isCancelling?: boolean;
 }
 
-export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) {
+export function TimeOffDrawer({ isOpen, onClose, request, onCancelRequest, isCancelling }: TimeOffDrawerProps) {
   if (!isOpen) return null;
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return "-";
+    return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex justify-end">
@@ -44,8 +43,12 @@ export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) 
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Detail Time Off
             </h2>
-            <Badge variant="warning" tinted className="text-[10px] uppercase tracking-wider px-2 py-0.5">
-              PENDING
+            <Badge 
+              variant={request?.status === "APPROVED" ? "success" : request?.status === "PENDING" ? "warning" : "error"} 
+              tinted 
+              className="text-[10px] uppercase tracking-wider px-2 py-0.5"
+            >
+              {request?.status || "PENDING"}
             </Badge>
           </div>
 
@@ -53,50 +56,57 @@ export function TimeOffDrawer({ isOpen, onClose, request }: TimeOffDrawerProps) 
             <div className="grid grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">From</span>
-                <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.from || "01 Mar 2023"}</span>
+                <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDate(request?.startDate)}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">To</span>
-                <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.to || "01 Jan 2023"}</span>
+                <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDate(request?.endDate)}</span>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total</span>
-              <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.total || "3 Days"}</span>
+              <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.totalDays ? `${request.totalDays} Days` : "-"}</span>
             </div>
 
             <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
-              <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.type || "Engagement"}</span>
+              <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.policy?.name || "-"}</span>
             </div>
+
+            {request?.reason && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Reason / Notes</span>
+                <span className="text-xs font-medium text-gray-750 dark:text-gray-300">{request.reason}</span>
+              </div>
+            )}
 
             <div className="flex flex-col gap-4">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Attachment</span>
               <div className="flex flex-col gap-4">
-                <span className="text-xs font-bold text-gray-900 dark:text-white">-</span>
-                <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-xl">
-                  <span className="text-xs font-bold text-gray-900 dark:text-white">Upload attachment</span>
-                  <HiOutlineDocumentArrowUp className="text-gray-400 dark:text-gray-500 text-xl" />
-                </div>
-                <p className="text-[10px] text-gray-400 dark:text-gray-500">
-                  Max file size : 5MB. File format : pdf, docx, png, and jpeg
-                </p>
+                <span className="text-xs font-bold text-gray-900 dark:text-white">{request?.attachment || "No attachment"}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="p-8 border-t border-gray-300 dark:border-gray-800 flex items-center gap-4">
-          <Button
-            variant="outline"
+          {request?.status === "PENDING" && onCancelRequest && (
+            <Button
+              variant="outline"
+              className="flex-1 font-bold h-12 text-red-500 hover:text-red-650 border-red-200 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/20"
+              onClick={() => onCancelRequest(request.id)}
+              disabled={isCancelling}
+            >
+              Cancel Request
+            </Button>
+          )}
+          <Button 
+            variant="primary" 
             className="flex-1 font-bold h-12"
             onClick={onClose}
           >
-            Cancel Request
-          </Button>
-          <Button variant="primary" className="flex-1 font-bold h-12">
-            Edit
+            Close
           </Button>
         </div>
       </div>

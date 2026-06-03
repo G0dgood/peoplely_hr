@@ -4,47 +4,42 @@ import * as React from "react";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCreateRoleMutation } from "@/store/services/rolePermissionApi";
-import { useAppSelector } from "@/store/hooks";
-import { selectCurrentUser } from "@/store/features/authSlice";
+import { useUpdateRoleMutation } from "@/store/services/rolePermissionApi";
 import { toast } from "sonner";
 import { useApiError } from "@/hooks/useApiError";
-import { SVGLoader } from "@/components/ui/options";
 
-interface AddRoleDrawerProps {
+interface EditRoleDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  role: { id: string; name: string; description: string } | undefined;
 }
 
-export function AddRoleDrawer({ isOpen, onClose }: AddRoleDrawerProps) {
-  const currentUser = useAppSelector(selectCurrentUser);
-  const companyId = currentUser?.companyId ?? "";
-
-  const [createRole, { error: createError, isLoading: isCreating }] = useCreateRoleMutation();
-  useApiError(!!createError, createError, "Failed to create role");
+export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
+  const [updateRole, { error: updateError, isLoading: isUpdating }] = useUpdateRoleMutation();
+  useApiError(!!updateError, updateError, "Failed to update role");
 
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
 
   React.useEffect(() => {
-    if (isOpen) {
-      setName("");
-      setDescription("");
+    if (role && isOpen) {
+      setName(role.name);
+      setDescription(role.description);
     }
-  }, [isOpen]);
+  }, [role, isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !role?.id) return;
     try {
-      await createRole({
+      await updateRole({
+        id: role.id,
         name: name.trim(),
         description: description.trim(),
-        companyId,
       }).unwrap();
-      toast.success(`Role "${name}" created successfully!`);
+      toast.success(`Role "${name}" updated successfully!`);
       onClose();
     } catch (err) {
       // Handled by useApiError
@@ -74,7 +69,7 @@ export function AddRoleDrawer({ isOpen, onClose }: AddRoleDrawerProps) {
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
           <div className="p-8 flex-1 overflow-y-auto">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-8">
-              Add New Role
+              Edit Role Details
             </h2>
 
             <div className="flex flex-col gap-6">
@@ -110,17 +105,16 @@ export function AddRoleDrawer({ isOpen, onClose }: AddRoleDrawerProps) {
               variant="outline"
               onClick={onClose}
               className="flex-1 font-bold h-12 border-gray-300 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
-              disabled={isCreating}
+              disabled={isUpdating}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1 font-bold h-12 !bg-black dark:bg-white text-white dark:text-gray-900 hover:opacity-90 animate-pulse-once"
-              disabled={isCreating}
-              leftIcon={isCreating ? <SVGLoader width={16} height={16} color="currentColor" /> : undefined}
+              disabled={isUpdating}
             >
-              {isCreating ? "Creating..." : "Create"}
+              {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

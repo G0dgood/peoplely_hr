@@ -37,7 +37,7 @@ export default function PayrollSettingsPage() {
     <SettingsTabs
      tabs={tabs}
      activeTab={activeTab}
-     onChange={setActiveTab}
+     onChange={(id) => setActiveTab(id as TabType)}
      variant="emerald"
     />
 

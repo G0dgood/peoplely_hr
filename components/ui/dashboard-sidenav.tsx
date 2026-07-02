@@ -48,6 +48,9 @@ export function DashboardSidenav({
     if (pathname.startsWith("/employees/department") || pathname.startsWith("/employees/offices")) {
       setExpandedItems((prev) => prev.includes("employees") ? prev : [...prev, "employees"]);
     }
+    if (pathname.startsWith("/performance")) {
+      setExpandedItems((prev) => prev.includes("performance") ? prev : [...prev, "performance"]);
+    }
   }, [pathname]);
 
   const toggleExpand = (id: string) => {
@@ -324,9 +327,39 @@ export function DashboardSidenav({
             </SidebarSubItem>
           </div>
         )}
-        <SidebarItem icon={<HiOutlinePresentationChartLine />} hasSubmenu={!collapsed} title={collapsed ? "Performance" : undefined} className={itemClass}>
+        <SidebarItem
+          icon={<HiOutlinePresentationChartLine />}
+          hasSubmenu={!collapsed}
+          expanded={expandedItems.includes("performance")}
+          onClick={() => toggleExpand("performance")}
+          title={collapsed ? "Performance" : undefined}
+          className={itemClass}
+        >
           {!collapsed && "Performance"}
         </SidebarItem>
+        {!collapsed && expandedItems.includes("performance") && (
+          <div className="flex flex-col">
+            <SidebarSubItem
+              active={pathname === "/performance/my-performance" || pathname.startsWith("/performance/my-performance/")}
+              href="/performance/my-performance"
+            >
+              My Performance
+            </SidebarSubItem>
+            <SidebarSubItem
+              active={pathname === "/performance/team-performance" || pathname.startsWith("/performance/team-performance/")}
+              href="/performance/team-performance"
+            >
+              Team Performance
+            </SidebarSubItem>
+            <SidebarSubItem
+              isLast
+              active={pathname === "/performance/hr-performance" || pathname.startsWith("/performance/hr-performance/")}
+              href="/performance/hr-performance"
+            >
+              HR Performance
+            </SidebarSubItem>
+          </div>
+        )}
         <SidebarItem
           icon={<HiOutlineBriefcase />}
           hasSubmenu={!collapsed}

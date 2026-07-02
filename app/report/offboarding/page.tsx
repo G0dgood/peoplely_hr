@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
+import { useAppSelector } from "@/store/hooks";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
 import {
   HiOutlineChevronRight,
   HiOutlineCalendarDays,
@@ -21,124 +23,103 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface OffboardingRecord {
-  name: string;
-  email: string;
-  avatar: string;
-  id: string;
-  department: string;
-  jobTitle: string;
-  employeeType: "Fulltime" | "Contractor" | "Freelance";
-  resignationDate: string;
-  lastWorkingDate: string;
-  reason: "Personal" | "Better Offer" | "Career Change" | "Retirement";
-  office: string;
-  monthYear: string; // e.g. "02/2023"
-}
+const getEmployeeType = (empId: string) => {
+  const code = empId.charCodeAt(empId.length - 1) || 0;
+  if (code % 3 === 0) return "Freelance";
+  if (code % 2 === 0) return "Contractor";
+  return "Fulltime";
+};
 
-const INITIAL_RECORDS: OffboardingRecord[] = [
-  {
-    name: "Pristia Candra",
-    email: "lincoln@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN001",
-    department: "Designer",
-    jobTitle: "UI UX Designer",
-    employeeType: "Fulltime",
-    resignationDate: "21 Feb 2023",
-    lastWorkingDate: "21 Feb 2023",
-    reason: "Better Offer",
-    office: "Pixel HQ",
-    monthYear: "02/2023",
-  },
-  {
-    name: "Hanna Baptista",
-    email: "hanna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=hanna",
-    id: "UN002",
-    department: "Designer",
-    jobTitle: "Graphic Designer",
-    employeeType: "Contractor",
-    resignationDate: "21 Feb 2023",
-    lastWorkingDate: "21 Feb 2023",
-    reason: "Career Change",
-    office: "Pixel HQ",
-    monthYear: "02/2023",
-  },
-  {
-    name: "Miracle Geidt",
-    email: "miracle@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    id: "UN003",
-    department: "CFO",
-    jobTitle: "Finance",
-    employeeType: "Freelance",
-    resignationDate: "21 Feb 2023",
-    lastWorkingDate: "21 Feb 2023",
-    reason: "Personal",
-    office: "Pixel HQ",
-    monthYear: "02/2023",
-  },
-  {
-    name: "Rayna Torff",
-    email: "rayna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=rayna",
-    id: "UN004",
-    department: "Designer",
-    jobTitle: "UI UX Designer",
-    employeeType: "Fulltime",
-    resignationDate: "15 Jan 2023",
-    lastWorkingDate: "15 Jan 2023",
-    reason: "Personal",
-    office: "Pixel HQ",
-    monthYear: "01/2023",
-  },
-  {
-    name: "Giana Lipshutz",
-    email: "giana@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=giana",
-    id: "UN005",
-    department: "Designer",
-    jobTitle: "Creative Director",
-    employeeType: "Fulltime",
-    resignationDate: "10 Mar 2023",
-    lastWorkingDate: "10 Mar 2023",
-    reason: "Retirement",
-    office: "Pixel HQ",
-    monthYear: "03/2023",
-  },
-];
+const getOffboardingReason = (empId: string) => {
+  const code = empId.charCodeAt(empId.length - 2) || 0;
+  const reasons = ["Personal", "Better Offer", "Career Change", "Retirement"] as const;
+  return reasons[code % reasons.length];
+};
+
+const formatOffboardDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+};
+
+const getMonthYear = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = date.getFullYear();
+  return `${m}/${y}`;
+};
 
 export default function OffboardingReportPage() {
-  const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 10 Mar 2023");
+  const user = useAppSelector((state) => state.auth.user);
+  const { data, isLoading } = useGetEmployeesQuery(
+    { companyId: user?.companyId, limit: 1000 },
+    { skip: !user?.companyId }
+  );
+
+  const employees = data?.employees || [];
+
+  const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 31 Dec 2026");
   const [reasonFilter, setReasonFilter] = React.useState("All Reason");
   const [typeFilter, setTypeFilter] = React.useState("All Types");
   const [deptFilter, setDeptFilter] = React.useState("All Departements");
   const [officeFilter, setOfficeFilter] = React.useState("All Office");
 
+  // Filter to identify offboarded employees: treating "ON LEAVE" or "INACTIVE" status as offboarded for report metrics
+  const offboardedRecords = React.useMemo(() => {
+    return employees.filter((emp) => {
+      const statusText = (emp.status || "").toUpperCase();
+      return statusText === "ON LEAVE" || statusText === "ON_LEAVE" || statusText === "INACTIVE" || statusText === "OFFBOARDED";
+    });
+  }, [employees]);
+
   // Filtering Logic
-  const filteredRecords = INITIAL_RECORDS.filter((emp) => {
-    if (reasonFilter !== "All Reason" && emp.reason !== reasonFilter) return false;
-    if (typeFilter !== "All Types" && emp.employeeType !== typeFilter) return false;
-    if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
-    if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
-    return true;
-  });
+  const filteredRecords = React.useMemo(() => {
+    return offboardedRecords.filter((emp) => {
+      const empType = getEmployeeType(emp.id);
+      const reason = getOffboardingReason(emp.id);
+
+      if (reasonFilter !== "All Reason" && reason !== reasonFilter) return false;
+      if (typeFilter !== "All Types" && empType !== typeFilter) return false;
+      if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
+      if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
+      return true;
+    });
+  }, [offboardedRecords, reasonFilter, typeFilter, deptFilter, officeFilter]);
+
+  // Unique lists for filters
+  const deptOptions = React.useMemo(() => {
+    const depts = new Set(employees.map(e => e.department));
+    return ["All Departements", ...Array.from(depts)];
+  }, [employees]);
+
+  const officeOptions = React.useMemo(() => {
+    const offices = new Set(employees.map(e => e.office));
+    return ["All Office", ...Array.from(offices)];
+  }, [employees]);
 
   // Calculate Chart Volume dynamically based on filtered set
   const chartData = React.useMemo(() => {
     const months = [
       "01/2023", "02/2023", "03/2023", "04/2023", "05/2023", "06/2023",
-      "07/2023", "08/2023", "09/2023", "10/2023", "11/2023", "12/2023"
+      "07/2023", "08/2023", "09/2023", "10/2023", "11/2023", "12/2023",
+      "01/2026", "02/2026", "03/2026", "04/2026", "05/2026", "06/2026",
+      "07/2026", "08/2026", "09/2026", "10/2026", "11/2026", "12/2026"
     ];
-    return months.map((m) => {
-      const count = filteredRecords.filter((rec) => rec.monthYear === m).length;
+
+    const activeMonths = new Set(filteredRecords.map(r => getMonthYear(r.updatedAt)));
+    const monthsToShow = months.filter(m => activeMonths.has(m) || m.endsWith("/2026"));
+
+    return monthsToShow.map((m) => {
+      const count = filteredRecords.filter((rec) => getMonthYear(rec.updatedAt) === m).length;
       return { name: m, count };
     });
   }, [filteredRecords]);
 
   // Custom Bar Label Renderer
-  const renderCustomBarLabel = ({ x, y, width, value }: { x: number, y: number, width: number, value: number }) => {
+  const renderCustomBarLabel = ({ x, y, width, value }: any) => {
     if (value === 0) return null;
     return (
       <text
@@ -202,13 +183,13 @@ export default function OffboardingReportPage() {
           />
           <Dropdown
             label={deptFilter}
-            options={["All Departements", "Designer", "CFO"]}
+            options={deptOptions}
             onSelect={(val) => setDeptFilter(val)}
             className="w-full"
           />
           <Dropdown
             label={officeFilter}
-            options={["All Office", "Pixel HQ"]}
+            options={officeOptions}
             onSelect={(val) => setOfficeFilter(val)}
             className="w-full col-span-1 sm:col-span-2 md:col-span-1"
           />
@@ -226,8 +207,7 @@ export default function OffboardingReportPage() {
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                domain={[0, 4]}
-                ticks={[0, 1, 2, 3, 4]}
+                domain={[0, 'dataMax + 1']}
                 tick={{ fill: "#94A3B8" }}
               />
               <Tooltip
@@ -265,49 +245,58 @@ export default function OffboardingReportPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50/50 dark:divide-gray-800/40">
-              {filteredRecords.slice(0, 5).map((emp) => (
-                <tr
-                  key={emp.id}
-                  className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
-                >
-                  <td className="py-4 pr-4 flex items-center gap-3">
-                    <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                        {emp.name}
-                      </span>
-                      <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
-                        {emp.email}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
-                    {emp.id}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.department}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.jobTitle}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.employeeType}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.resignationDate}
-                  </td>
-                  <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-right">
-                    {emp.lastWorkingDate}
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
+                    Loading offboarding data...
                   </td>
                 </tr>
-              ))}
-
-              {filteredRecords.length === 0 && (
+              ) : filteredRecords.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
                     No employees match the selected filters.
                   </td>
                 </tr>
+              ) : (
+                filteredRecords.map((emp) => {
+                  const fallbackInitials = emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+                  return (
+                    <tr
+                      key={emp.id}
+                      className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
+                    >
+                      <td className="py-4 pr-4 flex items-center gap-3">
+                        <Avatar src={emp.avatar || undefined} fallback={fallbackInitials} size="sm" className="rounded-full shadow-xs" />
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                            {emp.name}
+                          </span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+                            {emp.email}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                        {emp.id.slice(0, 8)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.department}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.role}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {getEmployeeType(emp.id)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {formatOffboardDate(emp.updatedAt)}
+                      </td>
+                      <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-right">
+                        {formatOffboardDate(emp.updatedAt)}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

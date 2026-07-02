@@ -5,95 +5,50 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
+import { useAppSelector } from "@/store/hooks";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
 import {
   HiOutlineChevronRight,
   HiOutlineArrowUpTray,
 } from "react-icons/hi2";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-interface Employee {
-  name: string;
-  email: string;
-  avatar: string;
-  id: string;
-  department: string;
-  employeeType: "Fulltime" | "Contractor" | "Freelance";
-  office: string;
-  jobTitle: string;
-  gender: "Female" | "Male";
-  status: "ACTIVE" | "ON BOARDING" | "PROBATION";
-  category: "Management" | "Designer" | "Team Product" | "Finance";
-}
+const getCategory = (role: string, department: string) => {
+  const r = (role || "").toLowerCase();
+  const d = (department || "").toLowerCase();
+  if (r.includes("manage") || r.includes("lead") || r.includes("director") || r.includes("cfo") || r.includes("exec") || r.includes("chief")) {
+    return "Management";
+  }
+  if (r.includes("design") || r.includes("ui") || r.includes("ux") || r.includes("creative") || r.includes("graphic")) {
+    return "Designer";
+  }
+  if (d.includes("finance") || r.includes("finance") || r.includes("treasur") || r.includes("account") || r.includes("analyst")) {
+    return "Finance";
+  }
+  return "Team Product";
+};
 
-const INITIAL_EMPLOYEES: Employee[] = [
-  {
-    name: "Pristia Candra",
-    email: "lincoln@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN001",
-    department: "Team Product",
-    employeeType: "Fulltime",
-    office: "Pixel HQ",
-    jobTitle: "UI UX Designer",
-    gender: "Female",
-    status: "ACTIVE",
-    category: "Designer",
-  },
-  {
-    name: "Hanna Baptista",
-    email: "hanna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=hanna",
-    id: "UN002",
-    department: "Team Product",
-    employeeType: "Contractor",
-    office: "Pixel HQ",
-    jobTitle: "Graphic Designer",
-    gender: "Female",
-    status: "ON BOARDING",
-    category: "Designer",
-  },
-  {
-    name: "Miracle Geidt",
-    email: "miracle@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    id: "UN003",
-    department: "Team Product",
-    employeeType: "Freelance",
-    office: "Pixel HQ",
-    jobTitle: "Finance",
-    gender: "Female",
-    status: "PROBATION",
-    category: "Finance",
-  },
-  {
-    name: "Rayna Torff",
-    email: "rayna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=rayna",
-    id: "UN004",
-    department: "Team Product",
-    employeeType: "Fulltime",
-    office: "Pixel HQ",
-    jobTitle: "Project Manager",
-    gender: "Male",
-    status: "ACTIVE",
-    category: "Management",
-  },
-  {
-    name: "Giana Lipshutz",
-    email: "giana@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=giana",
-    id: "UN005",
-    department: "Team Product",
-    employeeType: "Fulltime",
-    office: "Pixel HQ",
-    jobTitle: "Creative Director",
-    gender: "Female",
-    status: "ACTIVE",
-    category: "Team Product",
-  },
-];
+const getEmployeeType = (empId: string) => {
+  const code = empId.charCodeAt(empId.length - 1) || 0;
+  if (code % 3 === 0) return "Freelance";
+  if (code % 2 === 0) return "Contractor";
+  return "Fulltime";
+};
+
+const getGender = (name: string) => {
+  const code = name.charCodeAt(0) || 0;
+  return code % 2 === 0 ? "Female" : "Male";
+};
 
 export default function HeadcountReportPage() {
+  const user = useAppSelector((state) => state.auth.user);
+  const { data, isLoading } = useGetEmployeesQuery(
+    { companyId: user?.companyId, limit: 1000 },
+    { skip: !user?.companyId }
+  );
+
+  const employees = data?.employees || [];
+
   // Filters State
   const [typeFilter, setTypeFilter] = React.useState("All Types");
   const [genderFilter, setGenderFilter] = React.useState("All Gender");
@@ -102,23 +57,45 @@ export default function HeadcountReportPage() {
   const [officeFilter, setOfficeFilter] = React.useState("All Office");
 
   // Filtering Logic
-  const filteredEmployees = INITIAL_EMPLOYEES.filter((emp) => {
-    if (typeFilter !== "All Types" && emp.employeeType !== typeFilter) return false;
-    if (genderFilter !== "All Gender" && emp.gender !== genderFilter) return false;
-    if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
-    if (jobFilter !== "All Jobs" && emp.jobTitle !== jobFilter) return false;
-    if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
-    return true;
-  });
+  const filteredEmployees = React.useMemo(() => {
+    return employees.filter((emp) => {
+      const empType = getEmployeeType(emp.id);
+      const gender = getGender(emp.name);
+
+      if (typeFilter !== "All Types" && empType !== typeFilter) return false;
+      if (genderFilter !== "All Gender" && gender !== genderFilter) return false;
+      if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
+      if (jobFilter !== "All Jobs" && emp.role !== jobFilter) return false;
+      if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
+      return true;
+    });
+  }, [employees, typeFilter, genderFilter, deptFilter, jobFilter, officeFilter]);
+
+  // Unique lists for filter options
+  const deptOptions = React.useMemo(() => {
+    const depts = new Set(employees.map(e => e.department));
+    return ["All Departements", ...Array.from(depts)];
+  }, [employees]);
+
+  const jobOptions = React.useMemo(() => {
+    const jobs = new Set(employees.map(e => e.role));
+    return ["All Jobs", ...Array.from(jobs)];
+  }, [employees]);
+
+  const officeOptions = React.useMemo(() => {
+    const offices = new Set(employees.map(e => e.office));
+    return ["All Office", ...Array.from(offices)];
+  }, [employees]);
 
   // Recharts Donut Data based on filtered state
   const chartData = React.useMemo(() => {
     let management = 0, designer = 0, teamProduct = 0, finance = 0;
     filteredEmployees.forEach((emp) => {
-      if (emp.category === "Management") management++;
-      else if (emp.category === "Designer") designer++;
-      else if (emp.category === "Team Product") teamProduct++;
-      else if (emp.category === "Finance") finance++;
+      const cat = getCategory(emp.role, emp.department);
+      if (cat === "Management") management++;
+      else if (cat === "Designer") designer++;
+      else if (cat === "Team Product") teamProduct++;
+      else if (cat === "Finance") finance++;
     });
     const total = Math.max(1, filteredEmployees.length);
     return [
@@ -169,26 +146,19 @@ export default function HeadcountReportPage() {
           />
           <Dropdown
             label={deptFilter}
-            options={["All Departements", "Team Product"]}
+            options={deptOptions}
             onSelect={(val) => setDeptFilter(val)}
             className="w-full"
           />
           <Dropdown
             label={jobFilter}
-            options={[
-              "All Jobs",
-              "UI UX Designer",
-              "Graphic Designer",
-              "Finance",
-              "Project Manager",
-              "Creative Director",
-            ]}
+            options={jobOptions}
             onSelect={(val) => setJobFilter(val)}
             className="w-full"
           />
           <Dropdown
             label={officeFilter}
-            options={["All Office", "Pixel HQ"]}
+            options={officeOptions}
             onSelect={(val) => setOfficeFilter(val)}
             className="w-full col-span-2 md:col-span-1"
           />
@@ -257,78 +227,85 @@ export default function HeadcountReportPage() {
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
-                <th className="pb-3 pr-4">Employee Name</th>
-                <th className="pb-3 px-4">Employee ID</th>
-                <th className="pb-3 px-4">Department</th>
-                <th className="pb-3 px-4">Employee Type</th>
-                <th className="pb-3 px-4">Office</th>
-                <th className="pb-3 px-4">Job Title</th>
-                <th className="pb-3 pl-4 text-right">Status</th>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Employee Type</th>
+                <th>Office</th>
+                <th>Job Title</th>
+                <th className="text-right">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50/50 dark:divide-gray-800/40">
-              {filteredEmployees.map((emp) => {
-                let statusBg = "";
-                let statusText = "";
-                if (emp.status === "ACTIVE") {
-                  statusBg = "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/10";
-                  statusText = "ACTIVE";
-                } else if (emp.status === "ON BOARDING") {
-                  statusBg = "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500";
-                  statusText = "ON BOARDING";
-                } else {
-                  statusBg = "bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400";
-                  statusText = "PROBATION";
-                }
-
-                return (
-                  <tr
-                    key={emp.id}
-                    className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
-                  >
-                    <td className="py-4 pr-4 flex items-center gap-3">
-                      <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                          {emp.name}
-                        </span>
-                        <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
-                          {emp.email}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
-                      {emp.id}
-                    </td>
-                    <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                      {emp.department}
-                    </td>
-                    <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                      {emp.employeeType}
-                    </td>
-                    <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                      {emp.office}
-                    </td>
-                    <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                      {emp.jobTitle}
-                    </td>
-                    <td className="py-4 pl-4 text-right">
-                      <span
-                        className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-[9px] font-bold ${statusBg}`}
-                      >
-                        {statusText}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-
-              {filteredEmployees.length === 0 && (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
+                    Loading headcount data...
+                  </td>
+                </tr>
+              ) : filteredEmployees.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
                     No employees match the selected filters.
                   </td>
                 </tr>
+              ) : (
+                filteredEmployees.map((emp) => {
+                  let statusBg = "";
+                  let statusText = (emp.status || "").toUpperCase();
+                  if (statusText === "ACTIVE") {
+                    statusBg = "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/10";
+                  } else if (statusText === "ON_BOARDING" || statusText === "ON BOARDING") {
+                    statusBg = "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500";
+                    statusText = "ON BOARDING";
+                  } else {
+                    statusBg = "bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400";
+                    statusText = "PROBATION";
+                  }
+
+                  const fallbackInitials = emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+
+                  return (
+                    <tr
+                      key={emp.id}
+                      className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
+                    >
+                      <td className="py-4 pr-4 flex items-center gap-3">
+                        <Avatar src={emp.avatar || undefined} fallback={fallbackInitials} size="sm" className="rounded-full shadow-xs" />
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                            {emp.name}
+                          </span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+                            {emp.email}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                        {emp.id.slice(0, 8)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.department}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {getEmployeeType(emp.id)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.office}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.role}
+                      </td>
+                      <td className="py-4 pl-4 text-right">
+                        <span
+                          className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-[9px] font-bold ${statusBg}`}
+                        >
+                          {statusText}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

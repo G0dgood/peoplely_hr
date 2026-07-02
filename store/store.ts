@@ -13,6 +13,11 @@ import { checklistTemplatesApi } from "./services/checklistTemplatesApi";
 import { newsApi } from "./services/newsApi";
 import { messageApi } from "./services/messageApi";
 import { timeOffApi } from "./services/timeOffApi";
+import { attendanceApi } from "./services/attendanceApi";
+import { recruitmentApi } from "./services/recruitmentApi";
+import { payrollApi } from "./services/payrollApi";
+import { notificationApi } from "./services/notificationApi";
+import { performanceApi } from "./services/performanceApi";
 import authReducer from "./features/authSlice";
 
 export const store = configureStore({
@@ -30,6 +35,11 @@ export const store = configureStore({
     [newsApi.reducerPath]: newsApi.reducer,
     [messageApi.reducerPath]: messageApi.reducer,
     [timeOffApi.reducerPath]: timeOffApi.reducer,
+    [attendanceApi.reducerPath]: attendanceApi.reducer,
+    [recruitmentApi.reducerPath]: recruitmentApi.reducer,
+    [payrollApi.reducerPath]: payrollApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
+    [performanceApi.reducerPath]: performanceApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -46,7 +56,12 @@ export const store = configureStore({
       checklistTemplatesApi.middleware,
       newsApi.middleware,
       messageApi.middleware,
-      timeOffApi.middleware
+      timeOffApi.middleware,
+      attendanceApi.middleware,
+      recruitmentApi.middleware,
+      payrollApi.middleware,
+      notificationApi.middleware,
+      performanceApi.middleware
     ),
 });
 

@@ -33,7 +33,7 @@ export function DashboardWrapper({
   const knownMainRoutes = [
     "/dashboard", "/employees", "/report", "/documents", "/attendance",
     "/time-off", "/checklist", "/news", "/message", "/payroll",
-    "/settings", "/notification", "/help-center", "/recruitment"
+    "/settings", "/notification", "/help-center", "/recruitment", "/performance"
   ];
 
   const isMainRoute = knownMainRoutes.some(route => pathname.startsWith(route));

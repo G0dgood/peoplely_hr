@@ -4,23 +4,12 @@ import * as React from "react";
 import { HiOutlineChevronDown, HiOutlineChevronRight, HiOutlineXMark } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-interface Candidate {
-  id: number;
-  name: string;
-  email: string;
-  avatar: string;
-  phone: string;
-  job: string;
-  cv: string;
-  createdDate: string;
-  stage: "Applied" | "Screening" | "1st Interview" | "2nd Interview" | "Hiring" | "Rejected";
-}
+import { Candidate } from "@/store/services/recruitmentApi";
 
 export interface EditCandidateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (c: Omit<Candidate, "id" | "avatar" | "createdDate">) => void;
+  onSave: (c: Partial<Candidate>) => void;
   candidate: Candidate | null;
 }
 
@@ -67,7 +56,7 @@ export function EditCandidateDrawer({ isOpen, onClose, onSave, candidate }: Edit
       setEmail(candidate.email);
       setPhone(candidate.phone);
       setJob(candidate.job);
-      setCvName(candidate.cv !== "-" ? candidate.cv : "");
+      setCvName((candidate.cv && candidate.cv !== "-") ? candidate.cv : "");
       setStage(candidate.stage);
       setSource("");
       setCoverLetter("");

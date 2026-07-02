@@ -36,6 +36,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RowPerPage } from "@/components/ui/row-per-page";
+import { useParams } from "next/navigation";
+import { useApiError } from "@/hooks/useApiError";
+import { useGetJobByIdQuery, useUpdateCandidateMutation, useDeleteCandidateMutation, useUpdateJobMutation, Candidate } from "@/store/services/recruitmentApi";
+import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
+import { RecruitmentJobDetailSkeleton } from "@/components/ui/skeleton/recruitment-skeletons";
 
 type Stage =
  | "Applied"
@@ -43,7 +48,8 @@ type Stage =
  | "1st Interview"
  | "2nd Interview"
  | "Hiring"
- | "Rejected";
+ | "Rejected"
+ | string;
 
 const STAGES: Stage[] = [
  "Applied",
@@ -54,28 +60,6 @@ const STAGES: Stage[] = [
  "Rejected",
 ];
 
-interface Candidate {
- id: number;
- name: string;
- email: string;
- avatar: string;
- fallback: string;
- phone: string;
- cv: string | null;
- createdDate: string;
- stage: Stage;
-}
-
-const CANDIDATES: Candidate[] = [
- { id: 1, name: "Pristia Candra", email: "lincoln@unpixel.com", avatar: "https://i.pravatar.cc/150?u=pristia", fallback: "PC", phone: "08092139441", cv: "CV.pdf", createdDate: "01 Mar 2023", stage: "Applied" },
- { id: 2, name: "Hanna Baptista", email: "hanna@unpixel.com", avatar: "https://i.pravatar.cc/150?u=hanna", fallback: "HB", phone: "08092139441", cv: null, createdDate: "01 Mar 2023", stage: "Screening" },
- { id: 3, name: "Miracle Geidt", email: "miracle@unpixel.com", avatar: "", fallback: "MG", phone: "08092139441", cv: "CV.pdf", createdDate: "01 Mar 2023", stage: "1st Interview" },
- { id: 4, name: "Rayna Torff", email: "rayna@unpixel.com", avatar: "https://i.pravatar.cc/150?u=rayna", fallback: "RT", phone: "08092139441", cv: null, createdDate: "01 Mar 2023", stage: "2nd Interview" },
- { id: 5, name: "Giana Lipshutz", email: "giana@unpixel.com", avatar: "https://i.pravatar.cc/150?u=giana", fallback: "GL", phone: "08092139441", cv: null, createdDate: "01 Mar 2023", stage: "Hiring" },
- { id: 6, name: "James George", email: "james@unpixel.com", avatar: "https://i.pravatar.cc/150?u=james", fallback: "JG", phone: "08092139441", cv: "CV.pdf", createdDate: "01 Mar 2023", stage: "Hiring" },
- { id: 7, name: "Jordyn George", email: "jordyn@unpixel.com", avatar: "https://i.pravatar.cc/150?u=jordyn", fallback: "JG", phone: "08092139441", cv: "CV.pdf", createdDate: "01 Mar 2023", stage: "Rejected" },
- { id: 8, name: "Skylar Herwitz", email: "skylar@unpixel.com", avatar: "https://i.pravatar.cc/150?u=skylar", fallback: "SH", phone: "08092139441", cv: "CV.pdf", createdDate: "01 Mar 2023", stage: "Screening" },
-];
 
 // ── Stage dropdown (per-row in Table View) ─────────────────────────────
 function StageDropdown({ stage, onChange }: { stage: Stage; onChange: (s: Stage) => void }) {
@@ -192,13 +176,12 @@ function CardActionsDropdown({
  );
 }
 
-// ── Candidate Cards Stack Component ──────────────────────────────────
 interface CandidateCardsStackProps {
  stageCandidates: Candidate[];
- draggedCandidateId: number | null;
- handleDragStart: (e: React.DragEvent, id: number) => void;
+ draggedCandidateId: string | null;
+ handleDragStart: (e: React.DragEvent, id: string) => void;
  setSelectedCandidate: (c: Candidate) => void;
- setCandidates: React.Dispatch<React.SetStateAction<Candidate[]>>;
+ onDeleteCandidate: (id: string) => void;
 }
 
 function CandidateCardsStack({
@@ -206,7 +189,7 @@ function CandidateCardsStack({
  draggedCandidateId,
  handleDragStart,
  setSelectedCandidate,
- setCandidates,
+ onDeleteCandidate,
 }: CandidateCardsStackProps) {
  return (
   <div className="flex flex-col gap-3 overflow-y-auto max-h-[550px] pr-0.5">
@@ -224,7 +207,7 @@ function CandidateCardsStack({
        onClick={() => setSelectedCandidate(c)}
        className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
       >
-       <Avatar src={c.avatar} fallback={c.fallback} size="sm" />
+       <Avatar src={c.avatar} fallback={c.name ? c.name[0] : ""} size="sm" />
        <div className="flex flex-col">
         <span className="text-xs font-bold text-gray-900 dark:text-white leading-tight hover:text-primary transition-colors">
          {c.name}
@@ -260,9 +243,7 @@ function CandidateCardsStack({
       <div className="flex items-center justify-end mt-1">
        <CardActionsDropdown
         onEdit={() => { }}
-        onDelete={() => {
-         setCandidates((prev) => prev.filter((item) => item.id !== c.id));
-        }}
+        onDelete={() => onDeleteCandidate(c.id)}
        />
       </div>
      </Card>
@@ -279,12 +260,12 @@ function CandidateCardsStack({
 // ── Pipeline View Component ──────────────────────────────────────────
 interface PipelineViewProps {
  candidates: Candidate[];
- draggedCandidateId: number | null;
+ draggedCandidateId: string | null;
  handleDragOver: (e: React.DragEvent) => void;
  handleDrop: (e: React.DragEvent, targetStage: Stage) => void;
- handleDragStart: (e: React.DragEvent, id: number) => void;
+ handleDragStart: (e: React.DragEvent, id: string) => void;
  setSelectedCandidate: (c: Candidate) => void;
- setCandidates: React.Dispatch<React.SetStateAction<Candidate[]>>;
+ onDeleteCandidate: (id: string) => void;
 }
 
 function PipelineView({
@@ -294,7 +275,7 @@ function PipelineView({
  handleDrop,
  handleDragStart,
  setSelectedCandidate,
- setCandidates,
+ onDeleteCandidate,
 }: PipelineViewProps) {
  return (
   <div className="flex gap-4 overflow-x-auto pb-4 items-start min-h-[500px]">
@@ -322,7 +303,7 @@ function PipelineView({
        draggedCandidateId={draggedCandidateId}
        handleDragStart={handleDragStart}
        setSelectedCandidate={setSelectedCandidate}
-       setCandidates={setCandidates}
+       onDeleteCandidate={onDeleteCandidate}
       />
      </div>
     );
@@ -337,9 +318,10 @@ interface CandidateProfileDrawerProps {
  onClose: () => void;
  candidate: Candidate | null;
  jobTitle: string;
+ onUpdateCandidate: (id: string, fields: Partial<Candidate>) => Promise<void>;
 }
 
-function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle }: CandidateProfileDrawerProps) {
+function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle, onUpdateCandidate }: CandidateProfileDrawerProps) {
  const [activeTab, setActiveTab] = React.useState<"profile" | "email" | "evaluation" | "comments" | "activity">("evaluation");
  const [selectedRating, setSelectedRating] = React.useState<"strong_no" | "no" | "not_sure" | "yes" | "excellent">("yes");
  const [evaluationText, setEvaluationText] = React.useState("You are have talented, love your work!");
@@ -385,7 +367,7 @@ function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle }: Candid
     {/* Header Hero Section */}
     <div className="p-6 border-b border-gray-300 dark:border-gray-800 flex items-start justify-between bg-white dark:bg-gray-900">
      <div className="flex items-center gap-4">
-      <Avatar src={candidate.avatar} fallback={candidate.fallback} size="lg" className="w-16 h-16 border-2 border-primary/20" />
+      <Avatar src={candidate.avatar} fallback={candidate.name ? candidate.name[0] : ""} size="lg" className="w-16 h-16 border-2 border-primary/20" />
       <div className="flex flex-col">
        <div className="flex items-center gap-2">
         <h2 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">
@@ -577,7 +559,7 @@ function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle }: Candid
         <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-850 pb-3">
          <span className="text-xs font-bold text-gray-400 dark:text-gray-550 w-8">To</span>
          <div className="flex items-center gap-2">
-          <Avatar src={candidate.avatar} fallback={candidate.fallback} size="sm" className="w-6 h-6 border border-gray-300 dark:border-gray-800" />
+          <Avatar src={candidate.avatar} fallback={candidate.name ? candidate.name[0] : ""} size="sm" className="w-6 h-6 border border-gray-300 dark:border-gray-800" />
           <span className="text-xs font-bold text-gray-800 dark:text-gray-200">{candidate.name}</span>
          </div>
         </div>
@@ -769,7 +751,18 @@ function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle }: Candid
     {/* Evaluation Sticky Footer */}
     {activeTab === "evaluation" && (
      <div className="p-6 border-t border-gray-200 dark:border-gray-800 flex justify-end bg-white dark:bg-gray-900">
-      <button className="bg-[#0b0f19] hover:bg-[#1a233a] text-white rounded-xl py-3 px-8 text-xs font-bold transition-all shadow-sm">
+      <button
+       onClick={async () => {
+         if (candidate) {
+           await onUpdateCandidate(candidate.id, {
+             overallRating: selectedRating,
+             evaluationText: evaluationText
+           });
+           onClose();
+         }
+       }}
+       className="bg-[#0b0f19] hover:bg-[#1a233a] text-white rounded-xl py-3 px-8 text-xs font-bold transition-all shadow-sm"
+      >
        Submit
       </button>
      </div>
@@ -781,21 +774,74 @@ function CandidateProfileDrawer({ isOpen, onClose, candidate, jobTitle }: Candid
 
 export default function JobDetailPage() {
  const router = useRouter();
- const [candidates, setCandidates] = React.useState(CANDIDATES);
+ const params = useParams();
+ const jobId = params.id as string;
+ 
+ const { data, isLoading, error } = useGetJobByIdQuery(jobId);
+ const [updateCandidate, { error: updateError }] = useUpdateCandidateMutation();
+ const [deleteCandidate, { error: deleteError }] = useDeleteCandidateMutation();
+ const [updateJob, { error: jobUpdateError }] = useUpdateJobMutation();
+
  const [viewMode, setViewMode] = React.useState<"pipeline" | "table">("pipeline");
- const [draggedCandidateId, setDraggedCandidateId] = React.useState<number | null>(null);
+ const [draggedCandidateId, setDraggedCandidateId] = React.useState<string | null>(null);
  const [selectedCandidate, setSelectedCandidate] = React.useState<Candidate | null>(null);
+ const [search, setSearch] = React.useState("");
 
- const jobTitle = "3D Designer";
+ useApiError(!!error, error, "Failed to load job details");
+ useApiError(!!updateError, updateError, "Failed to update candidate");
+ useApiError(!!deleteError, deleteError, "Failed to delete candidate");
+ useApiError(!!jobUpdateError, jobUpdateError, "Failed to update job status");
 
- const handleStageChange = (id: number, newStage: Stage) => {
-  setCandidates((prev) => prev.map((c) => (c.id === id ? { ...c, stage: newStage } : c)));
+ const job = data?.job;
+ const jobTitle = job?.title || "Loading...";
+
+ const filteredCandidates = React.useMemo(() => {
+  const raw = job?.candidates || [];
+  if (!search.trim()) return raw;
+  const query = search.toLowerCase();
+  return raw.filter(c => 
+    c.name.toLowerCase().includes(query) || 
+    c.email.toLowerCase().includes(query) || 
+    c.phone.includes(query)
+  );
+ }, [job, search]);
+
+ const handleStageChange = async (id: string, newStage: Stage) => {
+  try {
+   await updateCandidate({ id, stage: newStage }).unwrap();
+  } catch (err) {
+   // handled by useApiError
+  }
+ };
+
+ const handleUpdateCandidate = async (id: string, fields: Partial<Candidate>) => {
+  try {
+   await updateCandidate({ id, ...fields }).unwrap();
+   if (selectedCandidate && selectedCandidate.id === id) {
+    setSelectedCandidate((prev) => prev ? { ...prev, ...fields } : null);
+   }
+  } catch (err) {
+   // handled by useApiError
+  }
+ };
+
+ const handleDeleteCandidate = async (id: string) => {
+  if (confirm("Are you sure you want to delete this candidate?")) {
+   try {
+    await deleteCandidate(id).unwrap();
+    if (selectedCandidate?.id === id) {
+     setSelectedCandidate(null);
+    }
+   } catch (err) {
+    // handled by useApiError
+   }
+  }
  };
 
  // Drag and Drop handlers
- const handleDragStart = (e: React.DragEvent, id: number) => {
+ const handleDragStart = (e: React.DragEvent, id: string) => {
   setDraggedCandidateId(id);
-  e.dataTransfer.setData("text/plain", id.toString());
+  e.dataTransfer.setData("text/plain", id);
  };
 
  const handleDragOver = (e: React.DragEvent) => {
@@ -804,13 +850,24 @@ export default function JobDetailPage() {
 
  const handleDrop = (e: React.DragEvent, targetStage: Stage) => {
   e.preventDefault();
-  const idStr = e.dataTransfer.getData("text/plain");
-  const id = parseInt(idStr, 10);
-  if (!isNaN(id)) {
+  const id = e.dataTransfer.getData("text/plain");
+  if (id) {
    handleStageChange(id, targetStage);
   }
   setDraggedCandidateId(null);
  };
+
+ if (isLoading) {
+  return <RecruitmentJobDetailSkeleton />;
+ }
+
+ if (!job) {
+  return (
+   <div className="flex justify-center items-center py-20 min-h-full">
+    <NoRecordFound colSpan={1} text="Job not found." />
+   </div>
+  );
+ }
 
  return (
   <div className="flex flex-col gap-6 p-2 md:p-8 min-h-full">
@@ -836,13 +893,18 @@ export default function JobDetailPage() {
      <Input
       placeholder="Search what you need"
       leftIcon={<HiOutlineMagnifyingGlass />}
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
       className="w-56 h-11 bg-white dark:bg-gray-900"
       containerClassName="w-auto"
      />
 
      {/* Add Candidates split button */}
      <div className="flex h-11">
-      <button className="flex items-center gap-2 px-5 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-l-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap">
+      <button 
+       onClick={() => router.push("/recruitment/candidates")}
+       className="flex items-center gap-2 px-5 bg-[#11131A] dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-l-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap"
+      >
        <HiOutlinePlus className="text-base" />
        Add Candidates
       </button>
@@ -890,38 +952,15 @@ export default function JobDetailPage() {
    {/* Main Content Area */}
    {viewMode === "pipeline" ? (
     /* ── PIPELINE VIEW ── */
-    <div className="flex gap-4 overflow-x-auto pb-4 items-start min-h-[500px]">
-     {STAGES.map((stage) => {
-      const stageCandidates = candidates.filter((c) => c.stage === stage);
-      return (
-       <div
-        key={stage}
-        onDragOver={handleDragOver}
-        onDrop={(e) => handleDrop(e, stage)}
-        className="flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/30 border border-gray-300 dark:border-gray-800 rounded-3xl p-4 min-h-[450px] w-[290px] shrink-0"
-       >
-        {/* Stage Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-gray-300 dark:border-gray-800">
-         <span className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider">
-          {stage}
-         </span>
-         <Badge variant="primary" tinted className="text-[10px] px-2 py-0.5 font-bold">
-          {stageCandidates.length}
-         </Badge>
-        </div>
-
-        {/* Candidate Cards Stack */}
-        <CandidateCardsStack
-         stageCandidates={stageCandidates}
-         draggedCandidateId={draggedCandidateId}
-         handleDragStart={handleDragStart}
-         setSelectedCandidate={setSelectedCandidate}
-         setCandidates={setCandidates}
-        />
-       </div>
-      );
-     })}
-    </div>
+    <PipelineView
+     candidates={filteredCandidates}
+     draggedCandidateId={draggedCandidateId}
+     handleDragOver={handleDragOver}
+     handleDrop={handleDrop}
+     handleDragStart={handleDragStart}
+     setSelectedCandidate={setSelectedCandidate}
+     onDeleteCandidate={handleDeleteCandidate}
+    />
    ) : (
     /* ── TABLE VIEW ── */
     <div className="flex flex-col gap-4">
@@ -933,7 +972,7 @@ export default function JobDetailPage() {
        <table>
         <thead>
          <tr className="border-b border-gray-300 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/30">
-          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-505 uppercase tracking-wider">
            <div className="flex items-center gap-1.5">Name <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
           </th>
           <th >
@@ -948,86 +987,91 @@ export default function JobDetailPage() {
           <th >
            <div className="flex items-center gap-1.5">Stages <HiOutlineChevronUpDown className="text-gray-300 text-xs" /></div>
           </th>
-          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider text-right">
+          <th className="py-4 px-6 text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider text-right">
            Action
           </th>
          </tr>
         </thead>
         <tbody>
-         {candidates.map((c) => (
-          <tr
-           key={c.id}
-           className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
-          >
-           {/* Name */}
-           <td className="py-4 px-6">
-            <div
-             onClick={() => setSelectedCandidate(c)}
-             className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group/name"
-            >
-             <Avatar src={c.avatar} fallback={c.fallback} size="sm" />
-             <div className="flex flex-col">
-              <span className="text-xs font-bold text-gray-900 dark:text-white group-hover/name:text-primary transition-colors">{c.name}</span>
-              <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{c.email}</span>
-             </div>
-            </div>
-           </td>
-
-           {/* Phone */}
-           <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
-            {c.phone}
-           </td>
-
-           {/* CV */}
-           <td className="py-4 px-4">
-            {c.cv ? (
-             <div className="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
-              <span>{c.cv}</span>
-              <HiOutlineDocumentText className="text-gray-400 text-base" />
-              <HiOutlineChatBubbleLeftRight className="text-gray-400 text-sm hover:text-primary transition-colors cursor-pointer" />
-             </div>
-            ) : (
-             <span className="text-xs text-gray-300 dark:text-gray-600">-</span>
-            )}
-           </td>
-
-           {/* Created Date */}
-           <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
-            {c.createdDate}
-           </td>
-
-           {/* Stages */}
-           <td className="py-4 px-4">
-            <StageDropdown
-             stage={c.stage}
-             onChange={(s) => handleStageChange(c.id, s)}
-            />
-           </td>
-
-           {/* Actions */}
-           <td className="py-4 px-6 text-right">
-            <div className="flex items-center justify-end gap-2">
-             <button className="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
-              <HiOutlinePencilSquare className="text-sm" />
-             </button>
-             <button
-              onClick={() => {
-               setCandidates((prev) => prev.filter((item) => item.id !== c.id));
-              }}
-              className="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+         {filteredCandidates.length === 0 ? (
+          <NoRecordFound colSpan={6} text="No candidates found." />
+         ) : (
+          filteredCandidates.map((c) => (
+           <tr
+            key={c.id}
+            className="group hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+           >
+            {/* Name */}
+            <td className="py-4 px-6">
+             <div
+              onClick={() => setSelectedCandidate(c)}
+              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group/name"
              >
-              <HiOutlineTrash className="text-sm" />
-             </button>
-            </div>
-           </td>
-          </tr>
-         ))}
+              <Avatar src={c.avatar} fallback={c.name ? c.name[0] : ""} size="sm" />
+              <div className="flex flex-col">
+               <span className="text-xs font-bold text-gray-900 dark:text-white group-hover/name:text-primary transition-colors">{c.name}</span>
+               <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{c.email}</span>
+              </div>
+             </div>
+            </td>
+
+            {/* Phone */}
+            <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+             {c.phone}
+            </td>
+
+            {/* CV */}
+            <td className="py-4 px-4">
+             {c.cv ? (
+              <div className="flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
+               <span>{c.cv}</span>
+               <HiOutlineDocumentText className="text-gray-400 text-base" />
+               <HiOutlineChatBubbleLeftRight className="text-gray-400 text-sm hover:text-primary transition-colors cursor-pointer" />
+              </div>
+             ) : (
+              <span className="text-xs text-gray-300 dark:text-gray-600">-</span>
+             )}
+            </td>
+
+            {/* Created Date */}
+            <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400">
+             {c.createdDate}
+            </td>
+
+            {/* Stages */}
+            <td className="py-4 px-4">
+             <StageDropdown
+              stage={c.stage}
+              onChange={(s) => handleStageChange(c.id, s)}
+             />
+            </td>
+
+            {/* Actions */}
+            <td className="py-4 px-6 text-right">
+             <div className="flex items-center justify-end gap-2">
+              <button 
+               onClick={() => setSelectedCandidate(c)}
+               className="w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+              >
+               <HiOutlinePencilSquare className="text-sm" />
+              </button>
+              <button
+               onClick={() => handleDeleteCandidate(c.id)}
+               className="w-8 h-8 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+              >
+               <HiOutlineTrash className="text-sm" />
+              </button>
+             </div>
+            </td>
+           </tr>
+          ))
+         )}
         </tbody>
        </table>
       </div>
 
       {/* Pagination Footer */}
-      <div className="px-6 py-4 border-t border-gray-300 dark:border-gray-800">
+      <div className="px-6 py-4 border-t border-gray-300 dark:border-gray-850">
        <Pagination className="mt-0 w-full" />
       </div>
      </div>
@@ -1040,6 +1084,7 @@ export default function JobDetailPage() {
     onClose={() => setSelectedCandidate(null)}
     candidate={selectedCandidate}
     jobTitle={jobTitle}
+    onUpdateCandidate={handleUpdateCandidate}
    />
   </div>
  );

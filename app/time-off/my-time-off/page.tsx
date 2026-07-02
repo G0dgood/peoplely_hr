@@ -47,7 +47,7 @@ export default function MyTimeOffPage() {
  );
 
  const { data: balancesData, isLoading: isLoadingBalances, error: balancesError } = useGetTimeOffBalancesQuery(
-  user?.id || "",
+  { userId: user?.id || "" },
   { skip: !user?.id }
  );
 

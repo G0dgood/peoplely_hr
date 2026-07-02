@@ -34,34 +34,31 @@ import { Modal, ModalHeader, ModalTitle, ModalContent, ModalFooter, CreateEmailT
 import { PageHeader } from "@/components/ui/page-header";
 
 import { TableActions } from "@/components/ui/table-actions";
-
-interface Stage {
- id: string;
- name: string;
- isLocked: boolean;
-}
-
-interface TagItem {
- id: string;
- name: string;
- candidateCount: number;
-}
-
-interface ResourceItem {
- id: string;
- name: string;
- updatedAt: string;
-}
-
-interface EmailTemplate {
- id: string;
- name: string;
- subject: string;
- body: string;
- stage: string;
- lastModified: string;
- isLocked: boolean;
-}
+import { useApiError } from "@/hooks/useApiError";
+import { RecruitmentSettingsSkeleton } from "@/components/ui/skeleton/recruitment-skeletons";
+import {
+ useGetStagesQuery,
+ useCreateStageMutation,
+ useReorderStagesMutation,
+ useUpdateStageMutation,
+ useDeleteStageMutation,
+ useGetTagsQuery,
+ useCreateTagMutation,
+ useUpdateTagMutation,
+ useDeleteTagMutation,
+ useGetResourcesQuery,
+ useCreateResourceMutation,
+ useUpdateResourceMutation,
+ useDeleteResourceMutation,
+ useGetEmailTemplatesQuery,
+ useCreateEmailTemplateMutation,
+ useUpdateEmailTemplateMutation,
+ useDeleteEmailTemplateMutation,
+ Stage,
+ TagItem,
+ ResourceItem,
+ EmailTemplate,
+} from "@/store/services/recruitmentApi";
 
 export default function RecruitmentSettingsPage() {
  const [activeTab, setActiveTab] = React.useState<"workflow" | "tags" | "emails">("workflow");
@@ -72,16 +69,58 @@ export default function RecruitmentSettingsPage() {
   { id: "emails", label: "Email Template", icon: <HiOutlineEnvelope /> },
  ];
 
- // 1. Workflow State
- const [stages, setStages] = React.useState<Stage[]>([
-  { id: "applied", name: "Applied", isLocked: true },
-  { id: "screening", name: "Screening", isLocked: false },
-  { id: "1st-interview", name: "1st Interview", isLocked: false },
-  { id: "2nd-interview", name: "2nd Interview", isLocked: false },
-  { id: "offered", name: "Offered", isLocked: true },
-  { id: "hired", name: "Hired", isLocked: true },
-  { id: "rejected", name: "Rejected", isLocked: true },
- ]);
+ // Query hooks
+ const { data: stagesData, isLoading: isStagesLoading, error: stagesError } = useGetStagesQuery();
+ const { data: tagsData, isLoading: isTagsLoading, error: tagsError } = useGetTagsQuery();
+ const { data: resourcesData, isLoading: isResourcesLoading, error: resourcesError } = useGetResourcesQuery();
+ const { data: templatesData, isLoading: isTemplatesLoading, error: templatesError } = useGetEmailTemplatesQuery();
+
+ // Mutation hooks
+ const [createStage, { error: createStageError }] = useCreateStageMutation();
+ const [updateStage, { error: updateStageError }] = useUpdateStageMutation();
+ const [deleteStage, { error: deleteStageError }] = useDeleteStageMutation();
+ const [reorderStages, { error: reorderStageError }] = useReorderStagesMutation();
+
+ const [createTag, { error: createTagError }] = useCreateTagMutation();
+ const [updateTag, { error: updateTagError }] = useUpdateTagMutation();
+ const [deleteTag, { error: deleteTagError }] = useDeleteTagMutation();
+
+ const [createResource, { error: createResourceError }] = useCreateResourceMutation();
+ const [updateResource, { error: updateResourceError }] = useUpdateResourceMutation();
+ const [deleteResource, { error: deleteResourceError }] = useDeleteResourceMutation();
+
+ const [createTemplate, { error: createTemplateError }] = useCreateEmailTemplateMutation();
+ const [updateTemplate, { error: updateTemplateError }] = useUpdateEmailTemplateMutation();
+ const [deleteTemplate, { error: deleteTemplateError }] = useDeleteEmailTemplateMutation();
+
+ // Handle errors using toast notifications
+ useApiError(!!stagesError, stagesError, "Failed to load stages");
+ useApiError(!!tagsError, tagsError, "Failed to load tags");
+ useApiError(!!resourcesError, resourcesError, "Failed to load resources");
+ useApiError(!!templatesError, templatesError, "Failed to load email templates");
+
+ useApiError(!!createStageError, createStageError, "Failed to create stage");
+ useApiError(!!updateStageError, updateStageError, "Failed to update stage");
+ useApiError(!!deleteStageError, deleteStageError, "Failed to delete stage");
+ useApiError(!!reorderStageError, reorderStageError, "Failed to reorder stages");
+
+ useApiError(!!createTagError, createTagError, "Failed to create tag");
+ useApiError(!!updateTagError, updateTagError, "Failed to update tag");
+ useApiError(!!deleteTagError, deleteTagError, "Failed to delete tag");
+
+ useApiError(!!createResourceError, createResourceError, "Failed to create resource");
+ useApiError(!!updateResourceError, updateResourceError, "Failed to update resource");
+ useApiError(!!deleteResourceError, deleteResourceError, "Failed to delete resource");
+
+ useApiError(!!createTemplateError, createTemplateError, "Failed to create template");
+ useApiError(!!updateTemplateError, updateTemplateError, "Failed to update template");
+ useApiError(!!deleteTemplateError, deleteTemplateError, "Failed to delete template");
+
+ // Resolve values from query response
+ const stages = stagesData?.stages || [];
+ const tags = tagsData?.tags || [];
+ const resources = resourcesData?.resources || [];
+ const templates = templatesData?.templates || [];
 
  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
  const [isAddStageOpen, setIsAddStageOpen] = React.useState(false);
@@ -114,7 +153,7 @@ export default function RecruitmentSettingsPage() {
 
  // Drag and Drop
  const handleDragStart = (index: number) => {
-  if (stages[index].isLocked) return;
+  if (stages[index]?.isLocked) return;
   setDraggedIndex(index);
  };
 
@@ -122,148 +161,128 @@ export default function RecruitmentSettingsPage() {
   e.preventDefault();
  };
 
- const handleDrop = (index: number) => {
+ const handleDrop = async (index: number) => {
   if (draggedIndex === null) return;
-  if (stages[index].isLocked) return; // Cannot drop on locked stages
+  if (stages[index]?.isLocked) return; // Cannot drop on locked stages
 
   const updated = [...stages];
   const item = updated[draggedIndex];
   updated.splice(draggedIndex, 1);
   updated.splice(index, 0, item);
-  setStages(updated);
+  
   setDraggedIndex(null);
+  try {
+   await reorderStages({ stageIds: updated.map((s) => s.id) }).unwrap();
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleCreateStage = (name: string) => {
-  const offeredIndex = stages.findIndex((s) => s.id === "offered");
-  const insertIndex = offeredIndex !== -1 ? offeredIndex : stages.length;
-  const newStage: Stage = {
-   id: name.toLowerCase().replace(/\s+/g, "-"),
-   name: name,
-   isLocked: false,
-  };
-  const updated = [...stages];
-  updated.splice(insertIndex, 0, newStage);
-  setStages(updated);
-  setIsAddStageOpen(false);
+ const handleCreateStage = async (name: string) => {
+  try {
+   await createStage({ name }).unwrap();
+   setIsAddStageOpen(false);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleRenameStage = (name: string) => {
+ const handleRenameStage = async (name: string) => {
   if (!editingStage) return;
-
-  setStages((prev) =>
-   prev.map((s) => (s.id === editingStage.id ? { ...s, name } : s))
-  );
-  setEditingStage(null);
+  try {
+   await updateStage({ id: editingStage.id, name }).unwrap();
+   setEditingStage(null);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleDeleteStage = (id: string) => {
-  setStages((prev) => prev.filter((s) => s.id !== id));
-  setActiveDropdown(null);
+ const handleDeleteStage = async (id: string) => {
+  if (confirm("Are you sure you want to delete this stage?")) {
+   try {
+    await deleteStage(id).unwrap();
+    setActiveDropdown(null);
+   } catch (err) {
+    // handled by useApiError
+   }
+  }
  };
 
  // 2. Tags & Resources State
  const [activeSubTab, setActiveSubTab] = React.useState<"tag" | "resource">("tag");
- const [tags, setTags] = React.useState<TagItem[]>([
-  { id: "design", name: "Design", candidateCount: 20 },
-  { id: "engineer", name: "Engineer", candidateCount: 10 },
-  { id: "finance", name: "Finance", candidateCount: 5 },
-  { id: "product", name: "Product", candidateCount: 0 },
- ]);
  const [isAddTagOpen, setIsAddTagOpen] = React.useState(false);
  const [editingTag, setEditingTag] = React.useState<TagItem | null>(null);
 
- const [resources, setResources] = React.useState<ResourceItem[]>([
-  { id: "1", name: "Interview Evaluation Sheet", updatedAt: "Updated 3 days ago" },
-  { id: "2", name: "Candidate Assessment Checklist", updatedAt: "Updated 1 week ago" },
- ]);
  const [isAddResourceOpen, setIsAddResourceOpen] = React.useState(false);
  const [editingResource, setEditingResource] = React.useState<ResourceItem | null>(null);
 
- const handleCreateTag = (name: string) => {
-  const newTag: TagItem = {
-   id: name.toLowerCase().replace(/\s+/g, "-"),
-   name: name,
-   candidateCount: 0,
-  };
-  setTags((prev) => [...prev, newTag]);
-  setIsAddTagOpen(false);
+ const handleCreateTag = async (name: string) => {
+  try {
+   await createTag({ name }).unwrap();
+   setIsAddTagOpen(false);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleRenameTag = (name: string) => {
+ const handleRenameTag = async (name: string) => {
   if (!editingTag) return;
-  setTags((prev) =>
-   prev.map((t) => (t.id === editingTag.id ? { ...t, name } : t))
-  );
-  setEditingTag(null);
+  try {
+   await updateTag({ id: editingTag.id, name }).unwrap();
+   setEditingTag(null);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleDeleteTag = (id: string) => {
-  setTags((prev) => prev.filter((t) => t.id !== id));
-  setActiveTagDropdown(null);
+ const handleDeleteTag = async (id: string) => {
+  if (confirm("Are you sure you want to delete this tag?")) {
+   try {
+    await deleteTag(id).unwrap();
+    setActiveTagDropdown(null);
+   } catch (err) {
+    // handled by useApiError
+   }
+  }
  };
 
- const handleCreateResource = (name: string) => {
-  const newResource: ResourceItem = {
-   id: Date.now().toString(),
-   name: name,
-   updatedAt: "Updated just now",
-  };
-  setResources((prev) => [...prev, newResource]);
-  setIsAddResourceOpen(false);
+ const handleCreateResource = async (name: string) => {
+  try {
+   await createResource({ name }).unwrap();
+   setIsAddResourceOpen(false);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleRenameResource = (name: string) => {
+ const handleRenameResource = async (name: string) => {
   if (!editingResource) return;
-  setResources((prev) =>
-   prev.map((r) => (r.id === editingResource.id ? { ...r, name } : r))
-  );
-  setEditingResource(null);
+  try {
+   await updateResource({ id: editingResource.id, name }).unwrap();
+   setEditingResource(null);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleDeleteResource = (id: string) => {
-  setResources((prev) => prev.filter((r) => r.id !== id));
-  setActiveResourceDropdown(null);
+ const handleDeleteResource = async (id: string) => {
+  if (confirm("Are you sure you want to delete this resource?")) {
+   try {
+    await deleteResource(id).unwrap();
+    setActiveResourceDropdown(null);
+   } catch (err) {
+    // handled by useApiError
+   }
+  }
  };
 
  // 3. Email Templates State
- const [templates, setTemplates] = React.useState<EmailTemplate[]>([
-  {
-   id: "offer",
-   name: "Offer",
-   subject: "Offer from {{company_name}}",
-   body: "Dear {{candidate_first_name}},\n\n{{company_name}} is excited to bring you on board as {{job_title}}.\n\nYou were our best candidates. We were really sold on your [details about the candidate that made them your choice].\n\n{{company_name}} is offering a [full time, part time, etc.] position for you as {{job_title}}, reporting to [immediate manager/supervisor] starting on [proposed start date] at [workplace location]\n\nBest regards,\n\n{{company_name}}",
-   stage: "Offered",
-   lastModified: "13 Jul 2022",
-   isLocked: true,
-  },
-  {
-   id: "auto-confirmation",
-   name: "Auto Confirmation",
-   subject: "Thank you for your application at {{company_name}}",
-   body: "Hi {{candidate_name}},\n\nThank you for applying to the {{job_title}} position at {{company_name}}...\n\nBest regards,\nHR Team",
-   stage: "Applied",
-   lastModified: "1 Apr 2023",
-   isLocked: true,
-  },
-  {
-   id: "rejection",
-   name: "Rejection",
-   subject: "{{job_title}} position at {{company_name}}",
-   body: "Hi {{candidate_name}},\n\nThank you for your interest in the {{job_title}} position at {{company_name}}...\n\nBest regards,\nHR Team",
-   stage: "Rejected",
-   lastModified: "10 Jan 2023",
-   isLocked: true,
-  },
- ]);
-
  const [searchQuery, setSearchQuery] = React.useState("");
  const [stageFilter, setStageFilter] = React.useState("All Stages");
  const [isStageFilterOpen, setIsStageFilterOpen] = React.useState(false);
  const stageFilterRef = React.useRef<HTMLDivElement>(null);
 
  const [isAddTemplateOpen, setIsAddTemplateOpen] = React.useState(false);
-
  const [editingTemplate, setEditingTemplate] = React.useState<EmailTemplate | null>(null);
 
  // Close stage filter dropdown on click outside
@@ -277,48 +296,32 @@ export default function RecruitmentSettingsPage() {
   return () => document.removeEventListener("mousedown", handleOutsideStageFilter);
  }, []);
 
- const handleCreateTemplate = (data: { name: string; stage: string; subject: string; body: string }) => {
-  const newTemplate: EmailTemplate = {
-   id: data.name.toLowerCase().replace(/\s+/g, "-"),
-   name: data.name,
-   subject: data.subject,
-   body: data.body,
-   stage: data.stage,
-   lastModified: new Date().toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-   }),
-   isLocked: false,
-  };
-  setTemplates((prev) => [...prev, newTemplate]);
-  setIsAddTemplateOpen(false);
+ const handleCreateTemplate = async (data: { name: string; stage: string; subject: string; body: string }) => {
+  try {
+   await createTemplate(data).unwrap();
+   setIsAddTemplateOpen(false);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleUpdateTemplate = (data: { id: string; name: string; subject: string; body: string; stage: string }) => {
-  setTemplates((prev) =>
-   prev.map((t) =>
-    t.id === data.id
-     ? {
-      ...t,
-      name: data.name,
-      subject: data.subject,
-      body: data.body,
-      stage: data.stage,
-      lastModified: new Date().toLocaleDateString("en-GB", {
-       day: "numeric",
-       month: "short",
-       year: "numeric",
-      }),
-     }
-     : t
-   )
-  );
-  setEditingTemplate(null);
+ const handleUpdateTemplate = async (data: { id: string; name: string; subject: string; body: string; stage: string }) => {
+  try {
+   await updateTemplate(data).unwrap();
+   setEditingTemplate(null);
+  } catch (err) {
+   // handled by useApiError
+  }
  };
 
- const handleDeleteTemplate = (id: string) => {
-  setTemplates((prev) => prev.filter((t) => t.id !== id));
+ const handleDeleteTemplate = async (id: string) => {
+  if (confirm("Are you sure you want to delete this template?")) {
+   try {
+    await deleteTemplate(id).unwrap();
+   } catch (err) {
+    // handled by useApiError
+   }
+  }
  };
 
  const filteredTemplates = templates.filter((t) => {
@@ -328,6 +331,10 @@ export default function RecruitmentSettingsPage() {
   const matchesStage = stageFilter === "All Stages" || t.stage === stageFilter;
   return matchesSearch && matchesStage;
  });
+
+ if (isStagesLoading || isTagsLoading || isResourcesLoading || isTemplatesLoading) {
+  return <RecruitmentSettingsSkeleton />;
+ }
 
  return (
   <div className="flex flex-col gap-8 p-2 md:p-8 min-h-full">
@@ -341,7 +348,7 @@ export default function RecruitmentSettingsPage() {
     <SettingsTabs
      tabs={tabs}
      activeTab={activeTab}
-     onChange={setActiveTab}
+     onChange={(id) => setActiveTab(id as "workflow" | "tags" | "emails")}
      variant="emerald"
     />
 

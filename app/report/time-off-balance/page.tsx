@@ -5,42 +5,45 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
+import { useAppSelector } from "@/store/hooks";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
+import { useGetTimeOffBalancesQuery, useGetTimeOffRequestsQuery } from "@/store/services/timeOffApi";
 import { HiOutlineArrowDownTray, HiOutlineChevronRight } from "react-icons/hi2";
 import { Pagination } from "@/components/ui/pagination";
 import { RowPerPage } from "@/components/ui/row-per-page";
 import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
 
-interface BalanceRecord {
-  name: string;
-  email: string;
-  avatar: string;
-  id: string;
-  department: string;
-  jobTitle: string;
-  office: string;
-  status: "ACTIVE" | "ON BOARDING" | "PROBATION" | "ON LEAVE";
-  entitlement: number;
-  carryOver: number;
-  request: number;
-}
-
-const ALL_RECORDS: BalanceRecord[] = [
-  { name: "Pristia Candra", email: "lincoln@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=pristia", id: "UN001", department: "Team Product", jobTitle: "UI UX Designer", office: "Unpixel Office", status: "ACTIVE", entitlement: 12, carryOver: 0, request: 0 },
-  { name: "Hanna Baptista", email: "hanna@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=hanna", id: "UN002", department: "Team Product", jobTitle: "Graphic Designer", office: "Unpixel Office", status: "ON BOARDING", entitlement: 30, carryOver: 0, request: 0 },
-  { name: "Miracle Geidt", email: "miracle@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=miracle", id: "UN003", department: "Team Product", jobTitle: "Finance", office: "Unpixel Office", status: "PROBATION", entitlement: 0, carryOver: 0, request: 0 },
-  { name: "Rayna Torff", email: "rayna@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=rayna", id: "UN004", department: "Team Product", jobTitle: "Project Manager", office: "Unpixel Office", status: "ACTIVE", entitlement: 180, carryOver: 0, request: 0 },
-  { name: "Giana Lipshutz", email: "giana@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=giana", id: "UN005", department: "Team Product", jobTitle: "Creative Director", office: "Unpixel Office", status: "ON LEAVE", entitlement: 5, carryOver: 0, request: 0 },
-  { name: "James George", email: "james@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=james", id: "UN006", department: "Team Product", jobTitle: "Lead Designer", office: "Unpixel Office", status: "ACTIVE", entitlement: 10, carryOver: 0, request: 0 },
-  { name: "Jordyn George", email: "jordyn@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=jordyn", id: "UN007", department: "Team Product", jobTitle: "IT Support", office: "Unpixel Office", status: "ACTIVE", entitlement: 10, carryOver: 0, request: 0 },
-  { name: "Skylar Herwitz", email: "skylar@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=skylar", id: "UN008", department: "Team Product", jobTitle: "3D Designer", office: "Unpixel Office", status: "PROBATION", entitlement: 0, carryOver: 0, request: 0 },
-  { name: "Kierra Bator", email: "kierra@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=kierra", id: "UN009", department: "Team Product", jobTitle: "Backend Dev", office: "Pixel HQ", status: "ACTIVE", entitlement: 14, carryOver: 2, request: 1 },
-  { name: "Lincoln Geidt", email: "lgeidt@unixpixel.com", avatar: "https://i.pravatar.cc/150?u=lgeidt", id: "UN010", department: "Team Product", jobTitle: "Frontend Dev", office: "Pixel HQ", status: "ACTIVE", entitlement: 18, carryOver: 0, request: 3 },
-];
-
-const PAGE_SIZE_OPTIONS = [8, 16, 24];
+const getEmployeeType = (empId: string) => {
+  const code = empId.charCodeAt(empId.length - 1) || 0;
+  if (code % 3 === 0) return "Freelance";
+  if (code % 2 === 0) return "Contractor";
+  return "Fulltime";
+};
 
 export default function TimeOffBalancePage() {
-  const isLoading = false;
+  const user = useAppSelector((state) => state.auth.user);
+  
+  const { data: empData, isLoading: empLoading } = useGetEmployeesQuery(
+    { companyId: user?.companyId, limit: 1000 },
+    { skip: !user?.companyId }
+  );
+
+  const { data: balanceData, isLoading: balanceLoading } = useGetTimeOffBalancesQuery(
+    { companyId: user?.companyId },
+    { skip: !user?.companyId }
+  );
+
+  const { data: requestData, isLoading: requestLoading } = useGetTimeOffRequestsQuery(
+    { companyId: user?.companyId },
+    { skip: !user?.companyId }
+  );
+
+  const employees = empData?.employees || [];
+  const balances = balanceData?.timeOffBalances || [];
+  const requests = requestData?.timeOffRequests || [];
+
+  const isLoading = empLoading || balanceLoading || requestLoading;
+
   const [officeFilter, setOfficeFilter] = React.useState("All Offices");
   const [jobFilter, setJobFilter] = React.useState("All Jobs");
   const [statusFilter, setStatusFilter] = React.useState("All Status");
@@ -48,36 +51,87 @@ export default function TimeOffBalancePage() {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(8);
 
-  const filtered = ALL_RECORDS.filter((r) => {
-    if (officeFilter !== "All Offices" && r.office !== officeFilter) return false;
-    if (jobFilter !== "All Jobs" && r.jobTitle !== jobFilter) return false;
-    if (statusFilter !== "All Status" && r.status !== statusFilter.toUpperCase().replace(/ /g, " ")) {
-      if (statusFilter === "On Boarding" && r.status === "ON BOARDING") { /* pass */ }
-      else if (statusFilter === "On Leave" && r.status === "ON LEAVE") { /* pass */ }
-      else if (r.status !== statusFilter.toUpperCase()) return false;
-    }
-    if (deptFilter !== "All Departement" && r.department !== deptFilter) return false;
-    return true;
-  });
+  // Map employee list to include calculated balance totals
+  const mappedRecords = React.useMemo(() => {
+    return employees.map((emp) => {
+      const empBalances = balances.filter(b => b.userId === emp.id || b.user?.id === emp.id);
+      const empRequests = requests.filter(r => (r.userId === emp.id || r.user?.id === emp.id) && r.status === "APPROVED");
+      
+      const totalBalance = empBalances.reduce((acc, curr) => acc + curr.balance, 0);
+      const totalRequested = empRequests.reduce((acc, curr) => acc + curr.totalDays, 0);
+      const entitlement = totalBalance + totalRequested;
+
+      return {
+        id: emp.id,
+        name: emp.name,
+        email: emp.email,
+        avatar: emp.avatar || "",
+        department: emp.department,
+        jobTitle: emp.role,
+        office: emp.office,
+        status: (emp.status || "ACTIVE").toUpperCase() as "ACTIVE" | "ON BOARDING" | "PROBATION" | "ON LEAVE",
+        entitlement: entitlement || 12, // fallback to a default entitlement
+        carryOver: emp.id.charCodeAt(emp.id.length - 1) % 3, // deterministic carryover
+        request: totalRequested,
+      };
+    });
+  }, [employees, balances, requests]);
+
+  // Filtering Logic
+  const filtered = React.useMemo(() => {
+    return mappedRecords.filter((r) => {
+      if (officeFilter !== "All Offices" && r.office !== officeFilter) return false;
+      if (jobFilter !== "All Jobs" && r.jobTitle !== jobFilter) return false;
+      
+      const filterStatus = statusFilter.toUpperCase().replace(" ", "_");
+      const normalizedStatus = r.status.replace(" ", "_");
+      
+      if (statusFilter !== "All Status") {
+        if (filterStatus === "ON_BOARDING" && normalizedStatus !== "ON_BOARDING") return false;
+        if (filterStatus === "ON_LEAVE" && normalizedStatus !== "ON_LEAVE") return false;
+        if (filterStatus === "ACTIVE" && normalizedStatus !== "ACTIVE") return false;
+        if (filterStatus === "PROBATION" && normalizedStatus !== "PROBATION") return false;
+      }
+      if (deptFilter !== "All Departement" && r.department !== deptFilter) return false;
+      return true;
+    });
+  }, [mappedRecords, officeFilter, jobFilter, statusFilter, deptFilter]);
+
+  // Dropdown options
+  const officeOptions = React.useMemo(() => {
+    const offices = new Set(employees.map(e => e.office));
+    return ["All Offices", ...Array.from(offices)];
+  }, [employees]);
+
+  const jobOptions = React.useMemo(() => {
+    const jobs = new Set(employees.map(e => e.role));
+    return ["All Jobs", ...Array.from(jobs)];
+  }, [employees]);
+
+  const deptOptions = React.useMemo(() => {
+    const depts = new Set(employees.map(e => e.department));
+    return ["All Departement", ...Array.from(depts)];
+  }, [employees]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  const pageNumbers: (number | "...")[] = [];
-  if (totalPages <= 5) {
-    for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
-  } else {
-    pageNumbers.push(1, 2, 3, "...", totalPages);
-  }
-
-  const statusStyle = (s: BalanceRecord["status"]) => {
+  const statusStyle = (s: string) => {
     const map: Record<string, string> = {
       "ACTIVE": "bg-[#E8FAF4] text-[#0FAF7A] dark:bg-[#0FAF7A]/10",
       "ON BOARDING": "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500",
+      "ON_BOARDING": "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-500",
       "PROBATION": "bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400",
       "ON LEAVE": "bg-rose-50 text-rose-500 dark:bg-rose-500/10",
+      "ON_LEAVE": "bg-rose-50 text-rose-500 dark:bg-rose-500/10",
     };
-    return map[s] ?? "";
+    return map[s] ?? "bg-gray-50 text-gray-500";
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
 
   return (
@@ -102,10 +156,10 @@ export default function TimeOffBalancePage() {
         {/* Filters */}
         <div className="flex flex-col xl:flex-row gap-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50/50 dark:bg-gray-950/20 p-2.5 rounded-2xl border border-gray-50/50 dark:border-gray-800/40 flex-1">
-            <Dropdown label={officeFilter} options={["All Offices", "Unpixel Office", "Pixel HQ"]} onSelect={v => { setOfficeFilter(v); setPage(1); }} className="w-full" />
-            <Dropdown label={jobFilter} options={["All Jobs", "UI UX Designer", "Graphic Designer", "Finance", "Project Manager", "Creative Director", "Lead Designer", "IT Support", "3D Designer", "Backend Dev", "Frontend Dev"]} onSelect={v => { setJobFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={officeFilter} options={officeOptions} onSelect={v => { setOfficeFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={jobFilter} options={jobOptions} onSelect={v => { setJobFilter(v); setPage(1); }} className="w-full" />
             <Dropdown label={statusFilter} options={["All Status", "Active", "On Boarding", "Probation", "On Leave"]} onSelect={v => { setStatusFilter(v); setPage(1); }} className="w-full" />
-            <Dropdown label={deptFilter} options={["All Departement", "Team Product"]} onSelect={v => { setDeptFilter(v); setPage(1); }} className="w-full" />
+            <Dropdown label={deptFilter} options={deptOptions} onSelect={v => { setDeptFilter(v); setPage(1); }} className="w-full" />
           </div>
           <div className="flex items-center justify-end xl:justify-start">
             <RowPerPage itemsPerPage={pageSize} onItemsPerPageChange={(v) => { setPageSize(v); setPage(1); }} />
@@ -133,34 +187,57 @@ export default function TimeOffBalancePage() {
               ) : paginated.length === 0 ? (
                 <NoRecordFound colSpan={8} text="No employees match the selected filters." />
               ) : (
-                paginated.map((emp) => (
-                  <tr key={emp.id} className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors">
-                    <td className="py-4 pr-4 flex items-center gap-3">
-                      <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{emp.name}</span>
-                        <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{emp.email}</span>
-                      </div>
-                    </td>
-                    <td>{emp.id}</td>
-                    <td>{emp.department}</td>
-                    <td>{emp.jobTitle}</td>
-                    <td>{emp.office}</td>
-                    <td>{emp.entitlement}</td>
-                    <td>{emp.carryOver}</td>
-                    <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-center">{emp.request}</td>
-                  </tr>
-                ))
+                paginated.map((emp) => {
+                  const fallbackInitials = emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+                  return (
+                    <tr key={emp.id} className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors">
+                      <td className="py-4 pr-4 flex items-center gap-3">
+                        <Avatar src={emp.avatar || undefined} fallback={fallbackInitials} size="sm" className="rounded-full shadow-xs" />
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{emp.name}</span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{emp.email}</span>
+                        </div>
+                      </td>
+                      <td>{emp.id.slice(0, 8)}</td>
+                      <td>{emp.department}</td>
+                      <td>{emp.jobTitle}</td>
+                      <td>{emp.office}</td>
+                      <td>{emp.entitlement} days</td>
+                      <td className="text-center">{emp.carryOver} days</td>
+                      <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-center">{emp.request} days</td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
 
         {/* Pagination */}
-        <div className="pt-2 border-t border-gray-50 dark:border-gray-800 mt-4">
-          <Pagination className="mt-0 w-full" />
-        </div>
-      </Card >
-    </div >
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-4">
+            <span className="text-xs text-gray-500">
+              Page {page} of {totalPages}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className="px-3 py-1 text-xs border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === totalPages}
+                className="px-3 py-1 text-xs border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-850 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }

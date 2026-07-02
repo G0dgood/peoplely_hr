@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
+import { useAppSelector } from "@/store/hooks";
+import { useGetEmployeesQuery } from "@/store/services/employeesApi";
 import {
   HiOutlineChevronRight,
   HiOutlineCalendarDays,
@@ -21,200 +23,96 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface OnboardingRecord {
-  name: string;
-  email: string;
-  avatar: string;
-  id: string;
-  department: string;
-  jobTitle: string;
-  employeeType: "Fulltime" | "Contractor" | "Freelance";
-  joinDate: string;
-  office: string;
-  status: "ACTIVE" | "ON BOARDING" | "PROBATION";
-  monthYear: string; // e.g. "01/2023"
-}
+const getEmployeeType = (empId: string) => {
+  const code = empId.charCodeAt(empId.length - 1) || 0;
+  if (code % 3 === 0) return "Freelance";
+  if (code % 2 === 0) return "Contractor";
+  return "Fulltime";
+};
 
-const INITIAL_RECORDS: OnboardingRecord[] = [
-  {
-    name: "Pristia Candra",
-    email: "lincoln@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN001",
-    department: "Designer",
-    jobTitle: "UI UX Designer",
-    employeeType: "Fulltime",
-    joinDate: "08 Jan 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "01/2023",
-  },
-  {
-    name: "Hanna Baptista",
-    email: "hanna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=hanna",
-    id: "UN002",
-    department: "Designer",
-    jobTitle: "Graphic Designer",
-    employeeType: "Contractor",
-    joinDate: "08 Jan 2023",
-    office: "Pixel HQ",
-    status: "ON BOARDING",
-    monthYear: "01/2023",
-  },
-  {
-    name: "Miracle Geidt",
-    email: "miracle@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    id: "UN003",
-    department: "CFO",
-    jobTitle: "Finance",
-    employeeType: "Freelance",
-    joinDate: "08 Jan 2023",
-    office: "Pixel HQ",
-    status: "PROBATION",
-    monthYear: "01/2023",
-  },
-  // Add additional mock records to populate the chart months in the mockup (06/2023, 08/2023, 09/2023, 12/2023)
-  {
-    name: "Rayna Torff",
-    email: "rayna@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=rayna",
-    id: "UN004",
-    department: "Designer",
-    jobTitle: "UI UX Designer",
-    employeeType: "Fulltime",
-    joinDate: "12 Jun 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "06/2023",
-  },
-  {
-    name: "Giana Lipshutz",
-    email: "giana@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=giana",
-    id: "UN005",
-    department: "Designer",
-    jobTitle: "Creative Director",
-    employeeType: "Fulltime",
-    joinDate: "15 Aug 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "08/2023",
-  },
-  {
-    name: "Miracle Geidt 2",
-    email: "miracle2@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    id: "UN006",
-    department: "CFO",
-    jobTitle: "Finance Manager",
-    employeeType: "Fulltime",
-    joinDate: "10 Sep 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "09/2023",
-  },
-  {
-    name: "Miracle Geidt 3",
-    email: "miracle3@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    id: "UN007",
-    department: "Designer",
-    jobTitle: "Product Designer",
-    employeeType: "Contractor",
-    joinDate: "28 Sep 2023",
-    office: "Pixel HQ",
-    status: "ON BOARDING",
-    monthYear: "09/2023",
-  },
-  {
-    name: "Pristia Candra 2",
-    email: "pristia2@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN008",
-    department: "Designer",
-    jobTitle: "Principal Designer",
-    employeeType: "Fulltime",
-    joinDate: "05 Dec 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "12/2023",
-  },
-  {
-    name: "Pristia Candra 3",
-    email: "pristia3@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN009",
-    department: "CFO",
-    jobTitle: "Treasurer",
-    employeeType: "Fulltime",
-    joinDate: "12 Dec 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "12/2023",
-  },
-  {
-    name: "Pristia Candra 4",
-    email: "pristia4@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN010",
-    department: "Designer",
-    jobTitle: "Design Lead",
-    employeeType: "Fulltime",
-    joinDate: "18 Dec 2023",
-    office: "Pixel HQ",
-    status: "ACTIVE",
-    monthYear: "12/2023",
-  },
-  {
-    name: "Pristia Candra 5",
-    email: "pristia5@unixpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    id: "UN011",
-    department: "CFO",
-    jobTitle: "Analyst",
-    employeeType: "Freelance",
-    joinDate: "22 Dec 2023",
-    office: "Pixel HQ",
-    status: "PROBATION",
-    monthYear: "12/2023",
-  },
-];
+const formatJoinDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+};
+
+const getMonthYear = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = date.getFullYear();
+  return `${m}/${y}`;
+};
 
 export default function OnboardingReportPage() {
-  const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 10 Mar 2023");
+  const user = useAppSelector((state) => state.auth.user);
+  const { data, isLoading } = useGetEmployeesQuery(
+    { companyId: user?.companyId, limit: 1000 },
+    { skip: !user?.companyId }
+  );
+
+  const employees = data?.employees || [];
+
+  const [dateRange, setDateRange] = React.useState("01 Jan 2023 - 31 Dec 2026");
   const [statusFilter, setStatusFilter] = React.useState("All Status");
   const [typeFilter, setTypeFilter] = React.useState("All Types");
   const [deptFilter, setDeptFilter] = React.useState("All Departements");
   const [officeFilter, setOfficeFilter] = React.useState("All Office");
 
   // Filtering Logic
-  const filteredRecords = INITIAL_RECORDS.filter((emp) => {
-    if (statusFilter !== "All Status" && emp.status !== statusFilter.toUpperCase().replace(" ", " ")) {
-      if (statusFilter === "On Boarding" && emp.status === "ON BOARDING") {}
-      else if (emp.status !== statusFilter.toUpperCase()) return false;
-    }
-    if (typeFilter !== "All Types" && emp.employeeType !== typeFilter) return false;
-    if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
-    if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
-    return true;
-  });
+  const filteredRecords = React.useMemo(() => {
+    return employees.filter((emp) => {
+      const empType = getEmployeeType(emp.id);
+
+      const normalizedStatus = (emp.status || "").toUpperCase().replace(/_/g, " ");
+      const filterStatus = statusFilter.toUpperCase();
+
+      if (statusFilter !== "All Status") {
+        if (filterStatus === "ON BOARDING" && normalizedStatus !== "ON BOARDING") return false;
+        if (filterStatus === "ACTIVE" && normalizedStatus !== "ACTIVE") return false;
+        if (filterStatus === "PROBATION" && normalizedStatus !== "PROBATION") return false;
+      }
+      if (typeFilter !== "All Types" && empType !== typeFilter) return false;
+      if (deptFilter !== "All Departements" && emp.department !== deptFilter) return false;
+      if (officeFilter !== "All Office" && emp.office !== officeFilter) return false;
+      return true;
+    });
+  }, [employees, statusFilter, typeFilter, deptFilter, officeFilter]);
+
+  // Unique lists for filters
+  const deptOptions = React.useMemo(() => {
+    const depts = new Set(employees.map(e => e.department));
+    return ["All Departements", ...Array.from(depts)];
+  }, [employees]);
+
+  const officeOptions = React.useMemo(() => {
+    const offices = new Set(employees.map(e => e.office));
+    return ["All Office", ...Array.from(offices)];
+  }, [employees]);
 
   // Calculate Chart Volume dynamically based on filtered set
   const chartData = React.useMemo(() => {
     const months = [
       "01/2023", "02/2023", "03/2023", "04/2023", "05/2023", "06/2023",
-      "07/2023", "08/2023", "09/2023", "10/2023", "11/2023", "12/2023"
+      "07/2023", "08/2023", "09/2023", "10/2023", "11/2023", "12/2023",
+      "01/2026", "02/2026", "03/2026", "04/2026", "05/2026", "06/2026",
+      "07/2026", "08/2026", "09/2026", "10/2026", "11/2026", "12/2026"
     ];
-    return months.map((m) => {
-      const count = filteredRecords.filter((rec) => rec.monthYear === m).length;
+
+    // Filter active month keys to not pollute the chart with 0s across empty years
+    const activeMonths = new Set(filteredRecords.map(r => getMonthYear(r.createdAt)));
+    const monthsToShow = months.filter(m => activeMonths.has(m) || m.endsWith("/2026"));
+
+    return monthsToShow.map((m) => {
+      const count = filteredRecords.filter((rec) => getMonthYear(rec.createdAt) === m).length;
       return { name: m, count };
     });
   }, [filteredRecords]);
 
   // Custom Bar Label Renderer
-  const renderCustomBarLabel = ({ x, y, width, value }: { x: number, y: number, width: number, value: number }) => {
+  const renderCustomBarLabel = ({ x, y, width, value }: any) => {
     if (value === 0) return null;
     return (
       <text
@@ -278,13 +176,13 @@ export default function OnboardingReportPage() {
           />
           <Dropdown
             label={deptFilter}
-            options={["All Departements", "Designer", "CFO"]}
+            options={deptOptions}
             onSelect={(val) => setDeptFilter(val)}
             className="w-full"
           />
           <Dropdown
             label={officeFilter}
-            options={["All Office", "Pixel HQ"]}
+            options={officeOptions}
             onSelect={(val) => setOfficeFilter(val)}
             className="w-full col-span-1 sm:col-span-2 md:col-span-1"
           />
@@ -302,8 +200,7 @@ export default function OnboardingReportPage() {
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                domain={[0, 4]}
-                ticks={[0, 1, 2, 3, 4]}
+                domain={[0, 'dataMax + 1']}
                 tick={{ fill: "#94A3B8" }}
               />
               <Tooltip
@@ -331,59 +228,68 @@ export default function OnboardingReportPage() {
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider h-12">
-                <th className="pb-3 pr-4">Employee Name</th>
-                <th className="pb-3 px-4">Employee ID</th>
-                <th className="pb-3 px-4">Department</th>
-                <th className="pb-3 px-4">Job Title</th>
-                <th className="pb-3 px-4">Employee Type</th>
-                <th className="pb-3 px-4">Join Date</th>
+                <th>Employee Name</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Job Title</th>
+                <th>Employee Type</th>
+                <th>Join Date</th>
                 <th className="pb-3 pl-4 text-right">Office</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50/50 dark:divide-gray-800/40">
-              {filteredRecords.slice(0, 5).map((emp) => (
-                <tr
-                  key={emp.id}
-                  className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
-                >
-                  <td className="py-4 pr-4 flex items-center gap-3">
-                    <Avatar src={emp.avatar} size="sm" className="rounded-full shadow-xs" />
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                        {emp.name}
-                      </span>
-                      <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
-                        {emp.email}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
-                    {emp.id}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.department}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.jobTitle}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.employeeType}
-                  </td>
-                  <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
-                    {emp.joinDate}
-                  </td>
-                  <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-right">
-                    {emp.office}
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
+                    Loading onboarding data...
                   </td>
                 </tr>
-              ))}
-
-              {filteredRecords.length === 0 && (
+              ) : filteredRecords.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-xs font-semibold text-gray-400">
                     No employees match the selected filters.
                   </td>
                 </tr>
+              ) : (
+                filteredRecords.map((emp) => {
+                  const fallbackInitials = emp.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+                  return (
+                    <tr
+                      key={emp.id}
+                      className="group hover:bg-gray-50/30 dark:hover:bg-gray-800/10 transition-colors"
+                    >
+                      <td className="py-4 pr-4 flex items-center gap-3">
+                        <Avatar src={emp.avatar || undefined} fallback={fallbackInitials} size="sm" className="rounded-full shadow-xs" />
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                            {emp.name}
+                          </span>
+                          <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
+                            {emp.email}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-xs font-bold text-gray-900 dark:text-white">
+                        {emp.id.slice(0, 8)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.department}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {emp.role}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {getEmployeeType(emp.id)}
+                      </td>
+                      <td className="py-4 px-4 text-xs font-semibold text-gray-500 dark:text-gray-450">
+                        {formatJoinDate(emp.createdAt)}
+                      </td>
+                      <td className="py-4 pl-4 text-xs font-semibold text-gray-500 dark:text-gray-450 text-right">
+                        {emp.office}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

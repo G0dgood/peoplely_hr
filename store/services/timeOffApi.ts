@@ -35,6 +35,11 @@ export interface TimeOffBalance {
   policyId: string;
   policy: TimeOffPolicy;
   balance: number;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export interface Holiday {
@@ -82,8 +87,14 @@ export const timeOffApi = createApi({
       }),
       invalidatesTags: ["TimeOffRequest", "TimeOffBalance"],
     }),
-    getTimeOffBalances: builder.query<{ timeOffBalances: TimeOffBalance[] }, string>({
-      query: (userId) => `/time-off/balances?userId=${userId}`,
+    getTimeOffBalances: builder.query<
+      { timeOffBalances: TimeOffBalance[] },
+      { userId?: string; companyId?: string }
+    >({
+      query: (params) => ({
+        url: "/time-off/balances",
+        params,
+      }),
       providesTags: ["TimeOffBalance"],
     }),
     getTimeOffPolicies: builder.query<{ timeOffPolicies: TimeOffPolicy[] }, string>({

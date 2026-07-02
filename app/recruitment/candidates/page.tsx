@@ -22,111 +22,12 @@ import { RowPerPage } from "@/components/ui/row-per-page";
 import { TableActions } from "@/components/ui/table-actions";
 import { Pagination } from "@/components/ui/pagination";
 import { SVGLoaderFetch, NoRecordFound } from "@/components/ui/options";
+import { RecruitmentCandidatesSkeleton } from "@/components/ui/skeleton/recruitment-skeletons";
+import { useApiError } from "@/hooks/useApiError";
+import { useGetCandidatesQuery, useCreateCandidateMutation, useUpdateCandidateMutation, useDeleteCandidateMutation, Candidate } from "@/store/services/recruitmentApi";
 
 
 
-interface Candidate {
-  id: number;
-  name: string;
-  email: string;
-  avatar: string;
-  phone: string;
-  job: string;
-  cv: string; // "CV.pdf" or "-"
-  createdDate: string;
-  stage: "Applied" | "Screening" | "1st Interview" | "2nd Interview" | "Hiring" | "Rejected";
-}
-
-const INITIAL_CANDIDATES: Candidate[] = [
-  {
-    id: 1,
-    name: "Pristia Candra",
-    email: "lincoln@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=pristia",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "CV.pdf",
-    createdDate: "01 Mar 2023",
-    stage: "Applied",
-  },
-  {
-    id: 2,
-    name: "Hanna Baptista",
-    email: "hanna@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=hanna",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "-",
-    createdDate: "01 Mar 2023",
-    stage: "Screening",
-  },
-  {
-    id: 3,
-    name: "Miracle Geidt",
-    email: "miracle@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=miracle",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "CV.pdf",
-    createdDate: "01 Mar 2023",
-    stage: "1st Interview",
-  },
-  {
-    id: 4,
-    name: "Rayna Torff",
-    email: "rayna@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=rayna",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "-",
-    createdDate: "01 Mar 2023",
-    stage: "2nd Interview",
-  },
-  {
-    id: 5,
-    name: "Giana Lipshutz",
-    email: "giana@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=giana",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "-",
-    createdDate: "01 Mar 2023",
-    stage: "Hiring",
-  },
-  {
-    id: 6,
-    name: "James George",
-    email: "james@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=james",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "CV.pdf",
-    createdDate: "01 Mar 2023",
-    stage: "Hiring",
-  },
-  {
-    id: 7,
-    name: "Jordyn George",
-    email: "jordyn@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=jordyn",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "CV.pdf",
-    createdDate: "01 Mar 2023",
-    stage: "Rejected",
-  },
-  {
-    id: 8,
-    name: "Skylar Herwitz",
-    email: "skylar@unpixel.com",
-    avatar: "https://i.pravatar.cc/150?u=skylar",
-    phone: "08092139441",
-    job: "Designer",
-    cv: "CV.pdf",
-    createdDate: "01 Mar 2023",
-    stage: "Screening",
-  },
-];
 
 function TableStageDropdown({
   stage,
@@ -188,8 +89,6 @@ function TableStageDropdown({
 }
 
 export default function CandidatesPage() {
-  const isLoading = false;
-  const [candidates, setCandidates] = React.useState<Candidate[]>(INITIAL_CANDIDATES);
   const [search, setSearch] = React.useState("");
   const [selectedRecordFilter, setSelectedRecordFilter] = React.useState("All Record");
   const [selectedLocationFilter, setSelectedLocationFilter] = React.useState("All Location");
@@ -203,6 +102,21 @@ export default function CandidatesPage() {
   const [pageSize, setPageSize] = React.useState(8);
   const [currentPage, setCurrentPage] = React.useState(1);
 
+  const { data, isLoading, error } = useGetCandidatesQuery({
+    search,
+    status: selectedStatusFilter
+  });
+  const [createCandidate, { error: createError }] = useCreateCandidateMutation();
+  const [updateCandidate, { error: updateError }] = useUpdateCandidateMutation();
+  const [deleteCandidate, { error: deleteError }] = useDeleteCandidateMutation();
+
+  useApiError(!!error, error, "Failed to load candidates");
+  useApiError(!!createError, createError, "Failed to create candidate");
+  useApiError(!!updateError, updateError, "Failed to update candidate");
+  useApiError(!!deleteError, deleteError, "Failed to delete candidate");
+
+  const candidates = data?.candidates || [];
+
   // Filter logic
   const filteredCandidates = candidates.filter((c) => {
     const matchesSearch =
@@ -213,10 +127,7 @@ export default function CandidatesPage() {
 
     const matchesStatus =
       selectedStatusFilter === "All Status" ||
-      (selectedStatusFilter === "Hiring" && c.stage === "Hiring") ||
-      (selectedStatusFilter === "Rejected" && c.stage === "Rejected") ||
-      (selectedStatusFilter === "Applied" && c.stage === "Applied") ||
-      (selectedStatusFilter === "Screening" && c.stage === "Screening");
+      c.stage === selectedStatusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -228,43 +139,35 @@ export default function CandidatesPage() {
     currentPage * pageSize
   );
 
-  const handleStageChange = (id: number, newStage: Candidate["stage"]) => {
-    setCandidates((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, stage: newStage } : c))
-    );
+  const handleStageChange = async (id: string, newStage: string) => {
+    try {
+      await updateCandidate({ id, stage: newStage }).unwrap();
+    } catch (err) {
+      // handled by useApiError
+    }
   };
 
-  const handleAddOrEditCandidate = (data: Omit<Candidate, "id" | "avatar" | "createdDate">) => {
-    if (editingCandidate) {
-      setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === editingCandidate.id
-            ? { ...c, ...data }
-            : c
-        )
-      );
-    } else {
-      const newId = candidates.length > 0 ? Math.max(...candidates.map((c) => c.id)) + 1 : 1;
-      setCandidates((prev) => [
-        {
-          id: newId,
-          name: data.name,
-          email: data.email,
-          avatar: `https://i.pravatar.cc/150?u=${encodeURIComponent(data.name)}`,
-          phone: data.phone,
-          job: data.job,
-          cv: data.cv,
-          createdDate: "01 Mar 2023",
-          stage: data.stage,
-        },
-        ...prev,
-      ]);
+  const handleAddOrEditCandidate = async (data: Partial<Candidate>) => {
+    try {
+      if (editingCandidate) {
+        await updateCandidate({ id: editingCandidate.id, ...data }).unwrap();
+      } else {
+        await createCandidate(data).unwrap();
+      }
+    } catch (err) {
+      // handled by useApiError
     }
     setEditingCandidate(null);
   };
 
-  const handleDeleteCandidate = (id: number) => {
-    setCandidates((prev) => prev.filter((c) => c.id !== id));
+  const handleDeleteCandidate = async (id: string) => {
+    if (confirm("Are you sure you want to delete this candidate?")) {
+      try {
+        await deleteCandidate(id).unwrap();
+      } catch (err) {
+        // handled by useApiError
+      }
+    }
   };
 
   return (
@@ -341,32 +244,18 @@ export default function CandidatesPage() {
             <table>
               <thead>
                 <tr className="border-b border-gray-300 dark:border-gray-800">
-                  <th >
-                    Name
-                  </th>
-                  <th >
-                    Phone Number
-                  </th>
-                  <th >
-                    Job
-                  </th>
-                  <th >
-                    CV
-                  </th>
-                  <th >
-                    Created Date
-                  </th>
-                  <th >
-                    Stages
-                  </th>
-                  <th className="text-right">
-                    Action
-                  </th>
+                  <th>Name</th>
+                  <th>Phone Number</th>
+                  <th>Job</th>
+                  <th>CV</th>
+                  <th>Created Date</th>
+                  <th>Stages</th>
+                  <th className="text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
-                  <SVGLoaderFetch colSpan={7} text="Loading candidates..." />
+                  <RecruitmentCandidatesSkeleton />
                 ) : paginatedCandidates.length === 0 ? (
                   <NoRecordFound colSpan={7} text="No candidates found." />
                 ) : (
@@ -388,13 +277,13 @@ export default function CandidatesPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                      <td>
                         {cand.phone}
                       </td>
-                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                      <td>
                         {cand.job}
                       </td>
-                      <td className="py-4 px-4 text-xs font-medium text-gray-600 dark:text-gray-400">
+                      <td>
                         {cand.cv !== "-" ? (
                           <a
                             href="#"
